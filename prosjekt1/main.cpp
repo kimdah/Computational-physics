@@ -19,8 +19,8 @@ int main(int argc, const char * argv[]) {
     double x_max = 1.0;
     double h = (x_max - x_min) / npoints;
     // Boundary conditions:
-    double u_min = 0; // u(0) = 0
-    double u_max = 0;  // u(1)=0
+    double u_0 = 0; // u(0) = 0 // nye navn?
+    double u_1 = 0;  // u(1)=0
 
     int width = 12;
     int prec = 4;
@@ -56,8 +56,8 @@ int main(int argc, const char * argv[]) {
 
     // Defining the g vector:
     arma::vec g = arma::vec(n);
-    g(0) = h*h*100*exp(-10*x(0)) + u_min; // h^2*f1 + u(0)
-    g(n-1) = h*h*100*exp(-10*x(n-1)) + u_max; // h^2*f1 + u(1)
+    g(0) = h*h*100*exp(-10*x(0)) + u_0; // h^2*f1 + u(0)
+    g(n-1) = h*h*100*exp(-10*x(n-1)) + u_1; // h^2*f1 + u(1)
 
     for (int i = 1; i <= n-2; i++){
       g(i) = h*h*100*exp(-10*x(i))
