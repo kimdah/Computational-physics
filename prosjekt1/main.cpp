@@ -13,11 +13,11 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
 int main(int argc, const char * argv[]) {
 
     //Dette er test kommentar så Seb kan sjekke om det funker
-    
+
     int i;
     int n = 15; // legg inn atoi
-    arma::vec u = arma::vec(n);
-    arma::vec x = arma::vec(n);
+    arma::vec u = arma::vec(n+1);
+    arma::vec x = arma::vec(n+1);
     double x_min = 0.0;
     double x_max = 1.0;
     double h = (x_max - x_min) / n;
@@ -34,7 +34,7 @@ int main(int argc, const char * argv[]) {
 
     //setting up the x-array and the solutions to the function u, and printing it to file
 
-    for (i=0 ; i <= n-1 ; i++){
+    for (i=0 ; i <= n ; i++){
 
         x(i) = h*i;
         u(i) = 1 - (1 - exp(-10)) * x(i) - exp(-10 * x(i));
@@ -48,9 +48,18 @@ int main(int argc, const char * argv[]) {
 
     // Problem 7
     // special case:
+    /*
+    x = arma::vec(n);
+
+    for (i=0 ; i <= n-2 ; i++){
+      x(i) = h*(i+1);
+    }
+    */
+    n = n-1; // det gikk men hvorfor
+
     arma::vec a = arma::vec(n).fill(-1.);
     arma::vec b = arma::vec(n).fill(2.);
-    arma::vec c = arma::vec(n).fill(-1);
+    arma::vec c = arma::vec(n).fill(-1.);
 
     // Making sure a and c only have n-1 values, but corresponding indices
     a(0) = 0.;
@@ -59,14 +68,15 @@ int main(int argc, const char * argv[]) {
 
     // Defining the g vector:
     arma::vec g = arma::vec(n);
-    g(0) = h*h*100*exp(-10*x(0)) + u_0; // h^2*f1 + u(0)
-    g(n-1) = h*h*100*exp(-10*x(n-1)) + u_1; // h^2*f1 + u(1)
+    g(0) = h*h*100*exp(-10*x(1)) + u_0; // h^2*f1 + u(0)
+    g(n-1) = h*h*100*exp(-10*x(n)) + u_1; // h^2*f1 + u(1)
 
     for (int i = 1; i <= n-2; i++){
-      g(i) = h*h*100*exp(-10*x(i));
+      g(i) = h*h*100*exp(-10*x(i+1));
     }
 
     arma::vec v = general_algorithm(a,b,c,g,n);
+
 
     //opening file
     ofstream ofile2;
@@ -74,7 +84,7 @@ int main(int argc, const char * argv[]) {
 
     //setting up the x-array and the solutions to the function u, and printing it to file
     for (i=0 ; i <= n-1 ; i++){
-        ofile << setw(width) << setprecision(prec) << scientific << x(i)
+        ofile2 << setw(width) << setprecision(prec) << scientific << x(i+1)
               << setw(width) << setprecision(prec) << scientific << v(i) << endl;
     }
     //close file
@@ -96,9 +106,9 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
     double tmp; // variable to reduce FLOPs
 
     for (int i = 1; i <= n - 1; i++){ // n elements (n-1)?
-      tmp = a(i) / b(i-1) * c(i-1);
-      btilde(i) = b(i) - tmp;
-      gtilde(i) = g(i) - tmp;
+      //tmp = a(i) / btilde(i-1)
+      btilde(i) = b(i) - (a(i) / btilde(i-1)) * c(i-1) ;
+      gtilde(i) = g(i) - (a(i) / btilde(i-1)) * gtilde(i-1);
     }
 
     v(n-1) = gtilde(n-1) / btilde(n-1); // Last element can now be found directly
