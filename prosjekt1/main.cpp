@@ -11,6 +11,8 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
 
 int main(int argc, const char * argv[]) {
 
+    //Dette er test kommentar så Seb kan sjekke om det funker
+    
     int i;
     int npoints = 10;
     arma::vec u = arma::vec(npoints);
@@ -30,7 +32,7 @@ int main(int argc, const char * argv[]) {
     ofile.open ("data.txt");
 
     //setting up the x-array and the solutions to the function u, and printing it to file
-    for (i=0 ; i <= npoints ; i++){
+    for (i=0 ; i <= npoints-1 ; i++){
 
         x(i) = h*i;
         u(i) = 1 - (1 - exp(-10)) * x(i) - exp(-10 * x(i));
