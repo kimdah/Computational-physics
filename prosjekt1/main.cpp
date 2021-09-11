@@ -12,8 +12,6 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
 
 int main(int argc, const char * argv[]) {
 
-    //Dette er test kommentar så Seb kan sjekke om det funker
-
     int i;
     int n = 15; // legg inn atoi
     arma::vec u = arma::vec(n+1);
