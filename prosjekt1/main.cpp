@@ -34,7 +34,7 @@ int main(int argc, const char * argv[]) {
     double x_max = 1.0;
     double h = (x_max - x_min) / n;
     // Boundary conditions:
-    double u_0 = 0; // u(0) = 0 // nye navn?
+    double u_0 = 0; // u(0) = 0 
     double u_1 = 0;  // u(1)=0
 
     int width = 12;
