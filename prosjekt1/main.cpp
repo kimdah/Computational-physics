@@ -10,10 +10,22 @@ using namespace std;
 double f(double x); ///    BRUKE Denne?
 arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, int n);
 
+
 int main(int argc, const char * argv[]) {
 
-    int i;
+    if (argc != 2)
+    {
+      // Get the name of the executable file
+      std::string executable_name = argv[0];
+
+      std::cerr << "Error: Wrong number of input arguments." << std::endl;
+      std::cerr << "Usage: " << executable_name << " <integer number of steps>" << std::endl;
+      return 1;
+    }
     int n = 15; // legg inn atoi !!!!!!
+    // int n = atoi(argv[1]);
+    int i;
+
     arma::vec u = arma::vec(n+1);
     arma::vec x = arma::vec(n+1);
     double x_min = 0.0;
