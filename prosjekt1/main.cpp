@@ -9,6 +9,7 @@ using namespace std;
 
 double f(double x); ///    BRUKE Denne?
 arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, int n);
+arma::vec special_algorithm(arma::vec g, int n);
 
 
 int main(int argc, const char * argv[]) {
@@ -22,8 +23,8 @@ int main(int argc, const char * argv[]) {
       std::cerr << "Usage: " << executable_name << " <integer number of steps>" << std::endl;
       return 1;
     }
-    int n = 15; // legg inn atoi !!!!!!
-    // int n = atoi(argv[1]);
+
+    int n = atoi(argv[1]);
     int i;
 
     arma::vec u = arma::vec(n+1);
@@ -40,10 +41,12 @@ int main(int argc, const char * argv[]) {
 
     //opening file
     ofstream ofile;
-    ofile.open ("data.txt");
+    std::ostringstream filename;
+    filename << "exact_data" << n << ".txt";
+    ofile.open(filename.str());
+    //ofile.open ("exact_data.txt"); // NEED NEW ONE FOR EACH n VALUE
 
     //setting up the x-array and the solutions to the function u, and printing it to file
-
     for (i=0 ; i <= n ; i++){
 
         x(i) = h*i;
@@ -82,7 +85,10 @@ int main(int argc, const char * argv[]) {
 
     //opening file
     ofstream ofile2;
-    ofile2.open ("approx_general.txt");
+    std::ostringstream filename2;
+    filename2 << "approx_general" << n+1 << ".txt"; // CHANGE IF n CHANGES! (n+1) fordi vi redef n= n-1 istad (liker ikke det!)
+    ofile2.open(filename2.str());
+    //ofile2.open ("approx_general.txt");
 
     //setting up the x-array and the solutions to the function u, and printing it to file
     for (i=0 ; i <= n-1 ; i++){
@@ -91,6 +97,29 @@ int main(int argc, const char * argv[]) {
     }
     //close file
     ofile2.close();
+
+
+
+
+    // Problem 9:
+    // A is tridiagonal matrix. Solve Av^ = g where v^ denotes v using special algorithm.
+    arma::vec vhat = special_algorithm(g,n);
+
+    ofstream ofile3;
+    std::ostringstream filename3;
+    filename3 << "approx_special" << n+1 << ".txt"; // CHANGE IF n CHANGES! (n+1) fordi vi redef n= n-1 istad (liker ikke det!)
+    ofile3.open(filename3.str());
+    //ofile2.open ("approx_general.txt");
+
+    //setting up the x-array and the solutions to the function u, and printing it to file
+    for (i=0 ; i <= n-1 ; i++){
+        ofile3 << setw(width) << setprecision(prec) << scientific << x(i+1)
+              << setw(width) << setprecision(prec) << scientific << v(i) << endl;
+    }
+    //close file
+    ofile3.close();
+
+
 
     return 0;
 }
@@ -116,6 +145,32 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
 
     for (int j = n-2; j >= 0; j--){ // n-1 elements
       v(j) = (gtilde(j) - (c(j) * v(j+1))) / btilde(j);
+    }
+    return v;
+
+}
+
+arma::vec special_algorithm(arma::vec g, int n){
+
+    // Helpful new variables
+    arma::vec btilde = arma::vec(n);
+    arma::vec gtilde = arma::vec(n);
+    btilde(0) = -2;
+    gtilde(0) = g(0);
+
+    arma::vec v = arma::vec(n); // solution vector
+    double tmp; // variable to reduce FLOPs
+
+    for (int i = 1; i <= n - 1; i++){
+      tmp = 1 / btilde(i-1);
+      btilde(i) = 2 - tmp;
+      gtilde(i) = g(i) + tmp * gtilde(i-1);
+    }
+
+    v(n-1) = gtilde(n-1) / btilde(n-1); // Last element can now be found directly
+
+    for (int j = n-2; j >= 0; j--){ // n-1 elements
+      v(j) = (gtilde(j) +v(j+1)) / btilde(j);
     }
     return v;
 
