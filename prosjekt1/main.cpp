@@ -25,6 +25,7 @@ int main(int argc, const char * argv[]) {
     }
 
     int n = atoi(argv[1]);
+
     int i;
 
     arma::vec u = arma::vec(n+1);
