@@ -7,13 +7,28 @@
 #include <armadillo>
 using namespace std;
 
-double f(double x);
+double f(double x); ///    BRUKE Denne?
 arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, int n);
+
 
 int main(int argc, const char * argv[]) {
 
+<<<<<<< HEAD
+=======
+    if (argc != 2)
+    {
+      // Get the name of the executable file
+      std::string executable_name = argv[0];
+
+      std::cerr << "Error: Wrong number of input arguments." << std::endl;
+      std::cerr << "Usage: " << executable_name << " <integer number of steps>" << std::endl;
+      return 1;
+    }
+    int n = 15; // legg inn atoi !!!!!!
+    // int n = atoi(argv[1]);
+>>>>>>> f881e16d76e4f86a12e249c3e364f68a06c6b450
     int i;
-    int n = 15; // legg inn atoi
+
     arma::vec u = arma::vec(n+1);
     arma::vec x = arma::vec(n+1);
     double x_min = 0.0;
@@ -45,15 +60,7 @@ int main(int argc, const char * argv[]) {
 
 
     // Problem 7
-    // special case:
-    /*
-    x = arma::vec(n);
-
-    for (i=0 ; i <= n-2 ; i++){
-      x(i) = h*(i+1);
-    }
-    */
-    n = n-1; // det gikk men hvorfor
+    n = n-1; // now letting
 
     arma::vec a = arma::vec(n).fill(-1.);
     arma::vec b = arma::vec(n).fill(2.);
@@ -67,7 +74,7 @@ int main(int argc, const char * argv[]) {
     // Defining the g vector:
     arma::vec g = arma::vec(n);
     g(0) = h*h*100*exp(-10*x(1)) + u_0; // h^2*f1 + u(0)
-    g(n-1) = h*h*100*exp(-10*x(n)) + u_1; // h^2*f1 + u(1)
+    g(n-1) = h*h*100*exp(-10*x(n)) + u_1; // h^2*fn + u(1)
 
     for (int i = 1; i <= n-2; i++){
       g(i) = h*h*100*exp(-10*x(i+1));
@@ -92,7 +99,6 @@ int main(int argc, const char * argv[]) {
 }
 
 arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, int n){
-    // check g!!!
 
     // Helpful new variables
     arma::vec btilde = arma::vec(n);
@@ -103,10 +109,10 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
     arma::vec v = arma::vec(n); // solution vector
     double tmp; // variable to reduce FLOPs
 
-    for (int i = 1; i <= n - 1; i++){ // n elements (n-1)?
-      //tmp = a(i) / btilde(i-1)
-      btilde(i) = b(i) - (a(i) / btilde(i-1)) * c(i-1) ;
-      gtilde(i) = g(i) - (a(i) / btilde(i-1)) * gtilde(i-1);
+    for (int i = 1; i <= n - 1; i++){
+      tmp = a(i) / btilde(i-1);
+      btilde(i) = b(i) - tmp * c(i-1) ;
+      gtilde(i) = g(i) - tmp * gtilde(i-1);
     }
 
     v(n-1) = gtilde(n-1) / btilde(n-1); // Last element can now be found directly
