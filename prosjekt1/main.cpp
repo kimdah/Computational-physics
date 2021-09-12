@@ -8,7 +8,7 @@
 #include <time.h>
 using namespace std;
 
-double f(double x); ///    BRUKE Denne?
+double f(double x);
 arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, int n);
 arma::vec special_algorithm(arma::vec g, int n);
 
@@ -27,7 +27,6 @@ int main(int argc, const char * argv[]) {
 
     int N = atoi(argv[1]); // number of steps
 
-    //int i;
     int m = N+1; // size of exact solution
     arma::vec u = arma::vec(m);
     arma::vec x = arma::vec(m);
@@ -78,12 +77,9 @@ int main(int argc, const char * argv[]) {
     */
     g(0) = h*h*f(x(1)) + u_0;
     g(n-1) = h*h*f(x(n)) + u_1;
-    //g(0) = h*h*100*exp(-10*x(1)) + u_0; // h^2*f1 + u(0)
-    //g(n-1) = h*h*100*exp(-10*x(n)) + u_1; // h^2*fn + u(1)
 
     for (int i = 1; i <= n-2; i++){
       g(i) = h*h*f(x(i+1));
-      //g(i) = h*h*100*exp(-10*x(i+1));
     }
 
     // General algorithm:
@@ -93,7 +89,7 @@ int main(int argc, const char * argv[]) {
     //opening file
     ofstream ofile2;
     std::ostringstream filename2;
-    filename2 << "approx_general" << N << ".txt"; // CHANGE IF n CHANGES! (n+1) fordi vi redef n= n-1 istad (liker ikke det!)
+    filename2 << "approx_general" << N << ".txt"; 
     ofile2.open(filename2.str());
 
     //setting up the x-array and the solutions to the function u, and printing it to file
@@ -112,7 +108,7 @@ int main(int argc, const char * argv[]) {
 
     ofstream ofile3;
     std::ostringstream filename3;
-    filename3 << "approx_special" << N << ".txt"; 
+    filename3 << "approx_special" << N << ".txt";
     ofile3.open(filename3.str());
 
     //setting up the x-array and the solutions to the function u, and printing it to file

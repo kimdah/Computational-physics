@@ -2,7 +2,7 @@
 #from script import *
 import matplotlib.pyplot as plt
 import numpy as np
-data = np.loadtxt('data.txt')
+data = np.loadtxt('exact_data.txt')
 plt.xlabel('x')
 plt.ylabel('u(x)')
 plt.plot(data[:,0], data [:,1], 'ro')
