@@ -150,7 +150,7 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
     }
     clock_t t2 = clock();
     double duration_seconds = ((double) (t2-t1))/CLOCKS_PER_SEC;
-    cout >> duration_seconds;
+    cout << duration_seconds;
     return v;
 
 }
@@ -179,7 +179,7 @@ arma::vec special_algorithm(arma::vec g, int n){
     }
     clock_t t4 = clock();
     double duration_seconds2 = ((double) (t4-t3))/CLOCKS_PER_SEC;
-    COUT >> duration_seconds2;
+    cout << duration_seconds2;
     return v;
 
 }
