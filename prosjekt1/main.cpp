@@ -84,8 +84,6 @@ int main(int argc, const char * argv[]) {
 
     // General algorithm:
     arma::vec v = general_algorithm(a,b,c,g,n);
-    ofile.open(filename.str());
-    ofile << setw(width) << setprecision(prec) << scientific << 2.3455 << endl;
 
     //opening file
     ofstream ofile2;
