@@ -5,6 +5,7 @@
 #include <string>
 #include <iomanip>
 #include <armadillo>
+#include <time.h>
 using namespace std;
 
 double f(double x); ///    BRUKE Denne?
@@ -126,7 +127,7 @@ int main(int argc, const char * argv[]) {
 }
 
 arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, int n){
-
+    clock_t t1 = clock();
     // Helpful new variables
     arma::vec btilde = arma::vec(n);
     arma::vec gtilde = arma::vec(n);
@@ -147,12 +148,15 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
     for (int j = n-2; j >= 0; j--){ // n-1 elements
       v(j) = (gtilde(j) - (c(j) * v(j+1))) / btilde(j);
     }
+    clock_t t2 = clock();
+    double duration_seconds = ((double) (t2-t1))/CLOCKS_PER_SEC;
+    cout >> duration_seconds;
     return v;
 
 }
 
 arma::vec special_algorithm(arma::vec g, int n){
-
+    clock_t t3 = clock();
     // Helpful new variables
     arma::vec btilde = arma::vec(n);
     arma::vec gtilde = arma::vec(n);
@@ -173,6 +177,9 @@ arma::vec special_algorithm(arma::vec g, int n){
     for (int j = n-2; j >= 0; j--){ // n-1 elements
       v(j) = (gtilde(j) +v(j+1)) / btilde(j);
     }
+    clock_t t4 = clock();
+    double duration_seconds2 = ((double) (t4-t3))/CLOCKS_PER_SEC;
+    COUT >> duration_seconds2;
     return v;
 
 }
