@@ -18,7 +18,11 @@ Run command: ./main.exe N
 
 plot_exact.py
 -------
-Python script that reads the data in ....
+Python script that reads the data in exact_data.txt and plots the exact solution of the Poisson equation, u(x). 
+
+Run command: python plot_exact.py
+
+error_plot.py
 
 output.txt and generates plots of the absolute error, 
 relative error and log10(relative error). Plots are saved as pdf files.
