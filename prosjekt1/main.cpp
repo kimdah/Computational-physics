@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]) {
     double x_max = 1.0;
     double h = (x_max - x_min) / n;
     // Boundary conditions:
-    double u_0 = 0; // u(0) = 0 
+    double u_0 = 0; // u(0) = 0
     double u_1 = 0;  // u(1)=0
 
     int width = 12;
@@ -150,7 +150,7 @@ arma::vec general_algorithm(arma::vec a, arma::vec b, arma::vec c, arma::vec g, 
     }
     clock_t t2 = clock();
     double duration_seconds = ((double) (t2-t1))/CLOCKS_PER_SEC;
-    cout << duration_seconds;
+    cout << "Timing for general algorithm: " << duration_seconds<< '\n';
     return v;
 
 }
@@ -179,7 +179,7 @@ arma::vec special_algorithm(arma::vec g, int n){
     }
     clock_t t4 = clock();
     double duration_seconds2 = ((double) (t4-t3))/CLOCKS_PER_SEC;
-    cout << duration_seconds2;
+    cout <<  "Timing for special algorithm: " << duration_seconds2 << '\n';
     return v;
 
 }

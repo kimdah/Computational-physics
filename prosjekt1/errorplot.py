@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-k = 3 # max exponent of 10 number of points
+k = 2 # max exponent of 10 number of points
 colors = ['r', 'g', 'y'] # add more
 
 for i in range(1, k+1):
@@ -17,11 +17,13 @@ for i in range(1, k+1):
     vstar = np.append(vstar, v)
     vstar = np.append(vstar, 0) # appending boundary point u_1 = 0
 
+    print(len(x), len(vstar))
 
-    
-    for (i : abs_error):
-        abs_error = math.log10(abs(u-vstar))
-        rel_error = math.log10(abs(u-vstar)/u)
+    abs_error = np.zeros(n);
+    rel_error = np.zeros(n);
+    for i in range(0, n):
+        abs_error[i] = math.log10(abs(u[i]-vstar[i]))
+        rel_error[i] = math.log10(abs((u[i]-vstar[i])/u[i]))
 
     plt.plot(x, abs_error, 'o-', color=colors[i-1], label='Approximation v*(x) with n =%d' %n)
 
@@ -44,7 +46,7 @@ plt.show()
 
 
 
-
+"""
 plt.xlabel('x')
 plt.ylabel('log10(|u(x)-v(x)|)')
 
@@ -58,3 +60,5 @@ plt.savefig('abs_error.pdf')
 
 for ax in axs.flat:
     ax.set(xlabel='x-label', ylabel='y-label')
+
+"""
