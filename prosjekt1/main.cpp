@@ -37,8 +37,8 @@ int main(int argc, const char * argv[]) {
     double u_0 = 0.;  // u(0) = 0
     double u_1 = 0.;  // u(1) = 0
 
-    int width = 15;
-    int prec = 6; // 4
+    int width = 30; //12
+    int prec = 10; // 4
 
     //opening file
     ofstream ofile;
