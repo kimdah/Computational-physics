@@ -106,13 +106,9 @@ int main(int argc, const char * argv[]) {
     for (int i=0 ; i <= n-1 ; i++){
       double abs_err =std::abs(u(i+1)-v(i));
       double rel_err = std::abs(abs_err / u(i+1));
-      ofile3 << setw(width) << setprecision(prec) << scientific << x(i+1)
+      ofile3 << setw(width) << setprecision(prec) << scientific << x(i+1)//log10(x(i+1))
             << setw(width) << setprecision(prec) << scientific << log10(abs_err)
-            << setw(width) << setprecision(prec) << scientific << log10(rel_err) //<< endl;
-            << setw(width) << setprecision(prec) << scientific << abs_err
-            << setw(width) << setprecision(prec) << scientific << rel_err
-            << setw(width) << setprecision(prec) << scientific << u(i+1)
-            << setw(width) << setprecision(prec) << scientific << v(i) << endl;
+            << setw(width) << setprecision(prec) << scientific << log10(rel_err) << endl;
     }
     ofile3.close();
 
