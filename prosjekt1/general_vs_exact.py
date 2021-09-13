@@ -4,7 +4,7 @@ import math
 
 # Plotting for multiple n values
 k = 3 # max exponent of 10 number of points
-colors = ['r', 'g', 'y'] # add more
+colors = ['r', 'g', 'y', 'b', 'c', 'm', 'r']
 
 for i in range(1, k+1):
     n = 10**i
@@ -19,11 +19,11 @@ for i in range(1, k+1):
     vstar = np.append(vstar, 0) # appending boundary point u_1 = 0
     plt.plot(x, vstar, ':', color=colors[i-1], label='Approximation v*(x) with n =%d' %n)
 
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 plt.xlabel('x')
-plt.ylabel('u(x)') # v? !!!!
 plt.title('General algorithm approximation vs exact of Poisson eq.')
 plt.plot(x, u, color='k', label='Exact u(x)') # Plotting u(x) with highest n
 plt.legend()
-plt.savefig('approx_general.pdf')
+plt.savefig('general_vs_exact.pdf')
 plt.show()
