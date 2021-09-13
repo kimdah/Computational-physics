@@ -111,7 +111,8 @@ int main(int argc, const char * argv[]) {
             << setw(width) << setprecision(prec) << scientific << log10(rel_err) //<< endl;
             << setw(width) << setprecision(prec) << scientific << abs_err
             << setw(width) << setprecision(prec) << scientific << rel_err
-            << setw(width) << setprecision(prec) << scientific << u(i+1) << endl;
+            << setw(width) << setprecision(prec) << scientific << u(i+1)
+            << setw(width) << setprecision(prec) << scientific << v(i) << endl;
     }
     ofile3.close();
 
