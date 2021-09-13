@@ -37,8 +37,8 @@ int main(int argc, const char * argv[]) {
     double u_0 = 0.;  // u(0) = 0
     double u_1 = 0.;  // u(1) = 0
 
-    int width = 12;
-    int prec = 4;
+    int width = 15;
+    int prec = 6; // 4
 
     //opening file
     ofstream ofile;
@@ -98,24 +98,39 @@ int main(int argc, const char * argv[]) {
     }
     ofile2.close();    //close file
 
-
+    // Problem 8:
+    ofstream ofile3;
+    std::ostringstream filename3;
+    filename3 << "errors" << N << ".txt";
+    ofile3.open(filename3.str());
+    for (int i=0 ; i <= n-1 ; i++){
+      double abs_err =std::abs(u(i+1)-v(i));
+      double rel_err = std::abs(abs_err / u(i+1));
+      ofile3 << setw(width) << setprecision(prec) << scientific << x(i+1)
+            << setw(width) << setprecision(prec) << scientific << log10(abs_err)
+            << setw(width) << setprecision(prec) << scientific << log10(rel_err) //<< endl;
+            << setw(width) << setprecision(prec) << scientific << abs_err
+            << setw(width) << setprecision(prec) << scientific << rel_err
+            << setw(width) << setprecision(prec) << scientific << u(i+1) << endl;
+    }
+    ofile3.close();
 
 
     // Problem 9:
     // A is tridiagonal matrix. Solve Av^ = g where v^ denotes v using special algorithm.
     arma::vec vhat = special_algorithm(g,n);
 
-    ofstream ofile3;
-    std::ostringstream filename3;
-    filename3 << "approx_special" << N << ".txt";
-    ofile3.open(filename3.str());
+    ofstream ofile4;
+    std::ostringstream filename4;
+    filename4 << "approx_special" << N << ".txt";
+    ofile3.open(filename4.str());
 
     //setting up the x-array and the solutions to the function u, and printing it to file
     for (int i=0 ; i <= n-1 ; i++){
-        ofile3 << setw(width) << setprecision(prec) << scientific << x(i+1)
+        ofile4 << setw(width) << setprecision(prec) << scientific << x(i+1)
               << setw(width) << setprecision(prec) << scientific << vhat(i) << endl;
     }
-    ofile3.close(); //close file
+    ofile4.close(); //close file
 
     return 0;
 }

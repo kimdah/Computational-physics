@@ -2,38 +2,32 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-k = 2 # max exponent of 10 number of points
+k = 3 # max exponent of 10 number of points
 colors = ['r', 'g', 'y'] # add more
 
+fig, (ax1, ax2) = plt.subplots(2, sharex=True)
+fig.suptitle('Errors')
+
 for i in range(1, k+1):
-    n = 10**i
-    exact_data = np.loadtxt('exact_data%d.txt' %n) # only once?
-    x = np.array(exact_data[:,0])
-    u = np.array(exact_data[:,1])
-    genapprox_data = np.loadtxt('approx_general%d.txt' %n)
-    v = np.array(genapprox_data[:,1])
+    N = 10**i
+    errors = np.loadtxt('errors%d.txt' %N) # only once?
+    x = np.array(errors[:,0])
+    abs_error = np.array(errors[:,1])
+    rel_error = np.array(errors[:,2])
 
-    vstar = np.array([0]) # boundary point u_0 = 0
-    vstar = np.append(vstar, v)
-    vstar = np.append(vstar, 0) # appending boundary point u_1 = 0
-
-    print(len(x), len(vstar))
-
-    abs_error = np.zeros(n);
-    rel_error = np.zeros(n);
-    for i in range(0, n):
-        abs_error[i] = math.log10(abs(u[i]-vstar[i]))
-        rel_error[i] = math.log10(abs((u[i]-vstar[i])/u[i]))
-
-    plt.plot(x, abs_error, 'o-', color=colors[i-1], label='Approximation v*(x) with n =%d' %n)
+    #plt.plot(x, abs_error, 'o-', color=colors[i-1], label='Approximation v*(x) with n =%d' %n)
+    ax1.plot(x, abs_error, '-', color=colors[i-1], label='Abs_error with %d' %N)
+    ax2.plot(x, rel_error, '-', color=colors[i-1], label='Rel_error with %d' %N)
 
 
-plt.xlabel('x')
-plt.ylabel('u(x)') # v? !!!!
-plt.title('General algorithm approximation vs exact of Poisson eq.')
-plt.plot(x, u, color='k', label='Exact u(x)') # Plotting u(x) with highest n
+
+
+#plt.xlabel('x')
+#plt.ylabel('u(x)') # v? !!!!
+#plt.title('General algorithm approximation vs exact of Poisson eq.')
+#plt.plot(x, u, color='k', label='Exact u(x)') # Plotting u(x) with highest n
 plt.legend()
-plt.savefig('approx_general.pdf')
+plt.savefig('error_plot.pdf')
 plt.show()
 
 
