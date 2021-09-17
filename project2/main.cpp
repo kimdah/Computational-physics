@@ -30,8 +30,11 @@ int main(int argc, char const *argv[]) {
   //cout << A;
   arma::vec eigval;
   arma::mat eigvec;
-
   eig_sym(eigval, eigvec, A);
+
+  cout << "Eigenvalues:\n" << eigval << endl; // printing out, delete later
+  cout << "Eigenvectors:\n" << eigvec << endl;
+
 
 
 
@@ -57,6 +60,13 @@ cout <<"max value: "<< find_max_value(B_4,k,l) <<" row: "<<l<<" column: "<< k <<
 //---------------Task 4B(end)-------------
 
   return 0;
+}
+
+double analytical_eigenvectors(){
+
+}
+double analytical_eigenvalues(){
+  
 }
 
 
