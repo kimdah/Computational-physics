@@ -56,7 +56,7 @@ arma::mat analytical_eigenvectors(arma::mat A){ // vurder aa samle disse i en
 
   arma::mat v(N,N);
 
-  for (int i = 0; i < N; i++){
+  for (int i = 0; i < N; i++){ // fungerer ikke helt enda
     for (int j = 0; j < N; j++){
       v(i,j) = sin(((i+1)*pi)/(N+1)); // i eller j inni?
     }
