@@ -8,7 +8,6 @@ using namespace std;
 double find_max_value();
 
 
-
 int main(int argc, char const *argv[]) {
 
   // Problem 3
@@ -28,9 +27,11 @@ int main(int argc, char const *argv[]) {
       }
     }
   }
-  cout << A;
+  //cout << A;
+  arma::vec eigval;
+  arma::mat eigvec;
 
-
+  eig_sym(eigval, eigvec, A);
 
 
 
@@ -40,19 +41,19 @@ int main(int argc, char const *argv[]) {
 
 double find_max_value(arma::mat A, int& k, int& l){
 
-double max_value = 0;
-N = arma::size(A)(0); //i is dimension N of matrix A
+  double max_value = 0;
+  int N = arma::size(A)(0); //i is dimension N of matrix A
 
 
-for (int i=0; i<=N+1; j++){
-        for (int j=0; j<=N+1; j++){
+  for (int i=0; i<=N+1; i++){
+          for (int j=0; j<=N+1; j++){
 
-          if(abs(A(i,j))>abs(max_value)){
-            max_value= A(i,j)
-            k = i, l=j;
-          }
-    }
-    }
+            if(abs(A(i,j))>abs(max_value)){
+              max_value= A(i,j);
+              k = i, l=j;
+            }
+      }
+      }
 
-return max_value
+  return max_value;
 }
