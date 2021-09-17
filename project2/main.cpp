@@ -2,11 +2,14 @@
 #include <iostream>
 #include <armadillo>
 
+#define pi 3.14159265359
+
 using namespace std;
 
 
 double find_max_value();
-
+arma::vec analytical_eigenvalues(arma::mat A);
+arma::mat analytical_eigenvectors(arma::mat A);
 
 int main(int argc, char const *argv[]) {
 
@@ -35,17 +38,44 @@ int main(int argc, char const *argv[]) {
   cout << "Eigenvalues:\n" << eigval << endl; // printing out, delete later
   cout << "Eigenvectors:\n" << eigvec << endl;
 
+  arma::vec eigval_analytic = analytical_eigenvalues(A);
+  arma::mat eigvec_analytic = analytical_eigenvectors(A);
 
+  cout << "Analytical eigenvalues:\n" << eigval_analytic << endl;
+
+  cout << "Analytical eigenvectors:\n" << eigvec_analytic << endl;
 
 
   return 0;
 }
 
-double analytical_eigenvectors(){
+arma::mat analytical_eigenvectors(arma::mat A){ // vurder aa samle disse i en
+  int N = arma::size(A)(0);
+  double d = A(0,0);
+  double a = A(0,1);
+
+  arma::mat v(N,N);
+
+  for (int i = 0; i < N; i++){
+    for (int j = 0; j < N; j++){
+      v(i,j) = sin(((i+1)*pi)/(N+1)); // i eller j inni?
+    }
+  }
+  return v;
 
 }
-double analytical_eigenvalues(){
-  
+arma::vec analytical_eigenvalues(arma::mat A){
+  // A is tridiagonal (a,d,a)
+  int N = arma::size(A)(0);
+  double d = A(0,0);
+  double a = A(0,1);
+
+  arma::vec lambda(N);
+
+  for (int i = 1; i <= N; i++){
+    lambda(i-1) = d + 2*a*cos((i*pi)/(N+1));
+  }
+  return lambda;
 }
 
 
