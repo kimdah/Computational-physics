@@ -7,9 +7,12 @@
 using namespace std;
 
 
+double find_max_value(arma::mat A, int& k, int& l);
+
 double find_max_value();
 arma::vec analytical_eigenvalues(arma::mat A);
 arma::mat analytical_eigenvectors(arma::mat A);
+
 
 int main(int argc, char const *argv[]) {
 
@@ -45,6 +48,27 @@ int main(int argc, char const *argv[]) {
 
   cout << "Analytical eigenvectors:\n" << eigvec_analytic << endl;
 
+
+
+//---------------Task 4B-------------
+
+arma::mat B_4 = arma::mat(4, 4).fill(0.);
+for (int i = 0; i < 3; i++){  // row
+    for (int j = 0; j < 3; j++){ // // column
+      if (i == j){
+        B_4(i,j) = 1;
+      }
+    }
+  }
+  B_4(0,3) = 0.5; B_4(1,2) = -0.7; B_4(2,1) = -0.7; B_4(3,0) = 0.5;
+
+
+int k; int l;
+cout<< B_4 <<endl;
+//returns max value and assigns k as the column index and l as the row index
+cout <<"max value: "<< find_max_value(B_4,k,l) <<" row: "<<l<<" column: "<< k << endl;
+
+//---------------Task 4B(end)-------------
 
   return 0;
 }
@@ -85,12 +109,13 @@ double find_max_value(arma::mat A, int& k, int& l){
   int N = arma::size(A)(0); //i is dimension N of matrix A
 
 
-  for (int i=0; i<=N+1; i++){
-          for (int j=0; j<=N+1; j++){
+  for (int j=0; j<=N-1; j++){
 
+          for (int i=1+j; i<=N-1; i++){
             if(abs(A(i,j))>abs(max_value)){
               max_value= A(i,j);
-              k = i, l=j;
+              k = j, l=i; //kolonne k rad l
+
             }
       }
       }
