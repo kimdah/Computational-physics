@@ -14,6 +14,10 @@ double find_max_value();
 arma::vec analytical_eigenvalues(arma::mat A);
 arma::mat analytical_eigenvectors(arma::mat A);
 
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets
+void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int maxiter, int& iterations, bool& converged);
+
 
 int main(int argc, char const *argv[]) {
 
@@ -64,9 +68,9 @@ arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 
 
   arma::mat v(N,N);
 
-  for (int i = 1; i <= N; i++){ // fungerer ikke helt enda
+  for (int i = 1; i <= N; i++){
     for (int j = 1; j <= N; j++){
-      v(j-1,i-1) = sin((i*j*pi)/(N+1));
+      v(j-1,i-1) = sin((i*j*pi)/(N+1)); // Aji fordi det i definisjonen var i som ga kolonnevektorene.
     }
   }
   return arma::normalise(v);
@@ -123,7 +127,7 @@ void task_4b(){
 
 
   //prints the matrix to terminal and calls the function from task 3
-  //to find en print the max value of non-diagonal matrix element in the 
+  //to find en print the max value of non-diagonal matrix element in the
   //sub triangular matrix.
 
   int k; int l;
