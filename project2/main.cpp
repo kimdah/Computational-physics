@@ -73,22 +73,23 @@ cout <<"max value: "<< find_max_value(B_4,k,l) <<" row: "<<l<<" column: "<< k <<
   return 0;
 }
 
-arma::mat analytical_eigenvectors(arma::mat A){ // vurder aa samle disse i en
+arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 funk
+  // Denne gir riktige verdier, men fortegnene er feil!!!
   int N = arma::size(A)(0);
   double d = A(0,0);
   double a = A(0,1);
 
   arma::mat v(N,N);
 
-  for (int i = 0; i < N; i++){ // fungerer ikke helt enda
-    for (int j = 0; j < N; j++){
-      v(i,j) = sin(((i+1)*pi)/(N+1)); // i eller j inni?
+  for (int i = 1; i <= N; i++){ // fungerer ikke helt enda
+    for (int j = 1; j <= N; j++){
+      v(j-1,i-1) = sin((i*j*pi)/(N+1));
     }
   }
-  return v;
+  return arma::normalise(v);
 
 }
-arma::vec analytical_eigenvalues(arma::mat A){
+arma::vec analytical_eigenvalues(arma::mat A){ // 3
   // A is tridiagonal (a,d,a)
   int N = arma::size(A)(0);
   double d = A(0,0);
