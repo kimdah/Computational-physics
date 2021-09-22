@@ -10,22 +10,40 @@ using namespace std;
 double find_max_value(arma::mat A, int& k, int& l);
 void task_4b();
 
+arma::mat create_symmetric_tridiagonal(int N, double a, double d);
+
 double find_max_value();
 arma::vec analytical_eigenvalues(arma::mat A);
 arma::mat analytical_eigenvectors(arma::mat A);
 
-
-
-void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets (why ref A?)
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged);
 
 
 int main(int argc, char const *argv[]) {
 
-  // Problem 3
-  int N = 6;    // size of matrix
-  int n = N+1; // number of steps
+  //problem 3
+  int N = 6;                          //size of matrix NxN
+  int n = N+1;                        //steps in matrix
+  double a= -1./ ((1./n)*(1./n));     //super and sub diagonal elements
+  double d= 2./((1./n)*(1./n));       //diagonal elements
+  arma::mat A = create_symmetric_tridiagonal(N, a, d);
+
+  task_4b(); //Solution to task 4b
+
+
+  int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
+
+  return 0;
+}
+
+arma::mat create_symmetric_tridiagonal(int N, double a, double d)
+{
+
+    // Problem 3
+  int n = N+1;   //number of steps
+
   double h = 1./n; // stepsize
   arma::mat A = arma::mat(N, N).fill(0.);
 
@@ -34,9 +52,9 @@ int main(int argc, char const *argv[]) {
   for (int i = 0; i < N; i++){  // row
     for (int j = 0; j < N; j++){ // // column
       if (i == j){
-        A(i,j) = 2./(h*h);
+        A(i,j) = d;
       } else if ((j == i+1) || (i == j+1)){
-        A(i,j) = -1./ (h*h);
+        A(i,j) = a;
       }
     }
   }
@@ -63,6 +81,7 @@ int main(int argc, char const *argv[]) {
 
 
   return 0;
+  // return A; // hvorfor hadde du denne?
 }
 
 /*
@@ -111,6 +130,7 @@ arma::vec analytical_eigenvalues(arma::mat A){ // 3
 }
 
 
+
 double find_max_value(arma::mat A, int& k, int& l){
 
   double max_value = 0;
@@ -130,6 +150,7 @@ double find_max_value(arma::mat A, int& k, int& l){
 
   return max_value;
 }
+
 
 //---------------Task 4B-------------
 void task_4b(){
@@ -155,5 +176,28 @@ void task_4b(){
   //returns max value and assigns k as the column index and l as the row index
   cout <<"max value: "<< find_max_value(B_4,k,l) <<" row: "<<l<<" column: "<< k << endl;
 }
-
 //---------------Task 4B(end)-------------
+
+
+//-----------Task 6-------------
+
+
+void jacobi_scaling(int& number_of_rotations, int& a, int& d){
+
+arma::mat A;
+for (int N = 3; N < 100; N++){
+    A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
+    //jacobi_rotate(A);
+
+    //should work as lons as Jacobi_rotate takes matrix A as an input
+    //and updates a variable number_of_rotations to the number of rotations
+    //required to get the total rotation S, that satisfy the minimal
+    //off-diag element limit.
+    cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl;
+    }
+}
+
+
+
+
+//-----------Task 6(end)-------------
