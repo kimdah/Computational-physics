@@ -33,16 +33,17 @@ int main(int argc, char const *argv[]) {
 
 
 
-  //Task 5:
+  //Task 5: Trengte N, k, l og A for aa kjøre, så disse må kanskje endres
   int N = 6; // for aa faa den til aa kompilere, vet ikke om riktig
+
   double epsilon = 1.0e-8; //Tolerance
   double max_number_iterations = (double) N * (double) N * (double) N;
   int iterations = 0;
-  double max_value = find_max_value( A, &k, &l);
+  double max_value = find_max_value( A, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
 
   while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
-      max:value = find_max_value( A, &k, &l);
+      max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
       jacobi_rotate( A, R, k, l);
       iterations++;
   }
