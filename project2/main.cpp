@@ -52,7 +52,11 @@ int main(int argc, char const *argv[]) {
 
   task_4b(); //Solution to task 4b
 
-
+  //Task 5
+ /*   while (arma::abs(A) > eps){
+        
+    }
+*/
   return 0;
 }
 
@@ -131,5 +135,21 @@ void task_4b(){
   //returns max value and assigns k as the column index and l as the row index
   cout <<"max value: "<< find_max_value(B_4,k,l) <<" row: "<<l<<" column: "<< k << endl;
 }
-
 //---------------Task 4B(end)-------------
+
+//---------------Task 5A------------------
+/*void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){
+    // Setting up the eigenvector matrix
+    for ( int i = 0; i < n; i++ ) {
+        for ( int j = 0; j < n; j++ ) {
+            if ( i == j ) {
+                R[i][j] = 1.0;
+                
+            } else {
+                R[i][j] = 0.0;
+            }
+            
+        }
+    }
+}
+*/
