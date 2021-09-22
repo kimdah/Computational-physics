@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]) {
   double max_number_iterations = (double) N * (double) N * (double) N;
   int iterations = 0;
   double max_value = find_max_value( A, &k, &l);
-  arma::mat R = arma::mat( N, N, arma::fill::eye);
+  arma::mat R = arma::mat( N, N, arma::fill::eye); //initializing R
     
   while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
       max:value = find_max_value( A, &k, &l);
