@@ -24,22 +24,30 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, 
 
 int main(int argc, char const *argv[]) {
 
-  task3();
+  arma::mat A = task3(); // ????
+
+  int k;
+  int l;
   task_4b(); //Solution to task 4b
 
+
+
+
   //Task 5:
+  int N = 6; // for aa faa den til aa kompilere, vet ikke om riktig
   double epsilon = 1.0e-8; //Tolerance
   double max_number_iterations = (double) N * (double) N * (double) N;
   int iterations = 0;
   double max_value = find_max_value( A, &k, &l);
-  arma::mat R = arma::mat( N, N, arma::fill::eye);
+  arma::mat R = arma::mat(N, N, arma::fill::eye);
 
-  while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
+  while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
       max:value = find_max_value( A, &k, &l);
-      jacobi_rotate( A, R, k, l, N);
+      jacobi_rotate( A, R, k, l);
       iterations++;
   }
   cout << "Number of iterations: " << iterations << "\n";
+
 
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
@@ -136,7 +144,7 @@ arma::mat create_symmetric_tridiagonal(int N, double a, double d)
 
 arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 funk
   // Denne gir riktige verdier, men fortegnene er feil!!!
-  int N = arma::size(A)(0);
+  int N = arma::size(A,0);
   double d = A(0,0);
   double a = A(0,1);
 
@@ -152,7 +160,7 @@ arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 
 }
 arma::vec analytical_eigenvalues(arma::mat A){ // 3
   // A is tridiagonal (a,d,a)
-  int N = arma::size(A)(0);
+  int N = arma::size(A,0);
   double d = A(0,0);
   double a = A(0,1);
 
@@ -169,7 +177,7 @@ arma::vec analytical_eigenvalues(arma::mat A){ // 3
 double find_max_value(arma::mat A, int& k, int& l){
 
   double max_value = 0;
-  int N = arma::size(A)(0); //i is dimension N of matrix A
+  int N = arma::size(A,0); //i is dimension N of matrix A
 
   //for loop runs through the non-diagonal matrix elements under the diagonal.
   for (int j=0; j<=N-1; j++){
@@ -213,12 +221,14 @@ void task_4b(){
 //---------------Task 4B(end)-------------
 
 //---------------Task 5A------------------
-void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
+
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){ // SJEKK INDEXER A(row, column)
     //Computing tan (t), cos (c) and sin (s)
+    int N = arma::size(A,0);
     double s, c;
-    if ( A[k][l] != 0.0){
+    if ( A(k,l) != 0.0){
         double t, tau;
-        tau = (A[l][l]-A[k][k])/(2*A[k][l]);
+        tau = (A(l,l)-A(k,k))/(2*A(k,l));
         if ( tau > 0){
             t = 1.0/(tau + sqrt(1.0 + tau*tau));
         }
@@ -235,26 +245,26 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
 
     //Transform current A matrix
     double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
-    a_kk = A[k][k];
-    a_ll = A[l][l];
-    A[k][k] = c*c*a_kk - 2.0*c*s*A[k][l] + s*s*a_ll;
-    A[l][l] = s*s*a_kk + 2.0*c*s*A[k][l] + c*c*a_ll;
-    A[k][l] = 0.0;
-    A[l][k] = 0.0;
+    a_kk = A(k,k);
+    a_ll = A(l,l);
+    A(k,k) = c*c*a_kk - 2.0*c*s*A(k,l) + s*s*a_ll;
+    A(l,l) = s*s*a_kk + 2.0*c*s*A(k,l) + c*c*a_ll;
+    A(k,l) = 0.0;
+    A(l,k) = 0.0;
     for ( int i = 0; i < N; i++ ) {
         if ( i != k && i != l ) {
-            a_ik = A[i][k];
-            a_il = A[i][l];
-            A[i][k] = c*a_ik - s*a_il;
-            A[k][i] = A[i][k];
-            A[i][l] = c*a_il + s*a_ik;
-            A[l][i] = A[i][l];
+            a_ik = A(i,k);
+            a_il = A(i,l);
+            A(i,k) = c*a_ik - s*a_il;
+            A(k,i) = A(i,k);
+            A(i,l) = c*a_il + s*a_ik;
+            A(l,i) = A(i,l);
         }
         //Compute new eigenvectors
-        r_ik = R[i][k];
-        r_il = R[i][l];
-        R[i][k] = c*r_ik - s*r_il;
-        R[i][l] = c*r_il + s*r_ik;
+        r_ik = R(i,k);
+        r_il = R(i,l);
+        R(i,k) = c*r_ik - s*r_il;
+        R(i,l) = c*r_il + s*r_ik;
     }
     return;
 }
@@ -278,6 +288,7 @@ for (int N = 3; N < 100; N++){
     cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl;
     }
 }
+
 
 
 
