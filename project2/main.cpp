@@ -39,18 +39,6 @@ int main(int argc, char const *argv[]) {
   double max_value = find_max_value( A, &k, &l);
   arma::mat R = arma::mat( N, N, arma::fill::eye);
     
-  /* for ( int i = 0; i < N; i++ ) { //Setting up R
-      for ( int j = 0; j < N; j++ ) {
-          if ( i == j ) {
-              R[i][j] = 1.0;
-                 
-          } else {
-              R[i][j] = 0.0;
-          }
-             
-      }
-  }
-  */
   while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
       max:value = find_max_value( A, &k, &l);
       jacobi_rotate( A, R, k, l, N);
