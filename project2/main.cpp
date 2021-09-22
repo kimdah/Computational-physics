@@ -27,6 +27,19 @@ int main(int argc, char const *argv[]) {
   task3();
   task_4b(); //Solution to task 4b
 
+  //Task 5:
+  double epsilon = 1.0e-8; //Tolerance
+  double max_number_iterations = (double) N * (double) N * (double) N;
+  int iterations = 0;
+  double max_value = find_max_value( A, &k, &l);
+  arma::mat R = arma::mat( N, N, arma::fill::eye);
+
+  while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
+      max:value = find_max_value( A, &k, &l);
+      jacobi_rotate( A, R, k, l, N);
+      iterations++;
+  }
+  cout << "Number of iterations: " << iterations << "\n";
 
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
@@ -198,6 +211,54 @@ void task_4b(){
   cout <<"max value: "<< find_max_value(B_4,k,l) <<" row: "<<l<<" column: "<< k << endl;
 }
 //---------------Task 4B(end)-------------
+
+//---------------Task 5A------------------
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
+    //Computing tan (t), cos (c) and sin (s)
+    double s, c;
+    if ( A[k][l] != 0.0){
+        double t, tau;
+        tau = (A[l][l]-A[k][k])/(2*A[k][l]);
+        if ( tau > 0){
+            t = 1.0/(tau + sqrt(1.0 + tau*tau));
+        }
+        else {
+            t = -1.0/( -tau + sqrt(1.0 + tau*tau));
+        }
+        c = 1.0/(sqrt(1+t*t));
+        s = c*t;
+    }
+    else {
+        c = 1.0;
+        s = 0.0;
+    }
+
+    //Transform current A matrix
+    double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
+    a_kk = A[k][k];
+    a_ll = A[l][l];
+    A[k][k] = c*c*a_kk - 2.0*c*s*A[k][l] + s*s*a_ll;
+    A[l][l] = s*s*a_kk + 2.0*c*s*A[k][l] + c*c*a_ll;
+    A[k][l] = 0.0;
+    A[l][k] = 0.0;
+    for ( int i = 0; i < N; i++ ) {
+        if ( i != k && i != l ) {
+            a_ik = A[i][k];
+            a_il = A[i][l];
+            A[i][k] = c*a_ik - s*a_il;
+            A[k][i] = A[i][k];
+            A[i][l] = c*a_il + s*a_ik;
+            A[l][i] = A[i][l];
+        }
+        //Compute new eigenvectors
+        r_ik = R[i][k];
+        r_il = R[i][l];
+        R[i][k] = c*r_ik - s*r_il;
+        R[i][l] = c*r_il + s*r_ik;
+    }
+    return;
+}
+
 
 
 //-----------Task 6-------------
