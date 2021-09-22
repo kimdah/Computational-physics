@@ -1,16 +1,22 @@
 
 #include <iostream>
 #include <armadillo>
+#include <string>
 
 #define pi 3.14159265359
 
 using namespace std;
+using namespace arma;
 
 
 double find_max_value(arma::mat A, int& k, int& l);
 void task_4b();
+double find_max_value(); // ta bort?
 
-double find_max_value();
+arma::mat create_tridiagonal(const arma::vec& a, const arma::vec& d, const arma::vec& e);
+arma::mat create_tridiagonal(int n, double a, double d, double e);
+arma::mat create_symmetric_tridiagonal(int n, double a, double d);
+
 arma::vec analytical_eigenvalues(arma::mat A);
 arma::mat analytical_eigenvectors(arma::mat A);
 
@@ -20,6 +26,7 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippe
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged);
 
+void write_to_file(arma::mat output, String filename);
 
 int main(int argc, char const *argv[]) {
 
@@ -58,24 +65,112 @@ int main(int argc, char const *argv[]) {
 
   task_4b(); //Solution to task 4b
 
-  // 7 a
+  // 7 a - in separate function?
+  int n = 10 // steps
+  int N = n-1; // matrix size
+  int h = 1./n; // stepsize
+
+  // setting up scaled xhat:
+  arma::vec xhat = arma::vec(n+1);
+  xhat(0) = 0;
+  for (int i = 1; i < n; i++){
+    xhat(i) = xhat(i-1) + i*h;
+  }
+  xhat(n+1) = 1;
+
+
+  arma::mat A = create_symmetric_tridiagonal(N, -1/(h*h), 2/(h*h));
+  /*
+  arma::vec eigenvalues = arma::vec(N);
+  arma::mat eigenvectors = arma::mat(N,N);
+  jacobi_eigensolver(A, double eps, eigenvalues, eigenvectors,
+                        const int maxiter, int& iterations, bool& converged);
+
+  arma::vec min3_index = find_3min(eigenvalues);
+  for (int i = 0;  i < min3_index.size(); i++){
+    int index = min3_index(i);
+    arma::vec eigenvec = eigenvectors(:,i); // vil ha kolonnen her - sjekk at ok.
+
+  }
+  */
 
 
 
   return 0;
 }
+// find three smallest values
+arma::vec find_3min(arma::vec eigenvalues){
+  // HOW TO DO THIS IN A SMART WAY?
 
-/*
-int write_to_file(arma::mat output, String filename){
+  for (int i = 0; )
+}
+
+void write_to_file(arma::mat output, String filename){
   int width = 30;
   int prec = 10;
   ofstream ofile;
   ofile.open("output.txt"); //string(filename)
-  ofile << setw(width) << setprecision(prec) << scientific << x(i)
-        << setw(width) << setprecision(prec) << scientific << u(i) << endl;
+        << setw(width) << setprecision(prec) << scientific << 2 << endl; // temp
   ofile.close(); //close file
 }
-*/
+
+
+
+
+
+
+// Create tridiagonal matrix from vectors.
+// - lower diagonal: vector a, lenght n-1
+// - main diagonal:  vector d, lenght n
+// - upper diagonal: vector e, lenght n-1
+arma::mat create_tridiagonal(const arma::vec& a, const arma::vec& d, const arma::vec& e)
+{
+  int n = d.size();
+  // Start from identity matrix
+  arma::mat A = arma::mat(n, n, fill::eye);
+  A = A*d; //not work?
+
+  // Fill first row (row index 0)
+  // OBS! ANTAR A(ROW, COLUMN)
+  A(0,0) = d(0);
+  A(0,1) = e(0);
+
+  // Loop that fills rows 2 to n-1 (row indices 1 to n-2)
+  for (int r = 1; r <= n-2; r++){
+    A(r, r-1) = a(r-1);
+    A(r, r) = d(r); // diagonal element
+    A(r, r+1) = e(r);
+  }
+
+  // Fill last row (row index n-1)
+  A(n-1, n-2) = a(n-2);
+  A(n-1, n-1) = d(n-1);
+
+  return A;
+}
+
+
+// Create a tridiagonal matrix tridiag(a,d,e) of size n*n
+// from scalar input a, d and e
+arma::mat create_tridiagonal(int n, double a, double d, double e)
+{
+  arma::vec a_vec = arma::vec(n-1, arma::fill::ones) * a;
+  arma::vec d_vec = arma::vec(n, arma::fill::ones) * d;
+  arma::vec e_vec = arma::vec(n-1, arma::fill::ones) * e;
+
+  // Call the vector version of this function and return the result
+  return create_tridiagonal(a_vec, d_vec, e_vec);
+}
+
+
+// Create a symmetric tridiagonal matrix tridiag(a,d,a) of size n*n
+// from scalar input a and d.
+arma::mat create_symmetric_tridiagonal(int n, double a, double d)
+{
+  // Call create_tridiagonal and return the result
+  return create_tridiagonal(n, a, d, a);
+}
+
 
 
 
