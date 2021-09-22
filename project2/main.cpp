@@ -16,7 +16,7 @@ double find_max_value();
 arma::vec analytical_eigenvalues(arma::mat A);
 arma::mat analytical_eigenvectors(arma::mat A);
 
-void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets (why ref A?)
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged);
 
@@ -28,10 +28,12 @@ int main(int argc, char const *argv[]) {
   int n = N+1;                        //steps in matrix
   double a= -1./ ((1./n)*(1./n));     //super and sub diagonal elements
   double d= 2./((1./n)*(1./n));       //diagonal elements
-  create_symmetric_tridiagonal(N, a, d);
+  arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
   task_4b(); //Solution to task 4b
 
+
+  int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
   return 0;
 }
@@ -155,9 +157,20 @@ void task_4b(){
 
 //-----------Task 6-------------
 
-void jacobi_scaling(int& N, int& number_of_rotations){
 
+void jacobi_scaling(int& number_of_rotations, int& a, int& d){
 
+arma::mat A;
+for (int N = 3; N < 100; N++){  
+    A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
+    //jacobi_rotate(A);
+    
+    //should work as lons as Jacobi_rotate takes matrix A as an input
+    //and updates a variable number_of_rotations to the number of rotations
+    //required to get the total rotation S, that satisfy the minimal
+    //off-diag element limit.
+    cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl; 
+    }
 }
 
 
