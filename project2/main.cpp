@@ -59,8 +59,9 @@ int main(int argc, char const *argv[]) {
   int N = arma::size(A,0);
   double maxiter = (double) N * (double) N * (double) N;
   int iterations;
-  bool converged;
+  bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+
 
 
 
@@ -76,13 +77,13 @@ int main(int argc, char const *argv[]) {
 // - Writes the number of iterations to the integer "iterations"
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
 
-void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
-                        const int maxiter, int& iterations, bool& converged)
+void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int& maxiter, int& iterations, bool& converged)
                         // fjerne const int maxiter? - hvorfor er den const, hvorfor er den her?
 {
   int N = arma::size(A,0);
   //maxiter = (double) N * (double) N * (double) N;
-  iterations = 0;
+  iterations = 1;
 
   int k; // midlertidig losning?
   int l;
@@ -106,6 +107,11 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, 
 
   cout << A << endl;
   cout << eigenvalues << endl;
+
+//gonverged set to 0 means the jacobi rotation did not converge
+ if(iterations+1 == maxiter){
+  converged = 0;
+ }
 
 
 
@@ -390,18 +396,14 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){ // SJEKK INDEXER A
 //-----------Task 6-------------
 
 
-void jacobi_scaling(int& number_of_rotations, int& a, int& d){
+void jacobi_scaling(int& iterations, arma::mat& A, int& a, int& d, int& N){
 
 arma::mat A;
 for (int N = 3; N < 100; N++){
     A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
-    //jacobi_rotate(A);
+    jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+    cout <<"N= "<<N<<", gives "<< iterations<< "itterations"<< endl;
 
-    //should work as lons as Jacobi_rotate takes matrix A as an input
-    //and updates a variable number_of_rotations to the number of rotations
-    //required to get the total rotation S, that satisfy the minimal
-    //off-diag element limit.
-    cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl;
     }
 }
 
