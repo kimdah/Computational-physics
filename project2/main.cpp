@@ -53,6 +53,12 @@ int main(int argc, char const *argv[]) {
 
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
+
+  int iterations;
+  double max_number_iterations;
+  double eps = 1.0e-8; // tolerance
+
+
   return 0;
 }
 
@@ -64,17 +70,32 @@ int main(int argc, char const *argv[]) {
 // - Stops if it the number of iterations reaches "maxiter"
 // - Writes the number of iterations to the integer "iterations"
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
-/*
+
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged)
 {
+  int N = arma::size(A,0);
+  max_number_iterations = (double) N * (double) N * (double) N;
+  iterations = 0;
+  double max_value = find_max_value(A, k, l); //( A, &k, &l);
+  arma::mat R = arma::mat(N, N, arma::fill::eye);
 
+  while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
+      max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
+      jacobi_rotate(A, R, k, l);
+      iterations++;
+  }
+  cout << "Number of iterations: " << iterations << "\n";
+  cout << R << endl;
+  cout << A << endl;
+
+  int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
 
 
 
 }
-*/
+
 
 
 
@@ -151,6 +172,7 @@ arma::mat task3(){ // void?
   arma::vec eigval;
   arma::mat eigvec;
   eig_sym(eigval, eigvec, A);
+  cout << arma::normalise(eigvec);
 
   cout << "Eigenvalues:\n" << eigval << endl; // printing out
   cout << "Eigenvectors:\n" << eigvec << endl;
