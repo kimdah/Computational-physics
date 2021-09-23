@@ -83,29 +83,39 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, 
   int N = arma::size(A,0);
   //maxiter = (double) N * (double) N * (double) N;
   iterations = 0;
+  arma::mat Arot = A; // copy of A to change it in jacobi_rotate
 
   int k; // midlertidig losning?
   int l;
-  double max_value = find_max_value(A, k, l); //( A, &k, &l);
+  double max_value = find_max_value(Arot, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
 
   while (fabs(max_value) > eps && (double) iterations < maxiter ) {
-      max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
-      jacobi_rotate(A, R, k, l);
+      max_value = find_max_value(Arot, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
+      jacobi_rotate(Arot, R, k, l);
       iterations++;
   }
   cout << "Number of iterations: " << iterations << "\n";
   cout << R << endl;
 
+  eigenvectors = R;
+  eigenvalues = Arot.diag();
+  cout << "eigenvalues:\n" << eigenvalues;
+  // sort them!
+  arma::uvec indices = sort_index(eigenvalues);
+  cout << "Rekkefølge:\n " << indices;
 
-  eigenvectors = arma::sort_index(R, "ascend"); // smallest first
-  cout << eigenvectors << endl;
 
-  eigenvalues = arma::sort_index(A.diag(), "ascend");
+  //arma::sort(eigenvectors);
+  //eigenvectors = arma::sort_index(R, "ascend"); // smallest first
+  //cout << eigenvectors << endl;
 
 
-  cout << A << endl;
-  cout << eigenvalues << endl;
+  //eigenvalues = arma::sort_index(A.diag(), "ascend");
+
+
+  cout << Arot << endl;
+  //cout << eigenvalues << endl;
 
 
 
