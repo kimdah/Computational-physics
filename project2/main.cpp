@@ -1,4 +1,4 @@
-
+#include <string>
 #include <iostream>
 #include <armadillo>
 
@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
 
 
 
-
+  // SKAL DENNE KANSKJE INN I JACOBI_EIGENSOLVER?
   //Task 5: Trengte N, k, l og A for aa kjøre, så disse må kanskje endres
   int N = 6; // for aa faa den til aa kompilere, vet ikke om riktig
 
@@ -55,13 +55,83 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
+void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int maxiter, int& iterations, bool& converged)
+{
+  
+
+
+}
+
+
+
+// -----------Task 7------------
+/*
+void write_to_file(arma::mat eigvec_output){
+  int n = 10; // 100 etterpaa , gjoer mer generelt
+  ofstream ofile;
+  std::ostringstream filename;
+  filename << "output" << n << ".txt";
+  ofile << setw(20) << setprecision(8) << scientific << 2 << endl; // temp
+  ofile.close(); //close file
+}
+*/
+
+
+void file_to_plot(int n){ // finn paa nytt navn?
+  // n = steps in matrix
+  int N = n-1;         //size of matrix NxN
+  double h = 1./n;
+  double a = -1./(h*h);     //super and sub diagonal elements
+  double d = 2./(h*h);      //diagonal elements
+  arma::mat A = create_symmetric_tridiagonal(N, a, d);
+
+  // jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+  //                        const int maxiter, int& iterations, bool& converged);
+  arma::vec eigenvalues = arma::vec(N); // initialisere mindre ?
+  arma::mat eigenvectors = arma::mat(N,N);
+  jacobi_eigensolver(A, 1.e-8, eigenvalues, eigenvectors, ); // har vi denne?
+
+
+
+  // arma::sort_index();!!!!
+   // do this in plot instead?
+  arma::vec xhat = arma::vec(n+1);
+  arma::vec vstar = arma::vec(n+1);
+  xhat(0) = 0;
+  vstar(0)
+  for (int i = 1; i < n; i++){
+    xhat(i) = xhat(i-1) + i*h;
+  }
+  xhat(n) = 1;
+
+  ofstream ofile;
+  std::ostringstream filename;
+  filename << "output" << n << ".txt";
+  for (int i = 0; i < n+1; i++){ // < N if boundary points in python
+    ofile << setw(20) << setprecision(8) << scientific << xhat(i)
+    << setw(width) << setprecision(prec) << scientific << v(i, 0)
+    << setw(width) << setprecision(prec) << scientific << v(i, 1)
+    << setw(width) << setprecision(prec) << scientific << v(i, 2) << endl;
+  }
+  ofile.close(); //close file
+
+}
+
+
+//------- End task 7------------
+
+
+
+
+
 //-----------Task 3-------------
 arma::mat task3(){ // void?
-  int N = 6;          //size of matrix NxN
+  int N = 6;         //size of matrix NxN
   int n = N+1;       //steps in matrix
   double h = 1./n;
-  double a = -1./(h*h); //-1./ ((1./n)*(1./n));     //super and sub diagonal elements
-  double d = 2./(h*h); //2./((1./n)*(1./n));       //diagonal elements
+  double a = -1./(h*h);     //super and sub diagonal elements
+  double d = 2./(h*h);      //diagonal elements
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
   arma::vec eigval;
@@ -190,7 +260,6 @@ double find_max_value(arma::mat A, int& k, int& l){
             }
       }
   }
-
   return max_value;
 }
 
