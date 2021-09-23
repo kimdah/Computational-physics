@@ -54,6 +54,8 @@ int main(int argc, char const *argv[]) {
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
 
+
+
   int iterations;
   double max_number_iterations;
   double eps = 1.0e-8; // tolerance
