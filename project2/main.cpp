@@ -70,7 +70,7 @@ int main(int argc, char const *argv[]) {
 }
 
 // Jacobi method eigensolver:
-// - Runs jacobo_rotate until max off-diagonal element < eps
+// - Runs jacobi_rotate until max off-diagonal element < eps
 // - Writes the eigenvalues as entries in the vector "eigenvalues"
 // - Writes the eigenvectors as columns in the matrix "eigenvectors"
 //   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
@@ -80,6 +80,7 @@ int main(int argc, char const *argv[]) {
 
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged)
+                        // fjerne const int maxiter? - hvorfor er den const, hvorfor er den her?
 {
   int N = arma::size(A,0);
   //maxiter = (double) N * (double) N * (double) N;
