@@ -99,11 +99,13 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, 
 
 
   eigenvectors = arma::sort_index(R, "ascend"); // smallest first
-  eigenvalues = 
+  cout << eigenvectors << endl;
+
+  eigenvalues = arma::sort_index(A.diag(), "ascend");
 
 
   cout << A << endl;
-
+  cout << eigenvalues << endl;
 
 
 
