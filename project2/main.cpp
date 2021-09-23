@@ -34,14 +34,13 @@ int main(int argc, char const *argv[]) {
 
   // SKAL DENNE KANSKJE INN I JACOBI_EIGENSOLVER?
   //Task 5: Trengte N, k, l og A for aa kjøre, så disse må kanskje endres
+  /*
   int N = 6; // for aa faa den til aa kompilere, vet ikke om riktig
-
   double epsilon = 1.0e-8; //Tolerance
   double max_number_iterations = (double) N * (double) N * (double) N;
   int iterations = 0;
   double max_value = find_max_value( A, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
-
   while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
       max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
       jacobi_rotate( A, R, k, l);
@@ -50,22 +49,25 @@ int main(int argc, char const *argv[]) {
   cout << "Number of iterations: " << iterations << "\n";
   cout << R << endl;
   cout << A <<endl;
-
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
+  */
 
 
-
-
-  int iterations;
-  double max_number_iterations;
   double eps = 1.0e-8; // tolerance
+  arma::vec eigenvalues;
+  arma::mat eigenvectors;
+  double maxiter = (double) N * (double) N * (double) N;
+  int iterations;
+  bool converged;
+  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+
 
 
   return 0;
 }
 
 // Jacobi method eigensolver:
-// - Runs jacobo_rotate until max off-diagonal element < eps
+// - Runs jacobi_rotate until max off-diagonal element < eps
 // - Writes the eigenvalues as entries in the vector "eigenvalues"
 // - Writes the eigenvectors as columns in the matrix "eigenvectors"
 //   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
@@ -75,14 +77,18 @@ int main(int argc, char const *argv[]) {
 
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged)
+                        // fjerne const int maxiter? - hvorfor er den const, hvorfor er den her?
 {
   int N = arma::size(A,0);
-  max_number_iterations = (double) N * (double) N * (double) N;
+  //maxiter = (double) N * (double) N * (double) N;
   iterations = 0;
+
+  int k; // midlertidig losning?
+  int l;
   double max_value = find_max_value(A, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
 
-  while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
+  while (fabs(max_value) > eps && (double) iterations < maxiter ) {
       max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
       jacobi_rotate(A, R, k, l);
       iterations++;
@@ -91,7 +97,6 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, 
   cout << R << endl;
   cout << A << endl;
 
-  int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
 
 
@@ -121,15 +126,11 @@ void file_to_plot(int n){ // finn paa nytt navn?
   double a = -1./(h*h);     //super and sub diagonal elements
   double d = 2./(h*h);      //diagonal elements
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
-
   // jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
   //                        const int maxiter, int& iterations, bool& converged);
   arma::vec eigenvalues = arma::vec(N); // initialisere mindre ?
   arma::mat eigenvectors = arma::mat(N,N);
   jacobi_eigensolver(A, 1.e-8, eigenvalues, eigenvectors, ); // har vi denne?
-
-
-
   // arma::sort_index();!!!!
    // do this in plot instead?
   arma::vec xhat = arma::vec(n+1);
@@ -140,7 +141,6 @@ void file_to_plot(int n){ // finn paa nytt navn?
     xhat(i) = xhat(i-1) + i*h;
   }
   xhat(n) = 1;
-
   ofstream ofile;
   std::ostringstream filename;
   filename << "output" << n << ".txt";
@@ -151,7 +151,6 @@ void file_to_plot(int n){ // finn paa nytt navn?
     << setw(width) << setprecision(prec) << scientific << v(i, 2) << endl;
   }
   ofile.close(); //close file
-
 }
 */
 
