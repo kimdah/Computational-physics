@@ -213,17 +213,6 @@ arma::mat task3(){ // void?
 }
 //-----------End Task 3-------------
 
-/*
-int write_to_file(arma::mat output, String filename){
-  int width = 30;
-  int prec = 10;
-  ofstream ofile;
-  ofile.open("output.txt"); //string(filename)
-  ofile << setw(width) << setprecision(prec) << scientific << x(i)
-        << setw(width) << setprecision(prec) << scientific << u(i) << endl;
-  ofile.close(); //close file
-}
-*/
 
 // Create tridiagonal matrix from vectors.
 // - lower diagonal: vector a, lenght N-1
