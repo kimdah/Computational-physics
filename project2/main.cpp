@@ -48,7 +48,8 @@ int main(int argc, char const *argv[]) {
       iterations++;
   }
   cout << "Number of iterations: " << iterations << "\n";
-
+  cout << R << endl;
+  cout << A <<endl;
 
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
 
