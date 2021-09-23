@@ -56,13 +56,25 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
+// Jacobi method eigensolver:
+// - Runs jacobo_rotate until max off-diagonal element < eps
+// - Writes the eigenvalues as entries in the vector "eigenvalues"
+// - Writes the eigenvectors as columns in the matrix "eigenvectors"
+//   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
+// - Stops if it the number of iterations reaches "maxiter"
+// - Writes the number of iterations to the integer "iterations"
+// - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
+/*
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged)
 {
-  
+
+
+
 
 
 }
+*/
 
 
 
@@ -78,7 +90,7 @@ void write_to_file(arma::mat eigvec_output){
 }
 */
 
-
+/* // kommenterer ut for aa kjore
 void file_to_plot(int n){ // finn paa nytt navn?
   // n = steps in matrix
   int N = n-1;         //size of matrix NxN
@@ -118,6 +130,7 @@ void file_to_plot(int n){ // finn paa nytt navn?
   ofile.close(); //close file
 
 }
+*/
 
 
 //------- End task 7------------
