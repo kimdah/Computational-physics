@@ -18,9 +18,8 @@ double find_max_value(arma::mat A, int& k, int& l);
 void task_4b();
 
 void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets (why ref A?)
-void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
-                        const int maxiter, int& iterations, bool& converged);
-
+void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int& maxiter, int& iterations, bool& converged);
 
 int main(int argc, char const *argv[]) {
 
@@ -405,11 +404,12 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){ // SJEKK INDEXER A
 
 //-----------Task 6-------------
 
+/*
+void jacobi_scaling(arma::mat& A, int& a, int& d, int& N, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int& maxiter, int& iterations, bool& converged){
 
-void jacobi_scaling(int& iterations, arma::mat& A, int& a, int& d, int& N){
 
-arma::mat A;
-for (int N = 3; N < 100; N++){
+for (int N = 3; N < 6; N++){
     A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
     jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
     cout <<"N= "<<N<<", gives "<< iterations<< "itterations"<< endl;
@@ -417,7 +417,7 @@ for (int N = 3; N < 100; N++){
     }
 }
 
-
+*/
 
 
 
