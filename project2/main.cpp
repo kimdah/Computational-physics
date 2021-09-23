@@ -59,6 +59,7 @@ int main(int argc, char const *argv[]) {
   double eps = 1.0e-8; // tolerance
   arma::vec eigenvalues;
   arma::mat eigenvectors;
+  int N = arma::size(A,0);
   double maxiter = (double) N * (double) N * (double) N;
   int iterations;
   bool converged;
@@ -98,6 +99,12 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, 
   }
   cout << "Number of iterations: " << iterations << "\n";
   cout << R << endl;
+
+
+  eigenvectors = arma::sort_index(R, "ascend"); // smallest first
+  eigenvalues = 
+
+
   cout << A << endl;
 
 
