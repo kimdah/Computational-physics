@@ -6,37 +6,33 @@
 
 using namespace std;
 
+arma::mat task3();
+arma::mat create_tridiagonal(const arma::vec& a, const arma::vec& d, const arma::vec& e);
+arma::mat create_tridiagonal(int n, double a, double d, double e);
+arma::mat create_symmetric_tridiagonal(int n, double a, double d);
+
+arma::vec analytical_eigenvalues(arma::mat A);
+arma::mat analytical_eigenvectors(arma::mat A);
 
 double find_max_value(arma::mat A, int& k, int& l);
 void task_4b();
 
-arma::mat create_symmetric_tridiagonal(int N, double a, double d);
-
-double find_max_value();
-arma::vec analytical_eigenvalues(arma::mat A);
-arma::mat analytical_eigenvectors(arma::mat A);
-
-void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N); // fra code snippets (why ref A?)
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets (why ref A?)
 void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged);
 
 
 int main(int argc, char const *argv[]) {
 
-  //problem 3
-  int N = 6;                          //size of matrix NxN
-  int n = N+1;                        //steps in matrix
-  double a= -1./ ((1./n)*(1./n));     //super and sub diagonal elements
-  double d= 2./((1./n)*(1./n));       //diagonal elements
-  arma::mat A = create_symmetric_tridiagonal(N, a, d);
-
+  task3();
   task_4b(); //Solution to task 4b
-  
+
   //Task 5:
   double epsilon = 1.0e-8; //Tolerance
   double max_number_iterations = (double) N * (double) N * (double) N;
   int iterations = 0;
   double max_value = find_max_value( A, &k, &l);
+
   arma::mat R = arma::mat( N, N, arma::fill::eye); //initializing R
     
   while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
@@ -51,45 +47,93 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-arma::mat create_symmetric_tridiagonal(int N, double a, double d)
-{
+//-----------Task 3-------------
+arma::mat task3(){ // void?
+  int N = 6;          //size of matrix NxN
+  int n = N+1;       //steps in matrix
+  double h = 1./n;
+  double a = -1./(h*h); //-1./ ((1./n)*(1./n));     //super and sub diagonal elements
+  double d = 2./(h*h); //2./((1./n)*(1./n));       //diagonal elements
+  arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
-    // Problem 3
-  int n = N+1;   //number of steps
-
-  double h = 1./n; // stepsize
-  arma::mat A = arma::mat(N, N).fill(0.);
-
-  cout << "h = " << h << endl;
-
-  for (int i = 0; i < N; i++){  // row
-    for (int j = 0; j < N; j++){ // // column
-      if (i == j){
-        A(i,j) = 2./(h*h);
-      } else if ((j == i+1) || (i == j+1)){
-        A(i,j) = a;
-      }
-    }
-  }
-  //cout << A;
   arma::vec eigval;
   arma::mat eigvec;
   eig_sym(eigval, eigvec, A);
 
-  cout << "Eigenvalues:\n" << eigval << endl; // printing out, delete later
+  cout << "Eigenvalues:\n" << eigval << endl; // printing out
   cout << "Eigenvectors:\n" << eigvec << endl;
 
   arma::vec eigval_analytic = analytical_eigenvalues(A);
   arma::mat eigvec_analytic = analytical_eigenvectors(A);
 
   cout << "Analytical eigenvalues:\n" << eigval_analytic << endl;
-
   cout << "Analytical eigenvectors:\n" << eigvec_analytic << endl;
 
-  task_4b(); //Solution to task 4b
-    
+  return A; // eller ikke???? KAn bruke i 5b?
+}
+//-----------End Task 3-------------
+
+/*
+int write_to_file(arma::mat output, String filename){
+  int width = 30;
+  int prec = 10;
+  ofstream ofile;
+  ofile.open("output.txt"); //string(filename)
+  ofile << setw(width) << setprecision(prec) << scientific << x(i)
+        << setw(width) << setprecision(prec) << scientific << u(i) << endl;
+  ofile.close(); //close file
+}
+*/
+
+// Create tridiagonal matrix from vectors.
+// - lower diagonal: vector a, lenght N-1
+// - main diagonal:  vector d, lenght N
+// - upper diagonal: vector e, lenght N-1
+arma::mat create_tridiagonal(const arma::vec& a, const arma::vec& d, const arma::vec& e)
+{
+  int N = d.size();
+  // Start from identity matrix
+  arma::mat A = arma::mat(N, N, arma::fill::eye); // A(row, column)
+
+  // Fill first row (row index 0)
+  A(0,0) = d(0);
+  A(0,1) = e(0);
+
+  // Loop that fills rows 2 to N-1 (row indices 1 to N-2)
+  for (int r = 1; r <= N-2; r++){
+    A(r, r-1) = a(r-1);
+    A(r, r) = d(r); // diagonal element
+    A(r, r+1) = e(r);
+  }
+
+  // Fill last row (row index N-1)
+  A(N-1, N-2) = a(N-2);
+  A(N-1, N-1) = d(N-1);
+
   return A;
 }
+
+
+// Create a tridiagonal matrix tridiag(a,d,e) of size N*N
+// from scalar input a, d and e
+arma::mat create_tridiagonal(int N, double a, double d, double e)
+{
+  arma::vec a_vec = arma::vec(N-1, arma::fill::ones) * a;
+  arma::vec d_vec = arma::vec(N, arma::fill::ones) * d;
+  arma::vec e_vec = arma::vec(N-1, arma::fill::ones) * e;
+
+  // Call the vector version of this function and return the result
+  return create_tridiagonal(a_vec, d_vec, e_vec);
+}
+
+// Create a symmetric tridiagonal matrix tridiag(a,d,a) of size N*N
+// from scalar input a and d.
+arma::mat create_symmetric_tridiagonal(int N, double a, double d)
+{
+  // Call create_tridiagonal and return the result
+  return create_tridiagonal(N, a, d, a);
+}
+
 
 arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 funk
   // Denne gir riktige verdier, men fortegnene er feil!!!
@@ -104,7 +148,7 @@ arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 
       v(j-1,i-1) = sin((i*j*pi)/(N+1)); // Aji fordi det i definisjonen var i som ga kolonnevektorene.
     }
   }
-  return arma::normalise(v);
+  return arma::normalise(v); // return scaled eigenvectors
 
 }
 arma::vec analytical_eigenvalues(arma::mat A){ // 3
@@ -135,10 +179,10 @@ double find_max_value(arma::mat A, int& k, int& l){
             if(abs(A(i,j))>abs(max_value)){
               max_value= A(i,j);
               k = j, l=i; //column k and row l
-
             }
       }
-      }
+  }
+
   return max_value;
 }
 
@@ -189,7 +233,7 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
         c = 1.0;
         s = 0.0;
     }
-    
+
     //Transform current A matrix
     double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
     a_kk = A[k][k];
@@ -224,15 +268,15 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
 void jacobi_scaling(int& number_of_rotations, int& a, int& d){
 
 arma::mat A;
-for (int N = 3; N < 100; N++){  
+for (int N = 3; N < 100; N++){
     A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
     //jacobi_rotate(A);
-    
+
     //should work as lons as Jacobi_rotate takes matrix A as an input
     //and updates a variable number_of_rotations to the number of rotations
     //required to get the total rotation S, that satisfy the minimal
     //off-diag element limit.
-    cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl; 
+    cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl;
     }
 }
 
