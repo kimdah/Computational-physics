@@ -375,7 +375,7 @@ for (int N = 3; N < 150; N++){
   A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
   maxiter = (int) N * (int) N * (int) N;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-  cout <<"N= "<<N<<", gives "<< iterations<< "itterations"<< endl;
+  cout <<"N= "<<N<<", gives "<< iterations<< " iterations"<< endl;
     }
 }
 
