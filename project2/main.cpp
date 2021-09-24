@@ -64,7 +64,7 @@ void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues,
   iterations = 0;
   arma::mat Arot = A; // copy of A to change it in jacobi_rotate
 
-  int k; // midlertidig losning?
+  int k; // midlertidig losning?????
   int l;
   double max_value = find_max_value(Arot, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
@@ -88,9 +88,9 @@ void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues,
     eigenvectors.col(i) = R.col(indices(i));
   }
 
-//converged set to 0 means the jacobi rotation did not converge
- if(iterations+1 == maxiter){
-  converged = 0;
+//converged set to 1 means the jacobi rotation converged
+ if(iterations+1 != maxiter){
+  converged = 1;
  }
 
 
