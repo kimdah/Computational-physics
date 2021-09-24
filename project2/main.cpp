@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
   arma::vec eigenvalues;
   arma::mat eigenvectors;
   int N = arma::size(A,0);
-  int maxiter = (int) N * (int) N * (int) N;
+  int maxiter = N * N * N;
   int iterations;
   bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
@@ -96,45 +96,39 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
   converged = 1;
  }
 
-
-
-
 }
 
 
 
 
 // -----------Task 7------------
-/*
-void write_to_file(arma::mat eigvec_output){
-  int n = 10; // 100 etterpaa , gjoer mer generelt
-  ofstream ofile;
-  std::ostringstream filename;
-  filename << "output" << n << ".txt";
-  ofile << setw(20) << setprecision(8) << scientific << 2 << endl; // temp
-  ofile.close(); //close file
-}
-*/
 
-/* // kommenterer ut for aa kjore
+// kommenterer ut for aa kjore
 void file_to_plot(int n){ // finn paa nytt navn?
   // n = steps in matrix
+
+  // create symmetric tridiagonal matrix with:
   int N = n-1;         //size of matrix NxN
   double h = 1./n;
   double a = -1./(h*h);     //super and sub diagonal elements
   double d = 2./(h*h);      //diagonal elements
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
-  // jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
-  //                        const int maxiter, int& iterations, bool& converged);
-  arma::vec eigenvalues = arma::vec(N); // initialisere mindre ?
-  arma::mat eigenvectors = arma::mat(N,N);
-  jacobi_eigensolver(A, 1.e-8, eigenvalues, eigenvectors, ); // har vi denne?
-  // arma::sort_index();!!!!
+
+  // Solve matrix equation Ax = b
+  double eps = 1.0e-8; // tolerance
+  arma::vec eigenvalues;
+  arma::mat eigenvectors;
+  int N = arma::size(A,0);
+  double maxiter = (double) N * (double) N * (double) N;
+  int iterations;
+  bool converged = 0;
+  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+
    // do this in plot instead?
   arma::vec xhat = arma::vec(n+1);
   arma::vec vstar = arma::vec(n+1);
   xhat(0) = 0;
-  vstar(0)
+  vstar(0) =
   for (int i = 1; i < n; i++){
     xhat(i) = xhat(i-1) + i*h;
   }
@@ -148,9 +142,9 @@ void file_to_plot(int n){ // finn paa nytt navn?
     << setw(width) << setprecision(prec) << scientific << v(i, 1)
     << setw(width) << setprecision(prec) << scientific << v(i, 2) << endl;
   }
-  ofile.close(); //close file
+  ofile.close();
 }
-*/
+
 
 
 //------- End task 7------------
@@ -388,9 +382,15 @@ for (int N = 3; N < 110; N++){  //number of N can be increased
 
 
   A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
+<<<<<<< HEAD
   maxiter = (int) N * (int) N * (int) N;   //redefines max number of itterations
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged); //runs jacobi eigensolver
   myfile <<N<<","<< iterations << endl;   //writes N and number of itterations to a txt file
+=======
+  maxiter = (int) N * (int) N * (int) N;
+  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  cout <<"N= "<<N<<", gives "<< iterations<< " iterations"<< endl;
+>>>>>>> cef7573ee02c494e12931f4f7ef6a1e7cd727ac1
     }
 
 myfile.close();
