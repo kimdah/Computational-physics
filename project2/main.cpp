@@ -1,4 +1,4 @@
-
+#include <string>
 #include <iostream>
 #include <armadillo>
 
@@ -18,19 +18,27 @@ double find_max_value(arma::mat A, int& k, int& l);
 void task_4b();
 
 void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets (why ref A?)
-void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
-                        const int maxiter, int& iterations, bool& converged);
-
+void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int& maxiter, int& iterations, bool& converged);
 
 int main(int argc, char const *argv[]) {
 
-  task3();
+  arma::mat A = task3(); // ????
+
+  int k;
+  int l;
   task_4b(); //Solution to task 4b
 
-  //Task 5:
+
+
+  // SKAL DENNE KANSKJE INN I JACOBI_EIGENSOLVER?
+  //Task 5: Trengte N, k, l og A for aa kjøre, så disse må kanskje endres
+  /*
+  int N = 6; // for aa faa den til aa kompilere, vet ikke om riktig
   double epsilon = 1.0e-8; //Tolerance
   double max_number_iterations = (double) N * (double) N * (double) N;
   int iterations = 0;
+<<<<<<< HEAD
   double max_value = find_max_value( A, &k, &l);
 
   arma::mat R = arma::mat( N, N, arma::fill::eye); //initializing R
@@ -38,27 +46,168 @@ int main(int argc, char const *argv[]) {
   while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
       max:value = find_max_value( A, &k, &l);
       jacobi_rotate( A, R, k, l, N);
+=======
+  double max_value = find_max_value( A, k, l); //( A, &k, &l);
+  arma::mat R = arma::mat(N, N, arma::fill::eye);
+  while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
+      max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
+      jacobi_rotate( A, R, k, l);
+>>>>>>> 2d23484cb561be22b73627e68470065f27bf619c
       iterations++;
   }
   cout << "Number of iterations: " << iterations << "\n";
-
+  cout << R << endl;
+  cout << A <<endl;
   int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
+  */
+
+
+  double eps = 1.0e-8; // tolerance
+  arma::vec eigenvalues;
+  arma::mat eigenvectors;
+  int N = arma::size(A,0);
+  double maxiter = (double) N * (double) N * (double) N;
+  int iterations;
+  bool converged = 0;
+  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+
+
+
 
   return 0;
 }
 
+// Jacobi method eigensolver:
+// - Runs jacobi_rotate until max off-diagonal element < eps
+// - Writes the eigenvalues as entries in the vector "eigenvalues"
+// - Writes the eigenvectors as columns in the matrix "eigenvectors"
+//   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
+// - Stops if it the number of iterations reaches "maxiter"
+// - Writes the number of iterations to the integer "iterations"
+// - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
+
+void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int& maxiter, int& iterations, bool& converged)
+                        // fjerne const int maxiter? - hvorfor er den const, hvorfor er den her?
+{
+  int N = arma::size(A,0);
+  //maxiter = (double) N * (double) N * (double) N;
+  iterations = 0;
+  arma::mat Arot = A; // copy of A to change it in jacobi_rotate
+
+  int k; // midlertidig losning?
+  int l;
+  double max_value = find_max_value(Arot, k, l); //( A, &k, &l);
+  arma::mat R = arma::mat(N, N, arma::fill::eye);
+
+  while (fabs(max_value) > eps && (double) iterations < maxiter ) {
+      max_value = find_max_value(Arot, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
+      jacobi_rotate(Arot, R, k, l);
+      iterations++;
+  }
+  cout << "Number of iterations: " << iterations << "\n";
+  cout << R << endl;
+
+  eigenvectors = R;
+  eigenvalues = Arot.diag();
+  cout << "eigenvalues:\n" << eigenvalues;
+  // sort them!
+  arma::uvec indices = sort_index(eigenvalues);
+  cout << "Rekkefølge:\n " << indices;
+
+
+  //arma::sort(eigenvectors);
+  //eigenvectors = arma::sort_index(R, "ascend"); // smallest first
+  //cout << eigenvectors << endl;
+
+
+  //eigenvalues = arma::sort_index(A.diag(), "ascend");
+
+
+  cout << Arot << endl;
+  //cout << eigenvalues << endl;
+
+//gonverged set to 0 means the jacobi rotation did not converge
+ if(iterations+1 == maxiter){
+  converged = 0;
+ }
+
+
+
+
+}
+
+
+
+
+// -----------Task 7------------
+/*
+void write_to_file(arma::mat eigvec_output){
+  int n = 10; // 100 etterpaa , gjoer mer generelt
+  ofstream ofile;
+  std::ostringstream filename;
+  filename << "output" << n << ".txt";
+  ofile << setw(20) << setprecision(8) << scientific << 2 << endl; // temp
+  ofile.close(); //close file
+}
+*/
+
+/* // kommenterer ut for aa kjore
+void file_to_plot(int n){ // finn paa nytt navn?
+  // n = steps in matrix
+  int N = n-1;         //size of matrix NxN
+  double h = 1./n;
+  double a = -1./(h*h);     //super and sub diagonal elements
+  double d = 2./(h*h);      //diagonal elements
+  arma::mat A = create_symmetric_tridiagonal(N, a, d);
+  // jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+  //                        const int maxiter, int& iterations, bool& converged);
+  arma::vec eigenvalues = arma::vec(N); // initialisere mindre ?
+  arma::mat eigenvectors = arma::mat(N,N);
+  jacobi_eigensolver(A, 1.e-8, eigenvalues, eigenvectors, ); // har vi denne?
+  // arma::sort_index();!!!!
+   // do this in plot instead?
+  arma::vec xhat = arma::vec(n+1);
+  arma::vec vstar = arma::vec(n+1);
+  xhat(0) = 0;
+  vstar(0)
+  for (int i = 1; i < n; i++){
+    xhat(i) = xhat(i-1) + i*h;
+  }
+  xhat(n) = 1;
+  ofstream ofile;
+  std::ostringstream filename;
+  filename << "output" << n << ".txt";
+  for (int i = 0; i < n+1; i++){ // < N if boundary points in python
+    ofile << setw(20) << setprecision(8) << scientific << xhat(i)
+    << setw(width) << setprecision(prec) << scientific << v(i, 0)
+    << setw(width) << setprecision(prec) << scientific << v(i, 1)
+    << setw(width) << setprecision(prec) << scientific << v(i, 2) << endl;
+  }
+  ofile.close(); //close file
+}
+*/
+
+
+//------- End task 7------------
+
+
+
+
+
 //-----------Task 3-------------
 arma::mat task3(){ // void?
-  int N = 6;          //size of matrix NxN
+  int N = 6;         //size of matrix NxN
   int n = N+1;       //steps in matrix
   double h = 1./n;
-  double a = -1./(h*h); //-1./ ((1./n)*(1./n));     //super and sub diagonal elements
-  double d = 2./(h*h); //2./((1./n)*(1./n));       //diagonal elements
+  double a = -1./(h*h);     //super and sub diagonal elements
+  double d = 2./(h*h);      //diagonal elements
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
   arma::vec eigval;
   arma::mat eigvec;
   eig_sym(eigval, eigvec, A);
+  cout << arma::normalise(eigvec);
 
   cout << "Eigenvalues:\n" << eigval << endl; // printing out
   cout << "Eigenvectors:\n" << eigvec << endl;
@@ -73,17 +222,6 @@ arma::mat task3(){ // void?
 }
 //-----------End Task 3-------------
 
-/*
-int write_to_file(arma::mat output, String filename){
-  int width = 30;
-  int prec = 10;
-  ofstream ofile;
-  ofile.open("output.txt"); //string(filename)
-  ofile << setw(width) << setprecision(prec) << scientific << x(i)
-        << setw(width) << setprecision(prec) << scientific << u(i) << endl;
-  ofile.close(); //close file
-}
-*/
 
 // Create tridiagonal matrix from vectors.
 // - lower diagonal: vector a, lenght N-1
@@ -137,7 +275,7 @@ arma::mat create_symmetric_tridiagonal(int N, double a, double d)
 
 arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 funk
   // Denne gir riktige verdier, men fortegnene er feil!!!
-  int N = arma::size(A)(0);
+  int N = arma::size(A,0);
   double d = A(0,0);
   double a = A(0,1);
 
@@ -153,7 +291,7 @@ arma::mat analytical_eigenvectors(arma::mat A){ // 3, vurder aa samle disse i 1 
 }
 arma::vec analytical_eigenvalues(arma::mat A){ // 3
   // A is tridiagonal (a,d,a)
-  int N = arma::size(A)(0);
+  int N = arma::size(A,0);
   double d = A(0,0);
   double a = A(0,1);
 
@@ -170,7 +308,7 @@ arma::vec analytical_eigenvalues(arma::mat A){ // 3
 double find_max_value(arma::mat A, int& k, int& l){
 
   double max_value = 0;
-  int N = arma::size(A)(0); //i is dimension N of matrix A
+  int N = arma::size(A,0); //i is dimension N of matrix A
 
   //for loop runs through the non-diagonal matrix elements under the diagonal.
   for (int j=0; j<=N-1; j++){
@@ -182,7 +320,6 @@ double find_max_value(arma::mat A, int& k, int& l){
             }
       }
   }
-
   return max_value;
 }
 
@@ -214,12 +351,14 @@ void task_4b(){
 //---------------Task 4B(end)-------------
 
 //---------------Task 5A------------------
-void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
+
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){ // SJEKK INDEXER A(row, column)
     //Computing tan (t), cos (c) and sin (s)
+    int N = arma::size(A,0);
     double s, c;
-    if ( A[k][l] != 0.0){
+    if ( A(k,l) != 0.0){
         double t, tau;
-        tau = (A[l][l]-A[k][k])/(2*A[k][l]);
+        tau = (A(l,l)-A(k,k))/(2*A(k,l));
         if ( tau > 0){
             t = 1.0/(tau + sqrt(1.0 + tau*tau));
         }
@@ -236,26 +375,26 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
 
     //Transform current A matrix
     double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
-    a_kk = A[k][k];
-    a_ll = A[l][l];
-    A[k][k] = c*c*a_kk - 2.0*c*s*A[k][l] + s*s*a_ll;
-    A[l][l] = s*s*a_kk + 2.0*c*s*A[k][l] + c*c*a_ll;
-    A[k][l] = 0.0;
-    A[l][k] = 0.0;
+    a_kk = A(k,k);
+    a_ll = A(l,l);
+    A(k,k) = c*c*a_kk - 2.0*c*s*A(k,l) + s*s*a_ll;
+    A(l,l) = s*s*a_kk + 2.0*c*s*A(k,l) + c*c*a_ll;
+    A(k,l) = 0.0;
+    A(l,k) = 0.0;
     for ( int i = 0; i < N; i++ ) {
         if ( i != k && i != l ) {
-            a_ik = A[i][k];
-            a_il = A[i][l];
-            A[i][k] = c*a_ik - s*a_il;
-            A[k][i] = A[i][k];
-            A[i][l] = c*a_il + s*a_ik;
-            A[l][i] = A[i][l];
+            a_ik = A(i,k);
+            a_il = A(i,l);
+            A(i,k) = c*a_ik - s*a_il;
+            A(k,i) = A(i,k);
+            A(i,l) = c*a_il + s*a_ik;
+            A(l,i) = A(i,l);
         }
         //Compute new eigenvectors
-        r_ik = R[i][k];
-        r_il = R[i][l];
-        R[i][k] = c*r_ik - s*r_il;
-        R[i][l] = c*r_il + s*r_ik;
+        r_ik = R(i,k);
+        r_il = R(i,l);
+        R(i,k) = c*r_ik - s*r_il;
+        R(i,l) = c*r_il + s*r_ik;
     }
     return;
 }
@@ -264,22 +403,20 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, int N){
 
 //-----------Task 6-------------
 
+/*
+void jacobi_scaling(arma::mat& A, int& a, int& d, int& N, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int& maxiter, int& iterations, bool& converged){
 
-void jacobi_scaling(int& number_of_rotations, int& a, int& d){
 
-arma::mat A;
-for (int N = 3; N < 100; N++){
+for (int N = 3; N < 6; N++){
     A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
-    //jacobi_rotate(A);
+    jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+    cout <<"N= "<<N<<", gives "<< iterations<< "itterations"<< endl;
 
-    //should work as lons as Jacobi_rotate takes matrix A as an input
-    //and updates a variable number_of_rotations to the number of rotations
-    //required to get the total rotation S, that satisfy the minimal
-    //off-diag element limit.
-    cout << "N= "<< N <<" , "<< "rotations= " << number_of_rotations << endl;
     }
 }
 
+*/
 
 
 
