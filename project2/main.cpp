@@ -30,38 +30,6 @@ int main(int argc, char const *argv[]) {
   task_4b(); //Solution to task 4b
 
 
-
-  // SKAL DENNE KANSKJE INN I JACOBI_EIGENSOLVER?
-  //Task 5: Trengte N, k, l og A for aa kjøre, så disse må kanskje endres
-  /*
-  int N = 6; // for aa faa den til aa kompilere, vet ikke om riktig
-  double epsilon = 1.0e-8; //Tolerance
-  double max_number_iterations = (double) N * (double) N * (double) N;
-  int iterations = 0;
-<<<<<<< HEAD
-  double max_value = find_max_value( A, &k, &l);
-
-  arma::mat R = arma::mat( N, N, arma::fill::eye); //initializing R
-    
-  while ( fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
-      max:value = find_max_value( A, &k, &l);
-      jacobi_rotate( A, R, k, l, N);
-=======
-  double max_value = find_max_value( A, k, l); //( A, &k, &l);
-  arma::mat R = arma::mat(N, N, arma::fill::eye);
-  while (fabs(max_value) > epsilon && (double) iterations < max_number_iterations ) {
-      max_value = find_max_value( A, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
-      jacobi_rotate( A, R, k, l);
->>>>>>> 2d23484cb561be22b73627e68470065f27bf619c
-      iterations++;
-  }
-  cout << "Number of iterations: " << iterations << "\n";
-  cout << R << endl;
-  cout << A <<endl;
-  int number_of_rotations; //describes the number of rotations completed by jacobi_rotate()
-  */
-
-
   double eps = 1.0e-8; // tolerance
   arma::vec eigenvalues;
   arma::mat eigenvectors;
@@ -108,26 +76,18 @@ void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues,
   cout << "Number of iterations: " << iterations << "\n";
   cout << R << endl;
 
-  eigenvectors = R;
-  eigenvalues = Arot.diag();
-  cout << "eigenvalues:\n" << eigenvalues;
-  // sort them!
-  arma::uvec indices = sort_index(eigenvalues);
-  cout << "Rekkefølge:\n " << indices;
+  arma::vec diagonals = Arot.diag(); // eigenvalues are diagonal elements of rotated matrix Arot
+  arma::uvec indices = sort_index(diagonals, "ascending");
 
+  // Sorting and filling eigenvalues and eigenvectors
+  eigenvalues = arma::vec(N);
+  eigenvectors = arma::mat(N,N);
+  for (int i = 0; i < N; i++){
+    eigenvalues(i) = diagonals(indices(i));
+    eigenvectors.col(i) = R.col(indices(i));
+  }
 
-  //arma::sort(eigenvectors);
-  //eigenvectors = arma::sort_index(R, "ascend"); // smallest first
-  //cout << eigenvectors << endl;
-
-
-  //eigenvalues = arma::sort_index(A.diag(), "ascend");
-
-
-  cout << Arot << endl;
-  //cout << eigenvalues << endl;
-
-//gonverged set to 0 means the jacobi rotation did not converge
+//converged set to 0 means the jacobi rotation did not converge
  if(iterations+1 == maxiter){
   converged = 0;
  }
