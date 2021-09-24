@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]) {
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
 
-
+  jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged){
 
   return 0;
 }
@@ -364,12 +364,18 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){ // SJEKK INDEXER A
 
 //-----------Task 6-------------
 
-/*
-void jacobi_scaling(arma::mat& A, int& a, int& d, int& N, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+
+void jacobi_scaling(arma::mat& A, int& N, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int& maxiter, int& iterations, bool& converged){
 
 
 for (int N = 3; N < 6; N++){
+  int n = N+1;       //steps in matrix
+  double h = 1./n;
+  double a = -1./(h*h);     //super and sub diagonal elements
+  double d = 2./(h*h);      //diagonal elements
+
+
     A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
     jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
     cout <<"N= "<<N<<", gives "<< iterations<< "itterations"<< endl;
@@ -377,7 +383,7 @@ for (int N = 3; N < 6; N++){
     }
 }
 
-*/
+
 
 
 
