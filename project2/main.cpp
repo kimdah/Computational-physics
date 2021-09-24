@@ -18,7 +18,7 @@ double find_max_value(arma::mat A, int& k, int& l);
 void task_4b();
 
 void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); // fra code snippets (why ref A?)
-void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int& maxiter, int& iterations, bool& converged);
 
 int main(int argc, char const *argv[]) {
@@ -54,29 +54,27 @@ int main(int argc, char const *argv[]) {
 // - Writes the number of iterations to the integer "iterations"
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
 
-void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int& maxiter, int& iterations, bool& converged)
-                        // fjerne const int maxiter? - hvorfor er den const, hvorfor er den her?
+                        // chose to not define A as a constant to let this method change it
 {
   int N = arma::size(A,0);
-  //maxiter = (double) N * (double) N * (double) N;
   iterations = 0;
-  arma::mat Arot = A; // copy of A to change it in jacobi_rotate
 
-  int k; // midlertidig losning?
+  int k; // midlertidig losning?????
   int l;
-  double max_value = find_max_value(Arot, k, l); //( A, &k, &l);
+  double max_value = find_max_value(A, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
 
   while (fabs(max_value) > eps && (double) iterations < maxiter ) {
-      max_value = find_max_value(Arot, k, l); //(A, &k, &l); max:value før, var det meningen å ha max_value?
-      jacobi_rotate(Arot, R, k, l);
+      max_value = find_max_value(A, k, l); //(A, &k, &l);
+      jacobi_rotate(A, R, k, l);
       iterations++;
   }
   cout << "Number of iterations: " << iterations << "\n";
   cout << R << endl;
 
-  arma::vec diagonals = Arot.diag(); // eigenvalues are diagonal elements of rotated matrix Arot
+  arma::vec diagonals = A.diag(); // eigenvalues are diagonal elements of rotated matrix A
   arma::uvec indices = sort_index(diagonals, "ascending");
 
   // Sorting and filling eigenvalues and eigenvectors
@@ -87,9 +85,9 @@ void jacobi_eigensolver(const arma::mat& A, double& eps, arma::vec& eigenvalues,
     eigenvectors.col(i) = R.col(indices(i));
   }
 
-//converged set to 0 means the jacobi rotation did not converge
- if(iterations+1 == maxiter){
-  converged = 0;
+//converged set to 1 means the jacobi rotation converged
+ if(iterations+1 != maxiter){
+  converged = 1;
  }
 
 
@@ -167,7 +165,6 @@ arma::mat task3(){ // void?
   arma::vec eigval;
   arma::mat eigvec;
   eig_sym(eigval, eigvec, A);
-  cout << arma::normalise(eigvec);
 
   cout << "Eigenvalues:\n" << eigval << endl; // printing out
   cout << "Eigenvectors:\n" << eigvec << endl;
@@ -178,7 +175,7 @@ arma::mat task3(){ // void?
   cout << "Analytical eigenvalues:\n" << eigval_analytic << endl;
   cout << "Analytical eigenvectors:\n" << eigvec_analytic << endl;
 
-  return A; // eller ikke???? KAn bruke i 5b?
+  return A; // eller ikke???? KAn bruke i 5b????
 }
 //-----------End Task 3-------------
 
