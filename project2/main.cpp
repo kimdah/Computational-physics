@@ -371,18 +371,29 @@ void jacobi_scaling(arma::mat& A, int& N, double& eps, arma::vec& eigenvalues, a
                         int& maxiter, int& iterations, bool& converged){
 
 
-for (int N = 3; N < 150; N++){
-  int n = N+1;       //steps in matrix
+
+
+ofstream myfile;
+
+myfile.open("task6_dataset.txt");
+myfile << "N=    , Rotations=    "<<endl;
+
+for (int N = 3; N < 110; N++){  //number of N can be increased
+
+  //calculating matrix elements
+  int n = N+1;       
   double h = 1./n;
-  double a = -1./(h*h);     //super and sub diagonal elements
-  double d = 2./(h*h);      //diagonal elements
+  double a = -1./(h*h);     
+  double d = 2./(h*h);      
 
 
   A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
-  maxiter = (int) N * (int) N * (int) N;
-  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-  cout <<"N= "<<N<<", gives "<< iterations<< "itterations"<< endl;
+  maxiter = (int) N * (int) N * (int) N;   //redefines max number of itterations
+  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged); //runs jacobi eigensolver
+  myfile <<N<<","<< iterations << endl;   //writes N and number of itterations to a txt file
     }
+
+myfile.close();
 }
 
 
