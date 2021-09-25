@@ -74,7 +74,7 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
   int N = arma::size(A,0);
   iterations = 0;
 
-  int k; // midlertidig losning?????
+  int k;
   int l;
   double max_value = find_max_value(A, k, l); //( A, &k, &l);
   arma::mat R = arma::mat(N, N, arma::fill::eye);
@@ -84,8 +84,6 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
       jacobi_rotate(A, R, k, l);
       iterations++;
   }
-  //cout << "Number of iterations: " << iterations << "\n";
-  //cout << R << endl;
 
   arma::vec diagonals = A.diag(); // eigenvalues are diagonal elements of rotated matrix A
   arma::uvec indices = sort_index(diagonals, "ascending");
@@ -104,8 +102,6 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
  }
 
 }
-
-
 
 
 // -----------Task 7------------
