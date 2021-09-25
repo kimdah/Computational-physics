@@ -1,10 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-data10 = np.loadtxt("output10.txt")
-data100 = np.loadtxt("output100.txt")
-colors = ['r', 'g', 'b', 'r', 'c', 'm', 'y']
+colors = ['r', 'g', 'b', 'r', 'c', 'm', 'y'] # shorten later
 
 for n in range (10, 100, )(n=10; n<= 100; n*10){
 
@@ -25,7 +22,7 @@ for i in range(1, 3):
     xhat.append(1) # boundary value xhat = 1
 
     for j in range(1,4):
-        
+
         plt.plot(xhat, vstar, color=colors[i-1], label='n =%d' %n)
 
 

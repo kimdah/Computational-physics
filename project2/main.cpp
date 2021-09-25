@@ -2,6 +2,10 @@
 #include <iostream>
 #include <armadillo>
 
+//  need these?
+#include <fstream>
+#include <sstream>
+
 #define pi 3.14159265359
 
 using namespace std;
@@ -24,7 +28,7 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
 void jacobi_scaling(arma::mat& A, int& N, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         int& maxiter, int& iterations, bool& converged);
 
-
+void file_for_plot(int n);
 
 int main(int argc, char const *argv[]) {
 
@@ -46,7 +50,10 @@ int main(int argc, char const *argv[]) {
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
 
-  jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  //jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+
+  // Problem 7
+  file_for_plot(10);
 
   return 0;
 }
@@ -103,9 +110,8 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
 
 // -----------Task 7------------
 
-// kommenterer ut for aa kjore
-void file_to_plot(int n){ // finn paa nytt navn?
-  // n = steps in matrix
+void file_for_plot(int n){
+  // n = steps
 
   // create symmetric tridiagonal matrix with:
   int N = n-1;         //size of matrix NxN
@@ -118,35 +124,47 @@ void file_to_plot(int n){ // finn paa nytt navn?
   double eps = 1.0e-8; // tolerance
   arma::vec eigenvalues;
   arma::mat eigenvectors;
-  int N = arma::size(A,0);
-  double maxiter = (double) N * (double) N * (double) N;
+  int maxiter = N * N * N;
   int iterations;
   bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
-   // do this in plot instead?
   arma::vec xhat = arma::vec(n+1);
-  arma::vec vstar = arma::vec(n+1);
+  arma::mat vhat = arma::mat(N, 3);
+
   xhat(0) = 0;
-  vstar(0) =
   for (int i = 1; i < n; i++){
-    xhat(i) = xhat(i-1) + i*h;
+    xhat(i) = xhat(0) + i*h;
   }
   xhat(n) = 1;
-  ofstream ofile;
+
+  // only interested in eigenvectors corresponding to 3 smallest eigenvalues
+  for (int i = 0; i < 3; i++){
+    vhat.col(i) = eigenvectors.col(i);
+  }
+
+  // Boundary conditions v(0) = v(n) = 0
+  arma::rowvec boundary = arma::rowvec(3, arma::fill::zeros);
+  vhat.insert_rows(0, boundary);
+  vhat.insert_rows(N+1, boundary); // N+1 = n
+
+  cout << "Eigenvector:\n" << vhat << endl;
+
+  ofstream ofile; //scientific?
   std::ostringstream filename;
   filename << "output" << n << ".txt";
-  for (int i = 0; i < n+1; i++){ // < N if boundary points in python
-    ofile << setw(20) << setprecision(8) << scientific << xhat(i)
-    << setw(width) << setprecision(prec) << scientific << v(i, 0)
-    << setw(width) << setprecision(prec) << scientific << v(i, 1)
-    << setw(width) << setprecision(prec) << scientific << v(i, 2) << endl;
+  ofile.open(filename.str());
+  int width = 18;
+  int prec = 8;
+  for (int i = 0; i <= n; i++){
+    ofile << setw(width) << setprecision(prec) << scientific << xhat(i)
+          << setw(width) << setprecision(prec) << scientific << vhat(i, 0)
+          << setw(width) << setprecision(prec) << scientific << vhat(i, 1)
+          << setw(width) << setprecision(prec) << scientific << vhat(i, 2) << endl;
   }
   ofile.close();
+
 }
-
-
-
 //------- End task 7------------
 
 
