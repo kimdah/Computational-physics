@@ -1,33 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-colors = ['r', 'g', 'b', 'r', 'c', 'm', 'y'] # shorten later
 
-for n in range (10, 100, )(n=10; n<= 100; n*10){
-
-
-}
 for i in range(1, 3):
     n = 10**i # n = 10, 100
     data = np.loadtxt('output%d.txt' %n)
-    xscaled = np.array(data[:,0])
+    xhat = np.array(data[:,0])
     eigvec1 = np.array(data[:,1])
-    eigvec2 = np.array(data[: 2])
+    eigvec2 = np.array(data[:,2])
     eigvec3 = np.array(data[:,3])
-    eigval = np.array(np.array(data[:,1]),np.array(data[: 2]), np.array(data[:,3])) # isteden?
+    analytical_eigvec1 = np.array(data[:,4])
+    analytical_eigvec2 = np.array(data[:,5])
+    analytical_eigvec3 = np.array(data[:,6])
 
-    xhat = np.array();
-    xhat.append(0); # boundary value xhat = 0
-    xhat = np.append(xhat, xscaled)
-    xhat.append(1) # boundary value xhat = 1
+    #print(xhat)
+    #print(eigvec)
 
-    for j in range(1,4):
+    plt.plot(xhat, eigvec1, color='r', label='1 appr.')
+    plt.plot(xhat, eigvec2, color='g', label='2 appr.')
+    plt.plot(xhat, eigvec3, color='b', label='3 appr.')
+    plt.plot(xhat, analytical_eigvec1, color='c', label='1 analyt.')
+    plt.plot(xhat, analytical_eigvec2, color='m', label='2 analyt.')
+    plt.plot(xhat, analytical_eigvec3, color='k', label='3 analyt.')
 
-        plt.plot(xhat, vstar, color=colors[i-1], label='n =%d' %n)
-
-
-
-    plt.ylabel('Eigenvectors')
+    plt.title('Eigenvectors of sym.tridiag matrix A with n=%d steps' %n)
+    plt.ylabel('Eigenvectors, v(xhat)')
     plt.xlabel('xhat')
     plt.savefig('x_vs_eigvecn=%d.pdf' %n)
+    plt.grid()
+    plt.legend()
     plt.show()
