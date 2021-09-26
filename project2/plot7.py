@@ -13,9 +13,6 @@ for i in range(1, 3):
     analytical_eigvec2 = np.array(data[:,5])
     analytical_eigvec3 = np.array(data[:,6])
 
-    #print(xhat)
-    #print(eigvec)
-
     plt.plot(xhat, eigvec1, color='r', label='1 appr.')
     plt.plot(xhat, eigvec2, color='g', label='2 appr.')
     plt.plot(xhat, eigvec3, color='b', label='3 appr.')
@@ -28,5 +25,5 @@ for i in range(1, 3):
     plt.xlabel('xhat')
     plt.savefig('x_vs_eigvecn=%d.pdf' %n)
     plt.grid()
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.1, 1.05))
     plt.show()
