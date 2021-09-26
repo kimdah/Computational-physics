@@ -30,136 +30,7 @@ void file_for_plot(int n);
 
 int main(int argc, char const *argv[]) {
 
-<<<<<<< HEAD
-  arma::mat A = task3(); // ????
-
-  int k;
-  int l;
-  task_4b(); //Solution to task 4b
-
-
-  double eps = 1.0e-8; // tolerance
-  arma::vec eigenvalues;
-  arma::mat eigenvectors;
-  int N = arma::size(A,0);
-  int maxiter = N * N * N;
-  int iterations;
-  bool converged = 0;
-  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-
-
-  jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-
-  return 0;
-}
-
-// Jacobi method eigensolver:
-// - Runs jacobi_rotate until max off-diagonal element < eps
-// - Writes the eigenvalues as entries in the vector "eigenvalues"
-// - Writes the eigenvectors as columns in the matrix "eigenvectors"
-//   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
-// - Stops if it the number of iterations reaches "maxiter"
-// - Writes the number of iterations to the integer "iterations"
-// - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
-
-void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
-                        const int& maxiter, int& iterations, bool& converged)
-                        // chose to not define A as a constant to let this method change it
-{
-  int N = arma::size(A,0);
-  iterations = 0;
-
-  int k; // midlertidig losning?????
-  int l;
-  double max_value = find_max_value(A, k, l); //( A, &k, &l);
-  arma::mat R = arma::mat(N, N, arma::fill::eye);
-
-  while (fabs(max_value) > eps && (double) iterations < maxiter ) {
-      max_value = find_max_value(A, k, l); //(A, &k, &l);
-      jacobi_rotate(A, R, k, l);
-      iterations++;
-  }
-  //cout << "Number of iterations: " << iterations << "\n";
-  //cout << R << endl;
-
-  arma::vec diagonals = A.diag(); // eigenvalues are diagonal elements of rotated matrix A
-  arma::uvec indices = sort_index(diagonals, "ascending");
-
-  // Sorting and filling eigenvalues and eigenvectors
-  eigenvalues = arma::vec(N);
-  eigenvectors = arma::mat(N,N);
-  for (int i = 0; i < N; i++){
-    eigenvalues(i) = diagonals(indices(i));
-    eigenvectors.col(i) = R.col(indices(i));
-  }
-
-//converged set to 1 means the jacobi rotation converged
- if(iterations+1 != maxiter){
-  converged = 1;
- }
-
-}
-
-
-
-
-// -----------Task 7------------
-
-// kommenterer ut for aa kjore
-void file_to_plot(int n){ // finn paa nytt navn?
-  // n = steps in matrix
-
-  // create symmetric tridiagonal matrix with:
-  int N = n-1;         //size of matrix NxN
-  double h = 1./n;
-  double a = -1./(h*h);     //super and sub diagonal elements
-  double d = 2./(h*h);      //diagonal elements
-  arma::mat A = create_symmetric_tridiagonal(N, a, d);
-
-  // Solve matrix equation Ax = b
-  double eps = 1.0e-8; // tolerance
-  arma::vec eigenvalues;
-  arma::mat eigenvectors;
-  int N = arma::size(A,0);
-  double maxiter = (double) N * (double) N * (double) N;
-  int iterations;
-  bool converged = 0;
-  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-
-   // do this in plot instead?
-  arma::vec xhat = arma::vec(n+1);
-  arma::vec vstar = arma::vec(n+1);
-  xhat(0) = 0;
-  vstar(0) =
-  for (int i = 1; i < n; i++){
-    xhat(i) = xhat(i-1) + i*h;
-  }
-  xhat(n) = 1;
-  ofstream ofile;
-  std::ostringstream filename;
-  filename << "output" << n << ".txt";
-  for (int i = 0; i < n+1; i++){ // < N if boundary points in python
-    ofile << setw(20) << setprecision(8) << scientific << xhat(i)
-    << setw(width) << setprecision(prec) << scientific << v(i, 0)
-    << setw(width) << setprecision(prec) << scientific << v(i, 1)
-    << setw(width) << setprecision(prec) << scientific << v(i, 2) << endl;
-  }
-  ofile.close();
-}
-
-
-
-//------- End task 7------------
-
-
-
-
-
-//-----------Task 3-------------
-arma::mat task3(){ // void?
-=======
   // ----- Problem 3 -----
->>>>>>> 9ef2f0843341abef528fcaf3e7aa6491c6675fbb
   int N = 6;         //size of matrix NxN
   int n = N+1;       //steps in matrix
   double h = 1./n;
@@ -194,8 +65,8 @@ arma::mat task3(){ // void?
   int iterations;
   bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-  cout << "Eigenvalues with jacobi:\n" << eigval << endl; // printing out
-  cout << "Eigenvector with jacobi:\n" << eigvec << endl;
+  cout << "Eigenvalues with jacobi:\n" << eigenvalues << endl; // printing out
+  cout << "Eigenvector with jacobi:\n" << eigenvectors << endl;
 
   // Commented out to avoid taking up too much time
   // Problem 6
