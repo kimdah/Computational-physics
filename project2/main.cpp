@@ -84,7 +84,7 @@ int main(int argc, char const *argv[]) {
 
   // Commented out to avoid taking up too much time
   // Problem 6
-  //jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
   // Problem 7
   file_for_plot(10);
