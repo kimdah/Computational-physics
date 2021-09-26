@@ -72,10 +72,15 @@ int main(int argc, char const *argv[]) {
   bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
+
   cout << endl << "------------Solution to task 5 b)------------"<< endl;
 
   cout << "Eigenvalues with jacobi:\n" << eigval << endl; // printing out
   cout << "Eigenvector with jacobi:\n" << eigvec << endl;
+
+  cout << "Eigenvalues with jacobi:\n" << eigenvalues << endl; // printing out
+  cout << "Eigenvector with jacobi:\n" << eigenvectors << endl;
+
 
   cout << endl << "------------Solution to task 5 b) (end)------------"<< endl;
 
