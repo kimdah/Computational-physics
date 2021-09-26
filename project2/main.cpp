@@ -194,6 +194,8 @@ arma::mat task3(){ // void?
   int iterations;
   bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  cout << "Eigenvalues with jacobi:\n" << eigval << endl; // printing out
+  cout << "Eigenvector with jacobi:\n" << eigvec << endl;
 
   // Commented out to avoid taking up too much time
   // Problem 6
