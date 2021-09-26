@@ -20,9 +20,6 @@ for i in range(1, 3):
     plt.plot(xhat, analytical_eigvec2, color='m', label='2 analyt.')
     plt.plot(xhat, analytical_eigvec3, color='k', label='3 analyt.')
 
-    #box = plt.get_position()
-    #plt.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-
     plt.title('Eigenvectors of sym.tridiag matrix A with n=%d steps' %n)
     plt.ylabel('Eigenvectors, v(xhat)')
     plt.xlabel('xhat')
