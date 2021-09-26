@@ -75,9 +75,6 @@ int main(int argc, char const *argv[]) {
 
   cout << endl << "------------Solution to task 5 b)------------"<< endl;
 
-  cout << "Eigenvalues with jacobi:\n" << eigval << endl; // printing out
-  cout << "Eigenvector with jacobi:\n" << eigvec << endl;
-
   cout << "Eigenvalues with jacobi:\n" << eigenvalues << endl; // printing out
   cout << "Eigenvector with jacobi:\n" << eigenvectors << endl;
 
