@@ -13,9 +13,6 @@ for i in range(1, 3):
     analytical_eigvec2 = np.array(data[:,5])
     analytical_eigvec3 = np.array(data[:,6])
 
-    #print(xhat)
-    #print(eigvec)
-
     plt.plot(xhat, eigvec1, color='r', label='1 appr.')
     plt.plot(xhat, eigvec2, color='g', label='2 appr.')
     plt.plot(xhat, eigvec3, color='b', label='3 appr.')
@@ -23,10 +20,13 @@ for i in range(1, 3):
     plt.plot(xhat, analytical_eigvec2, color='m', label='2 analyt.')
     plt.plot(xhat, analytical_eigvec3, color='k', label='3 analyt.')
 
+    #box = plt.get_position()
+    #plt.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+
     plt.title('Eigenvectors of sym.tridiag matrix A with n=%d steps' %n)
     plt.ylabel('Eigenvectors, v(xhat)')
     plt.xlabel('xhat')
     plt.savefig('x_vs_eigvecn=%d.pdf' %n)
     plt.grid()
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.1, 1.05))
     plt.show()
