@@ -403,8 +403,8 @@ void file_for_plot(int n){
   std::ostringstream filename;
   filename << "output" << n << ".txt";
   ofile.open(filename.str());
-  int width = 18;
-  int prec = 8;
+  int width = 20;
+  int prec = 12;
   for (int i = 0; i <= n; i++){
     ofile << setw(width) << setprecision(prec) << scientific << xhat(i)
           << setw(width) << setprecision(prec) << scientific << vhat(i, 0)

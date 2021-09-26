@@ -25,5 +25,5 @@ You can run:
 
 $ python plot7.py
 
-To save and show the results for task 7.
-
+To show the results for task 7 and save the plots in pdf files named:
+x_vs_eigvecn=10.pdf and x_vs_eigvecn=100.pdf
