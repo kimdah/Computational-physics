@@ -1,12 +1,9 @@
 #include <string>
 #include <iostream>
 #include <armadillo>
-#include <string> //includes sting library
+#include <string> //includes string library
 #include <math.h>
 #include <iomanip>
-
-
-//  need these?
 #include <fstream>
 #include <sstream>
 
