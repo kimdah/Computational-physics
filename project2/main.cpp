@@ -43,6 +43,7 @@ int main(int argc, char const *argv[]) {
   arma::mat eigvec;
   eig_sym(eigval, eigvec, A);
 
+  cout << endl << "------------Solution to task 3------------"<< endl;
   cout << "Eigenvalues with eig_sym:\n" << eigval << endl; // printing out
   cout << "Eigenvector with eig_sym:\n" << eigvec << endl;
 
@@ -52,10 +53,15 @@ int main(int argc, char const *argv[]) {
 
   cout << "Analytical eigenvalues:\n" << eigval_analytic << endl;
   cout << "Analytical eigenvectors:\n" << eigvec_analytic << endl;
+
+  cout << endl << "------------Solution to task 3(end)------------"<< endl;
   // -------- Problem 3 (end) --------
 
+  cout << endl << "------------Solution to task 4 b)------------"<< endl;
   // Problem 4B
   problem_4b();
+
+  cout << endl << "------------Solution to task 4 b)(end)------------"<< endl;
 
   // Problem 5B using the matrix A from problem 3
   double eps = 1.0e-8; // tolerance
@@ -65,8 +71,13 @@ int main(int argc, char const *argv[]) {
   int iterations;
   bool converged = 0;
   jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+
+  cout << endl << "------------Solution to task 5 b)------------"<< endl;
+
   cout << "Eigenvalues with jacobi:\n" << eigval << endl; // printing out
   cout << "Eigenvector with jacobi:\n" << eigvec << endl;
+
+  cout << endl << "------------Solution to task 5 b) (end)------------"<< endl;
 
   // Commented out to avoid taking up too much time
   // Problem 6
