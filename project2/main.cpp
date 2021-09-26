@@ -1,6 +1,10 @@
 #include <string>
 #include <iostream>
 #include <armadillo>
+#include <string> //includes sting library
+#include <math.h>
+#include <iomanip>
+
 
 //  need these?
 #include <fstream>
