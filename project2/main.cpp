@@ -82,8 +82,7 @@ int main(int argc, char const *argv[]) {
 
   cout << endl << "------------Solution to task 5 b) (end)------------"<< endl;
 
-  // Commented out to avoid taking up too much time
-  // Problem 6
+  // Problem 6 - comment out to avoid taking up too much time
   jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
   // Problem 7
