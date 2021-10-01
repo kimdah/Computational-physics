@@ -1,9 +1,16 @@
 #ifndef PENNINGTRAP_HPP
 #define PENNINGTRAP_HPP
 
+#include "Particle.hpp"
+
+#include <vector>
+
+
 class PenningTrap(){
 
 public:
+  std::vector<Particle> particles_;
+
 
   // Constructor
   PenningTrap(double B0_in, double V0_in, double d_in);

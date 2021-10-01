@@ -31,3 +31,6 @@ void PenningTrap::evolve_RK4(double dt);
 
 // Evolve the system one time step (dt) using Forward Euler
 void PenningTrap::evolve_forward_Euler(double dt);
+
+
+q = particle_[0].q_;
