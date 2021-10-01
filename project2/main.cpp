@@ -1,8 +1,9 @@
 #include <string>
 #include <iostream>
 #include <armadillo>
-
-//  need these?
+#include <string> //includes string library
+#include <math.h>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 
@@ -81,9 +82,8 @@ int main(int argc, char const *argv[]) {
 
   cout << endl << "------------Solution to task 5 b) (end)------------"<< endl;
 
-  // Commented out to avoid taking up too much time
-  // Problem 6
-  //jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  // Problem 6 - comment out to avoid taking up too much time
+  jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
   // Problem 7
   file_for_plot(10);
@@ -399,8 +399,8 @@ void file_for_plot(int n){
   std::ostringstream filename;
   filename << "output" << n << ".txt";
   ofile.open(filename.str());
-  int width = 18;
-  int prec = 8;
+  int width = 20;
+  int prec = 12;
   for (int i = 0; i <= n; i++){
     ofile << setw(width) << setprecision(prec) << scientific << xhat(i)
           << setw(width) << setprecision(prec) << scientific << vhat(i, 0)
