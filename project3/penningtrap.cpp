@@ -25,8 +25,9 @@ arma::vec PenningTrap::external_E_field(arma::vec r){
 
 // External magnetic field at point r=(x,y,z)
 arma::vec PenningTrap::external_B_field(arma::vec r){
-  return arma::vec(1);
-
+  arma::vec B_field = arma::vec(3).fill(0);
+  B_field(2) = B0_;
+  return B_field;
 }
 
 // Force on particle_i from particle_j
@@ -37,18 +38,24 @@ arma::vec PenningTrap::force_particle(int i, int j){
 
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i){
-  return arma::vec(1);
-
+  // Lorentz force
+  double q = particles_[i].q_;
+  arma::vec v = particles_[i].vel_;
+  arma::vec E = external_E_field(particles_[i].pos_);
+  arma::vec B =external_B_field(particles_[i].pos_);
+  return q*E + cross(q*v,B);
 }
 
 // The total force on particle_i from the other particles
 arma::vec PenningTrap::total_force_particles(int i){
+  // sum of force_particle for all j
   return arma::vec(1);
 
 }
 
 // The total force on particle_i from both external fields and other particles
 arma::vec PenningTrap::total_force(int i){
+
   return arma::vec(1);
 }
 
