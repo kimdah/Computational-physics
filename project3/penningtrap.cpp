@@ -19,6 +19,10 @@ void PenningTrap::add_particle(Particle p_in){
 
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r){
+  arma::vec E_field = arma::vec(3).fill(0);
+  E_field(0) = (r(0)*V0)/((d_)^2);
+  E_field(1) = (r(1)*V0)/((d_)^2);
+  E_field(2) = (-2*r(2)*V0)/((d_)^2);
   return arma::vec(1);
 
 }
@@ -31,6 +35,9 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 
 // Force on particle_i from particle_j
 arma::vec PenningTrap::force_particle(int i, int j){
+
+
+
   return arma::vec(1);
 
 }
