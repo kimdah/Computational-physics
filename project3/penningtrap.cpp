@@ -71,6 +71,7 @@ arma::vec PenningTrap::total_force_particles(int i){
 
 // The total force on particle_i from both external fields and other particles
 arma::vec PenningTrap::total_force(int i){
+
   return arma::vec(1);
 }
 
