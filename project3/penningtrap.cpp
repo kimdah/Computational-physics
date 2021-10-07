@@ -81,8 +81,16 @@ void PenningTrap::evolve_RK4(double dt){
 
 }
 
-// Evolve the system one time step (dt) using Forward Euler
-void PenningTrap::evolve_forward_Euler(double dt){
+// Evolve the system one time step (dt) using Euler-Cromer
+void PenningTrap::evolve_Euler_Cromer(double dt){
+  for (int p = 0; p < particles_.size(); p++){
+    arma::vec r = particle_[p].pos_;
+    arma::vec v = particle_[p].vel_;
+    double m = particle_[p].m_;
 
+    v = v + dt * total_force(p)/m;
+    x = x + dt*v;
+
+  }
 
 }
