@@ -24,7 +24,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r){
   E_field(0) = (r(0)*V0)/pow(d,2); //((d_)^2);
   E_field(1) = (r(1)*V0)/pow(d,2);
   E_field(2) = (-2*r(2)*V0)/pow(d,2);
-  return arma::vec(1);
+  return E_field;
 
 }
 
@@ -70,7 +70,9 @@ arma::vec PenningTrap::total_force_particles(int i){
 
 // The total force on particle_i from both external fields and other particles
 arma::vec PenningTrap::total_force(int i){
-  return arma::vec(1);
+  arma::vec Fexternal = total_force_external;
+  arma::vec Finternal = total_force_particles;
+  return Fexternal+Finternal;
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
