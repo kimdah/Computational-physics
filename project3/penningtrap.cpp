@@ -11,7 +11,6 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in){
   V0_ = V0_in;
   d_ = d_in;
   ke = 1.38935333 * pow (10 , 5);
-  double m =
 }
 
 // Add a particle to the trap

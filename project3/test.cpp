@@ -14,7 +14,19 @@ int main(int argc, char const *argv[]) {
   std::cout << "norm a-b: " << arma::norm(a-b);
   //std::cout << "\n abs: " << abs(a-b);
 
+  // Evolve the system one time step (dt) using Euler-Cromer
+  void PenningTrap::evolve_Euler_Cromer(double dt){
+    for (int p = 0; p < particles_.size(); p++){
+      arma::vec r = particle_[p].pos_;
+      arma::vec v = particle_[p].vel_;
+      double m = particle_[p].m_;
 
+      v = v + dt * total_force(p)/m;
+      x = x + dt*v;
+
+    }
+
+  }
 
   return 0;
 }
