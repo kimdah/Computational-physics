@@ -35,11 +35,7 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 
 // Force on particle_i from particle_j, ignoring the magnetic forces
 arma::vec PenningTrap::force_particle(int i, int j){
-  arma::vec E_internal_force = arma::vec(3).fill(0);
 
-  for (i=0 ; i<n ; i++){
-    k_e*q(i)*((r - r(i))/((abs(r-r(i)))^3));
-  }
 
   return arma::vec(1);
 
@@ -53,6 +49,11 @@ arma::vec PenningTrap::total_force_external(int i){
 
 // The total force on particle_i from the other particles
 arma::vec PenningTrap::total_force_particles(int i){
+  arma::vec E_internal_force = arma::vec(3).fill(0);
+
+  for (i=0 ; i<n ; i++){
+    k_e*q(i)*((r - r(i))/((abs(r-r(i)))^3));
+  }
   return arma::vec(1);
 
 }
