@@ -79,8 +79,6 @@ arma::vec PenningTrap::total_force(int i){
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
 
-dvxi/dt - w0ivy-1/2wzi2xi - force_particle(0)
-
 }
 
 // Evolve the system one time step (dt) using Forward Euler
