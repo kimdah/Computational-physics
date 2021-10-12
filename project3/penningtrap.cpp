@@ -1,4 +1,4 @@
-#include "PenningTrap.hpp"
+#include "penningtrap.hpp"
 #include "Particle.hpp"
 
 
