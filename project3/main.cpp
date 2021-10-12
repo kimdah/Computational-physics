@@ -8,12 +8,12 @@
 #include <sstream>
 
 //Code files included:
-#include "Particle.cpp"
-#include "penningtrap.cpp"
+#include "Particle.hpp"
+#include "penningtrap.hpp"
 
 using namespace std;
 
 int main(int argc, char const *argv[]) {
-  
+
   return 0;
 }
