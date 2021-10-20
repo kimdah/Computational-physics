@@ -23,9 +23,9 @@ int main(int argc, char const *argv[]) {
   PenningTrap penning_trap(9.65*10, 9.65*pow(10,8), pow(10,4));
 
   // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
-  Particle new_particle(1, 40.08, vec(3).randn()*d*0.1, vec(3).randn()*d*0.1); // Ca ATOM!
+  //Particle new_particle(1, 40.08, vec(3).randn()*d*0.1, vec(3).randn()*d*0.1); // Ca ATOM!
 
-  penning_trap.add_particle(new_particle);
+  //penning_trap.add_particle(new_particle);
 
 
   return 0;
