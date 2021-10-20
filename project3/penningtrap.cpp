@@ -43,6 +43,7 @@ arma::vec PenningTrap::force_particle(int i, int j){
   double qj = particles_[j].q_;
   arma::vec ipos = particles_[i].pos_;
   arma::vec jpos = particles_[j].pos_;
+  std::cout << jpos << " \n\n";
   return ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
 
 }
@@ -53,17 +54,22 @@ arma::vec PenningTrap::total_force_external(int i){
   double q = particles_[i].q_;
   arma::vec v = particles_[i].vel_;
   arma::vec E = external_E_field(particles_[i].pos_);
-  arma::vec B =external_B_field(particles_[i].pos_);
-  return q*E + cross(q*v,B);
+  arma::vec B = external_B_field(particles_[i].pos_);
+  return q*E + q*cross(v,B);
 
 }
 
 // The total force on particle_i from the other particles
 arma::vec PenningTrap::total_force_particles(int i){
-  arma::vec total_force_internal = arma::vec(3);
-  for(int j=0 ; j<=particles_.size()-1 ; j++){
-    total_force_internal += force_particle(i, j);
+  arma::vec total_force_internal = arma::vec(3).fill(0.);
+  for(int j=0 ; j < particles_.size(); j++){
+     if (i!= j) {
+      total_force_internal += force_particle(i, j);
+    }
+      
   }
+  
+  
   return total_force_internal;
 
 
@@ -73,6 +79,7 @@ arma::vec PenningTrap::total_force_particles(int i){
 arma::vec PenningTrap::total_force(int i){
   arma::vec Fexternal = total_force_external(i);
   arma::vec Finternal = total_force_particles(i);
+  
   return Fexternal+Finternal;
 }
 
@@ -98,14 +105,14 @@ void PenningTrap::evolve_RK4(double dt){
     // 4
     arma::vec k4r = dt* (r + dt * (v + k3r));
     arma::vec k4v = dt* (v + dt * (a + k3v));
-    //std::cout << r << " \n\n";
+    
     // 5
     r = r + (1./6)*(k1r + 2*k2r + 2*k3r + k4r);
     v = v + (1./6)*(k1v + 2*k2v + 2*k3v + k4v);
-    //std::cout << r << " \n\n";
-    particles_[p].pos_.swap(r);  // position vector r
-    particles_[p].vel_.swap(v);  // velocity vector v
-
+    std::cout << v << " \n\n";
+    particles_[p].pos_ = r; 
+    particles_[p].vel_ = v;
+    
   }
 
 }
