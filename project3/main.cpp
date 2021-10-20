@@ -21,16 +21,17 @@ int main(int argc, char const *argv[]) {
     int n = 100; //itrs
     double t = 100.0;
     double h = t / n;
-    double d = pow(10,4);  
+    double d = pow(10,4);
     std::string filename = "Results/9_1_single_particle.txt";
     std::ofstream ofile;
     ofile.open(filename);
-    
+
     // Some width and precision parameters we will use to format the output
     int width = 16;
     int prec  = 8;
 
     // Run simulation for a single particle with default values for B_0, V_0 and d
+    // double B0_in, double V0_in, double d_in
     PenningTrap penning_trap(9.65*10, 9.65*pow(10,8), pow(10,4));
 
     // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
