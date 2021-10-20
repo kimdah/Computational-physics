@@ -100,11 +100,13 @@ void PenningTrap::evolve_RK4(double dt){
     // 4
     arma::vec k4r = dt* (r + dt * (v + k3r));
     arma::vec k4v = dt* (v + dt * (a + k3v));
-
+    //std::cout << r << " \n\n";
     // 5
     r = r + (1./6)*(k1r + 2*k2r + 2*k3r + k4r);
     v = v + (1./6)*(k1v + 2*k2v + 2*k3v + k4v);
-
+    //std::cout << r << " \n\n";
+    particles_[p].pos_.swap(r);  // position vector r
+    particles_[p].vel_.swap(v);  // velocity vector v
 
   }
 

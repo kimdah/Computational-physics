@@ -18,15 +18,31 @@ using namespace arma;
 
 int main(int argc, char const *argv[]) {
 
-  double d = pow(10,4);
+    int n = 100; //itrs
+    double t = 100.0;
+    double h = t / n;
+    double d = pow(10,4);
+    std::string filename = "Results/9_1_single_particle.txt";
+    std::ofstream ofile;
+    ofile.open(filename);
 
-  PenningTrap penning_trap(9.65*10, 9.65*pow(10,8), pow(10,4));
+    // Some width and precision parameters we will use to format the output
+    int width = 16;
+    int prec  = 8;
 
-  // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
-  //Particle new_particle(1, 40.08, vec(3).randn()*d*0.1, vec(3).randn()*d*0.1); // Ca ATOM!
+    // Run simulation for a single particle with default values for B_0, V_0 and d
+    PenningTrap penning_trap(9.65*10, 9.65*pow(10,8), pow(10,4));
 
-  //penning_trap.add_particle(new_particle);
+    // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
+    Particle new_particle(1, 40.08, vec(3).randn()*d*0.1, vec(3).randn()*d*0.1); // Ca ATOM!
 
+    penning_trap.add_particle(new_particle);
 
-  return 0;
+    for (int i = 0; i < n+1; i++) {
+        penning_trap.evolve_RK4(h);
+        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << h*i
+              << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[2]
+              << std::endl;
+    }
+    return 0;
 }
