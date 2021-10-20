@@ -7,7 +7,6 @@
 
 // Constructor
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in){
-  std::vector<Particle> particles_;
   B0_ = B0_in; // definer disse
   V0_ = V0_in;
   d_ = d_in;
