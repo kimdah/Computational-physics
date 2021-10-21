@@ -84,5 +84,7 @@ void simulator(int iterations, int duration, int particles, std::string axis, bo
             if (axis.find('y') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[1];}
             if (axis.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[2];}
         }
+        ofile << std::endl;
       }
+    ofile.close();
 }
