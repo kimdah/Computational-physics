@@ -16,38 +16,53 @@
 using namespace std;
 using namespace arma;
 
-void simulator(int iterations, int duration, int particles, std::string outputs, bool interactions);
+void simulator(int iterations, int duration, int particles, std::string outputs, bool interactions, bool euler_cromer);
 
 int main(int argc, char const *argv[]) {
 
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
-    simulator(100, 100, 1, "tz", true);
+    simulator(10000, 100, 1, "tz", true, false);
     // Problem 9 point 2
     // interactions on
-    simulator(100, 100, 2, "txy", true);
+    simulator(100, 100, 2, "txy", true, false);
     // interactions off
-    simulator(100, 100, 2, "txy", false);
+    simulator(100, 100, 2, "txy", false, false);
     // Point 3: Phase space plots
-    simulator(100, 100, 2, "xv", true);
-    simulator(100, 100, 2, "xv", false);
-    simulator(100, 100, 2, "yv", true);
-    simulator(100, 100, 2, "yv", false);
-    simulator(100, 100, 2, "zv", true);
-    simulator(100, 100, 2, "zv", false);
+    simulator(100, 100, 2, "xv", true, false);
+    simulator(100, 100, 2, "xv", false, false);
+    simulator(100, 100, 2, "yv", true, false);
+    simulator(100, 100, 2, "yv", false, false);
+    simulator(100, 100, 2, "zv", true, false);
+    simulator(100, 100, 2, "zv", false, false);
+    // Point 4: 3D plot
+    simulator(10000, 100, 2, "txyz", true, false);
+    simulator(10000, 100, 2, "txyz", false, false);
+    // Point 5: step sizes
+    for (int i = 1; i < 6; i++) {
+        simulator(pow(10,i), 100, 1, "txyz", true, false); // RK4
+        simulator(pow(10,i), 100, 1, "txyz", true, true); // Euler Cromer
+    }
+    
 
 
     return 0;
 }
 
-void simulator(int iterations, int duration, int particles, std::string outputs, bool interactions) {
-
+void simulator(int iterations, int duration, int particles, std::string outputs, bool interactions, bool euler_cromer) {
+   
     int n = iterations; //itrs
     double t = duration;
     double h = double(t) / n;
     double d = pow(10,4);
     // Create a filename specifying in order the number of iterations, duration, particles, axes included, whether particle interactions are on
-    std::string filename = "Results/i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+"_outputs_"+outputs+".txt";
+    std::string filename;
+    if (euler_cromer) {
+            filename = "Results/EC_i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+"_outputs_"+outputs+".txt";
+        } else {
+            filename = "Results/RK4_i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+"_outputs_"+outputs+".txt";
+        }
+    
     std::ofstream ofile;
     ofile.open(filename);
 
@@ -91,8 +106,13 @@ void simulator(int iterations, int duration, int particles, std::string outputs,
 
     ofile<< std::endl;
     for (int i = 1; i < n+1; i++) {
-        //penning_trap.evolve_Euler_Cromer(h);
-        penning_trap.evolve_RK4(h);
+        if (euler_cromer) {
+            penning_trap.evolve_Euler_Cromer(h);
+        } else {
+            penning_trap.evolve_RK4(h);
+        }
+        
+        
         if (outputs.find('t') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << h*i;}
         for (int j = 0; j < penning_trap.particles_.size(); j++) {
             if (outputs.find('x') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[0];}
@@ -106,3 +126,4 @@ void simulator(int iterations, int duration, int particles, std::string outputs,
       }
       ofile.close();
 }
+
