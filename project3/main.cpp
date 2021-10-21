@@ -67,9 +67,8 @@ void simulator(int iterations, int duration, int particles, std::string outputs,
     }
 
  
-
+    if (outputs.find('t') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "t";}
     for (int j = 1; j < penning_trap.particles_.size()+1; j++) {
-        if (outputs.find('t') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "t";}
         if (outputs.find('x') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "x_" + std::to_string(j);}
         if (outputs.find('y') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "y_" + std::to_string(j);}
         if (outputs.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "z_" + std::to_string(j);}
