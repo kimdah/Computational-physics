@@ -19,6 +19,8 @@ using namespace arma;
 void simulator(int iterations, int duration, int particles, std::string axis, bool interactions);
 
 int main(int argc, char const *argv[]) {
+
+    // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
     simulator(100, 100, 1, "z", true);
     // Problem 9 point 2
