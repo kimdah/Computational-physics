@@ -11,6 +11,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   B0_ = B0_in; // definer disse
   V0_ = V0_in;
+  particle_interactions_ = true;
   d_ = d_in;
 
 }
@@ -80,8 +81,12 @@ arma::vec PenningTrap::total_force_particles(int i){
 arma::vec PenningTrap::total_force(int i){
   arma::vec Fexternal = total_force_external(i);
   arma::vec Finternal = total_force_particles(i);
+  if (particle_interactions_) {
+    return Fexternal+Finternal;
+  } else {
+    return Fexternal;
+  }
   
-  return Fexternal+Finternal;
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
