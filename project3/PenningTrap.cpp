@@ -23,7 +23,7 @@ void PenningTrap::add_particle(Particle p_in){
 
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r){
-  double v0d = 9.65;
+  double v0d = 9.65; // V0_/d^2
   arma::vec E_field = arma::vec(3).fill(0);
   E_field(0) = r(0)*v0d;
   E_field(1) = r(1)*v0d;
@@ -121,13 +121,16 @@ void PenningTrap::evolve_RK4(double dt){
 
 // Evolve the system one time step (dt) using Euler-Cromer
 void PenningTrap::evolve_Euler_Cromer(double dt){
-  for (int p = 0; p < particles_.size(); p++){
-    arma::vec r = particles_[p].pos_;
-    arma::vec v = particles_[p].vel_;
-    double m = particles_[p].m_;
+  for (int i = 0; i < particles_.size(); i++){
+    arma::vec r = particles_[i].pos_;
+    arma::vec v = particles_[i].vel_;
+    double m = particles_[i].m_;
 
-    v = v + (dt * total_force(p)/m);
+    v = v + (dt * total_force(i)/m);
     r = r + dt*v;
+
+    particles_[i].vel_ = v;
+    particles_[i].pos_ = r;
 
   }
 

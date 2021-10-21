@@ -1,7 +1,6 @@
 # Plot of 2 particles and their motion in xy-plane with and without particle interactions
 import numpy as np
-import matplotlib as plt
-
+import matplotlib.pyplot as plt 
 
 
 fig, (ax1, ax2)= plt.subplots(2, sharey=True) #(ax1, ax2)
