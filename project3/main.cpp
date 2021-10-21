@@ -15,8 +15,6 @@
 
 using namespace std;
 using namespace arma;
-<<<<<<< HEAD
-=======
 
 void simulator(int iterations, int duration, int particles, std::string axis, bool interactions);
 
@@ -83,4 +81,4 @@ void simulator(int iterations, int duration, int particles, std::string axis, bo
             if (axis.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[2];}
         }
       }
-}     
+}
