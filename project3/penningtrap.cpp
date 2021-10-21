@@ -97,6 +97,7 @@ void PenningTrap::evolve_RK4(double dt){
     double m = particles_[p].m_;
     arma::vec a = total_force(p)/m;
 
+    // 1
     arma::vec k1r = dt * v; // rekkefølge?
     arma::vec k1v = dt * a;
 
