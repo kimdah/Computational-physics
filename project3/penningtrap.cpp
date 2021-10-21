@@ -45,7 +45,6 @@ arma::vec PenningTrap::force_particle(int i, int j){
   double qj = particles_[j].q_;
   arma::vec ipos = particles_[i].pos_;
   arma::vec jpos = particles_[j].pos_;
-  std::cout << jpos << " \n\n";
   return ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
 
 }
@@ -97,23 +96,21 @@ void PenningTrap::evolve_RK4(double dt){
     arma::vec k1v = dt * a;
 
     // 2
-    arma::vec k2r = dt* (r + 0.5*dt*(v + 0.5*k1r));
-    arma::vec k2v = dt* (v + 0.5*dt * (a + 0.5*k1v));
+    arma::vec k2r = dt * (r + 0.5 *dt * (v + 0.5 * k1r));
+    arma::vec k2v = dt * (v + 0.5 *dt * (a + 0.5 * k1v));
 
     // 3
-    arma::vec k3r = dt* (r + 0.5*dt *(v + 0.5*k2r));
-    arma::vec k3v = dt* (v + 0.5*dt * (a + 0.5*k2v));
+    arma::vec k3r = dt * (r + 0.5 * dt * (v + 0.5 * k2r));
+    arma::vec k3v = dt * (v + 0.5 * dt * (a + 0.5 * k2v));
 
     // 4
-    arma::vec k4r = dt* (r + dt * (v + k3r));
-    arma::vec k4v = dt* (v + dt * (a + k3v));
+    arma::vec k4r = dt * (r + dt * (v + k3r));
+    arma::vec k4v = dt * (v + dt * (a + k3v));
     
     // 5
-    r = r + (1./6)*(k1r + 2*k2r + 2*k3r + k4r);
-    v = v + (1./6)*(k1v + 2*k2v + 2*k3v + k4v);
-    std::cout << v << " \n\n";
-    particles_[p].pos_ = r; 
-    particles_[p].vel_ = v;
+    particles_[p].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
+    particles_[p].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
+    
     
   }
 
