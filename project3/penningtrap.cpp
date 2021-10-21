@@ -68,10 +68,10 @@ arma::vec PenningTrap::total_force_particles(int i){
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
-      
+
   }
-  
-  
+
+
   return total_force_internal;
 
 
@@ -86,7 +86,7 @@ arma::vec PenningTrap::total_force(int i){
   } else {
     return Fexternal;
   }
-  
+
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
@@ -111,12 +111,12 @@ void PenningTrap::evolve_RK4(double dt){
     // 4
     arma::vec k4r = dt * (r + dt * (v + k3r));
     arma::vec k4v = dt * (v + dt * (a + k3v));
-    
+
     // 5
     particles_[p].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
     particles_[p].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
-    
-    
+
+
   }
 
 }
