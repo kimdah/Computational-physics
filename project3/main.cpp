@@ -19,7 +19,6 @@ using namespace arma;
 =======
 
 void simulator(int iterations, int duration, int particles, std::string axis, bool interactions);
->>>>>>> 67596f0a894ed8af4e971d0faf915e9340fabd02
 
 int main(int argc, char const *argv[]) {
     //Problem 9 point 1
@@ -58,7 +57,7 @@ void simulator(int iterations, int duration, int particles, std::string axis, bo
         Particle new_particle(1, 40.08, vec(3).randn()*d*0.1, vec(3).randn()*d*0.1); // Ca ATOM!
         penning_trap.add_particle(new_particle);
     }
-    
+
     ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "t";
 
     for (int j = 1; j < penning_trap.particles_.size()+1; j++) {
@@ -66,14 +65,14 @@ void simulator(int iterations, int duration, int particles, std::string axis, bo
         if (axis.find('y') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "y_" + std::to_string(j);}
         if (axis.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << "z_" + std::to_string(j);}
     }
-    ofile << std::endl;     
+    ofile << std::endl;
     ofile << std::setw(width) << std::setprecision(prec) << std::scientific << 0;
     for (int j = 0; j < penning_trap.particles_.size(); j++) {
         if (axis.find('x') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[0];}
         if (axis.find('y') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[1];}
-        if (axis.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[2];}        
+        if (axis.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[2];}
     }
-          
+
     ofile<< std::endl;
     for (int i = 1; i < n+1; i++) {
         penning_trap.evolve_RK4(h);
@@ -83,22 +82,5 @@ void simulator(int iterations, int duration, int particles, std::string axis, bo
             if (axis.find('y') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[1];}
             if (axis.find('z') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[2];}
         }
-
-<<<<<<< HEAD
-  double d = pow(10,4);
-
-  PenningTrap Penning_Trap(9.65*10, 9.65*pow(10,8), pow(10,4));
-
-  // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
-  Particle new_particle(1, 40.08, vec(3).randn()*d*0.1, vec(3).randn()*d*0.1); // Ca ATOM!
-
-  penning_trap.add_particle(new_particle);
-
-
-  return 0;
-=======
-         ofile  << std::endl;
-    }
-    ofile.close();
->>>>>>> 67596f0a894ed8af4e971d0faf915e9340fabd02
-}
+      }
+}     
