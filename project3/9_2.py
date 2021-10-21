@@ -25,6 +25,6 @@ ax2.set(xlabel = 'x')
 # LEGENDS!
 
 plt.ylabel('y')
-plt.savefig('9_2plot.png')
+plt.savefig('9_2plot.pdf')
 plt.grid()
 plt.show()
