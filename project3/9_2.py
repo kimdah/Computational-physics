@@ -1,6 +1,8 @@
 # Plot of 2 particles and their motion in xy-plane with and without particle interactions
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+
+data = np.loadtxt('./Results/i_10000_d_100_p_1_pi_1_axis_z.txt', skiprows=1)
 
 
 fig, (ax1, ax2)= plt.subplots(2, sharey=True) #(ax1, ax2)
