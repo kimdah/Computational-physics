@@ -92,7 +92,14 @@ void PenningTrap::evolve_RK4(double dt){
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
     double m = particles_[i].m_;
-    arma::vec a = total_force(i)/m;
+    
+    arma::vec a = arma::vec(3).fill(0.);
+
+    if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
+      particles_[i].outofbounds_ = true;
+    } else {
+      a = total_force(i)/m;
+    }
 
     // 1
     arma::vec k1r = dt * v; // rekkefølge?
@@ -101,21 +108,26 @@ void PenningTrap::evolve_RK4(double dt){
     // 2
     particles_[i].pos_ = r + 0.5*k1r;
     particles_[i].vel_ = v + 0.5*k1v; // etter k2r?
-    a = total_force(i)/m;
+
+    if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
+    
+    //if (particle is outside |d|, set a to 0)
     arma::vec k2r = dt * particles_[i].vel_;
     arma::vec k2v = dt * a;
 
     // 3
     particles_[i].pos_ = r + 0.5*k2r;
     particles_[i].vel_ = v + 0.5*k2v; // etter k3r?
-    a = total_force(i)/m;
+    if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
+    //if (particle is outside |d|, set a to 0)
     arma::vec k3r = dt * particles_[i].vel_;
     arma::vec k3v = dt * a;
 
     // 4
     particles_[i].pos_ = r + k3r;
     particles_[i].vel_ = v + k3v; // etter k3r?
-    a = total_force(i)/m;
+    if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
+    //if (particle is outside |d|, set a to 0)
     arma::vec k4r = dt * particles_[i].vel_;
     arma::vec k4v = dt * a;
 
@@ -148,13 +160,32 @@ void PenningTrap::evolve_Euler_Cromer(double dt){
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
     double m = particles_[i].m_;
+    arma::vec a = arma::vec(3).fill(0.);
+    
 
-    v = v + (dt * total_force(i)/m);
+    if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
+      particles_[i].outofbounds_ = true;
+    } else {
+      a = total_force(i)/m;
+    }
+    
+    v = v + (dt * a);
     r = r + dt*v;
 
     particles_[i].vel_ = v;
     particles_[i].pos_ = r;
 
   }
-
 }
+  // Count how many particles is inside the d-region
+int PenningTrap::particles_inside() {
+  int count = 0;
+  for (int i = 0; i < particles_.size(); i++) {
+    if (!particles_[i].outofbounds_) {
+      count += 1;
+    }
+   }
+  return count;
+ }
+
+
