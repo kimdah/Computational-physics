@@ -80,12 +80,12 @@ void simulator(int iterations, int duration, int particles, std::string outputs,
     if (outputs.find('t') != std::string::npos) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << 0;}
 
     for (int j = 0; j < penning_trap.particles_.size(); j++) {
-        if (outputs.find('x') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[0];}
-        if (outputs.find('y') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[1];}
-        if (outputs.find('z') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[2];}
-        if (outputs.find('v') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].vel_[0]
-                                                           << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].vel_[1]
-                                                           << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].vel_[2];}
+        if (outputs.find('x') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[0];}
+        if (outputs.find('y') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[1];}
+        if (outputs.find('z') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[2];}
+        if (outputs.find('v') != std::string::npos) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[0]
+                                                           << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[1]
+                                                           << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[2];}
 
     }
 

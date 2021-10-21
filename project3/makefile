@@ -6,7 +6,7 @@ LIB =  -larmadillo
 all: compile link clean
 
 compile:
-	${CPPflags} -c main.cpp Particle.cpp PenningTrap.cpp ${LIB}
+	${CPPflags} -c main.cpp Particle.cpp PenningTrap.cpp #${LIB}
 
 link:
 	${CPPflags} -o main.out main.o PenningTrap.o Particle.o ${LIB}
