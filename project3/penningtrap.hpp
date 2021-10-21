@@ -13,6 +13,7 @@ class PenningTrap
     std::vector<Particle> particles_;  // container of particles
 
     double B0_, V0_, d_;
+    bool particle_interactions_;
 
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);
