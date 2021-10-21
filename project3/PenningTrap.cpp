@@ -88,31 +88,54 @@ arma::vec PenningTrap::total_force(int i){
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
-  for (int p = 0; p < particles_.size(); p++){
-    arma::vec r = particles_[p].pos_;
-    arma::vec v = particles_[p].vel_;
-    double m = particles_[p].m_;
-    arma::vec a = total_force(p)/m;
+  for (int i = 0; i < particles_.size(); i++){
+    arma::vec r = particles_[i].pos_;
+    arma::vec v = particles_[i].vel_;
+    double m = particles_[i].m_;
+    arma::vec a = total_force(i)/m;
 
     // 1
     arma::vec k1r = dt * v; // rekkefølge?
     arma::vec k1v = dt * a;
 
     // 2
-    arma::vec k2r = dt * (r + 0.5 *dt * (v + 0.5 * k1r));
-    arma::vec k2v = dt * (v + 0.5 *dt * (a + 0.5 * k1v));
+    particles_[i].pos_ = r + 0.5*k1r;
+    particles_[i].vel_ = v + 0.5*k1v; // etter k2r?
+    a = total_force(i)/m;
+    arma::vec k2r = dt * particles_[i].vel_;
+    arma::vec k2v = dt * a;
 
     // 3
-    arma::vec k3r = dt * (r + 0.5 * dt * (v + 0.5 * k2r));
-    arma::vec k3v = dt * (v + 0.5 * dt * (a + 0.5 * k2v));
+    particles_[i].pos_ = r + 0.5*k2r;
+    particles_[i].vel_ = v + 0.5*k2v; // etter k3r?
+    a = total_force(i)/m;
+    arma::vec k3r = dt * particles_[i].vel_;
+    arma::vec k3v = dt * a;
 
     // 4
-    arma::vec k4r = dt * (r + dt * (v + k3r));
-    arma::vec k4v = dt * (v + dt * (a + k3v));
+    particles_[i].pos_ = r + k3r;
+    particles_[i].vel_ = v + k3v; // etter k3r?
+    a = total_force(i)/m;
+    arma::vec k4r = dt * particles_[i].vel_;
+    arma::vec k4v = dt * a;
+
+    //  *dt * (v + 0.5 * k1r))
+    //(v + 0.5 *dt * (a + 0.5 * k1v))
+    //arma::vec k2r = dt * (r + 0.5 *dt * (v + 0.5 * k1r));
+  //  arma::vec k2v = dt * (v + 0.5 *dt * (a + 0.5 * k1v));
+
+    // // 3
+    // particles_[i].pos_ = r + 0.5*k2r;
+    // arma::vec k3r = dt * (r + 0.5 * dt * (v + 0.5 * k2r));
+    // arma::vec k3v = dt * (v + 0.5 * dt * (a + 0.5 * k2v));
+    //
+    // // 4
+    // arma::vec k4r = dt * (r + dt * (v + k3r));
+    // arma::vec k4v = dt * (v + dt * (a + k3v));
 
     // 5
-    particles_[p].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
-    particles_[p].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
+    particles_[i].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
+    particles_[i].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
 
 
   }
