@@ -29,6 +29,8 @@ int main(int argc, char const *argv[]) {
     // interactions off
     simulator(100, 100, 2, "xy", false);
 
+
+
     return 0;
 }
 

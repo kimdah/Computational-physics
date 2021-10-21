@@ -68,10 +68,7 @@ arma::vec PenningTrap::total_force_particles(int i){
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
-
   }
-
-
   return total_force_internal;
 
 
