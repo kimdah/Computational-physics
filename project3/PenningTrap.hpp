@@ -46,7 +46,7 @@ class PenningTrap
     void evolve_Euler_Cromer(double dt);
 
     // Count how many particles is inside the d-region
-    int particles_inside();
+    double particles_inside();
 
 };
 
