@@ -2,21 +2,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# pi = 0 = no interactions, pi=1 = interactions
-# for interactions in range(2): # 0, 1
-#     data = np.loadtxt('./Results/i_100_d_100_p_2_pi_%d_outputs_txy.txt', skiprows=1) %interactions
+# pi:   0: no interactions, 1:interactions
 
-# plt.figure()
-# #fig, (ax1, ax2)= plt.subplots(1,2, sharey=True)
-# fig.suptitle('Motion in xy-plane w/ and w/o particle interactions')
-# axes = fig.subplots(1, 2, sharey=True)
-
-colors = ['k', 'b']
-
-# 0: no interactions, 1:interactions
-
-data0 = np.loadtxt('./Results/i_100_d_100_p_2_pi_0_outputs_txy.txt', skiprows=1)
-data1 = np.loadtxt('./Results/i_100_d_100_p_2_pi_1_outputs_txy.txt', skiprows=1)
+data0 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_txy.txt', skiprows=1)
+data1 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_txy.txt', skiprows=1)
 
 # Particle 1
 x01 = np.array(data0[:,1])
