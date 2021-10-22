@@ -10,6 +10,7 @@ class Particle
 
     double q_, m_;
     arma::vec pos_, vel_;
+    bool outofbounds_;
 
 
     // Constructor

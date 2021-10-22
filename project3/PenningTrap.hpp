@@ -45,6 +45,9 @@ class PenningTrap
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_Euler_Cromer(double dt);
 
+    // Count how many particles is inside the d-region
+    int particles_inside();
+
 };
 
 #endif
