@@ -31,4 +31,5 @@ for i in range(0,2):
         inter = 'w/ interactions'
 
     ax.set_title('3D plot of the trajectory' + inter)
+    plt.savefig('xyz%d.pdf'%d)
     plt.show()

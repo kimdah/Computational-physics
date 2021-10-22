@@ -21,8 +21,5 @@ plt.grid()
 
 
 
-
-
-
-plt.savefig('9_1plot.pdf')
+plt.savefig('./Figures/zt.pdf')
 plt.show()

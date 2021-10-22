@@ -37,7 +37,7 @@ ax2.set(xlabel = 'x', title = 'Interaction')
 
 #plt.legend()
 plt.legend(bbox_to_anchor=(1.1, 1.05))
-plt.savefig('9_1.pdf')
+plt.savefig('./Figures/xy.pdf')
 plt.show()
 
 """
