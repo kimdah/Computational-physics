@@ -16,7 +16,7 @@
 using namespace std;
 using namespace arma;
 
-void problem_10(double f);
+void problem_10(double f, vec frequencies, bool interactions);
 double simulator(int iterations, int duration, int particles, std::string outputs, bool interactions, bool euler_cromer, bool pertrubation, bool randomseed, double f, double w_v, bool out);
 
 template <typename T>
@@ -30,7 +30,7 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
 
-/*     // ------------- PROBLEM 9 -----------
+    // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
     simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
@@ -53,19 +53,27 @@ int main(int argc, char const *argv[]) {
         simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
         simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
     }
- */
+
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
     // particles that are still trapped after 500μs as a function of the applied angular frequency ω_V
-    //problem_10(0.1);
-    //problem_10(0.4);
-    problem_10(0.7);
+    vector<double> freqs1;
+    for (int i = 32; i<401; i++) {
+        freqs1.push_back((i/160.0)*pow(10,6));
+    }
     
-   
+    problem_10(0.1, freqs1, false);
+    problem_10(0.4, freqs1, false);
+    problem_10(0.7, freqs1, false);
+    vector<double> freqs2;
+    for (int i = 60; i<65; i++) {
+        freqs2.push_back((i/40.0)*pow(10,6));
+    }
+    //problem_10(0.7, freqs2, false);
     return 0;
 }
 
-void problem_10(double f) {
+void problem_10(double f, vec frequencies, bool interactions) {
     int width = 16;
     int prec  = 8;
     std::string filename = "Results/problem10_f_"+to_string_with_precision(f)+".txt";
@@ -74,10 +82,10 @@ void problem_10(double f) {
     ofile << std::setw(width) << std::setprecision(prec) << std::scientific << "w_v";
     ofile << std::setw(width) << std::setprecision(prec) << std::scientific << "fraction";
     ofile << std::endl;
-    for (int n = 2; n<26; n++){
-        std::cout << n << "----------------------" << std::endl;
-        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << (n/10.0)*pow(10,6);
-        double fraction = simulator(10000, 500, 100, "w", false, false, true, true, f, (n/10.0)*pow(10,6), false);
+    for (double x : frequencies){
+        std::cout << x << "----------------------" << std::endl;
+        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << x;
+        double fraction = simulator(5000, 500, 100, "w", interactions, false, true, true, f, x, false);
         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << fraction;
         ofile << std::endl;
     }
@@ -130,7 +138,7 @@ double simulator(int iterations, int duration, int particles, std::string output
     penning_trap.particle_interactions_ = interactions;
     // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
     for (int j = 0; j < particles; j++) {
-        Particle new_particle(1, 40.08, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); // Ca ATOM!
+        Particle new_particle(1, 40.08, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.5*penning_trap.d_); // Ca ATOM!
         penning_trap.add_particle(new_particle);
     }
 
@@ -185,6 +193,6 @@ double simulator(int iterations, int duration, int particles, std::string output
       }
 
       ofile.close();
-      std::cout << "extreme " << penning_trap.extreme_ << std::endl;
+      //std::cout << "extreme " << penning_trap.extreme_ << std::endl;
       return penning_trap.particles_inside()/penning_trap.particles_.size();
 }

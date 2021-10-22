@@ -1,6 +1,6 @@
 #include "PenningTrap.hpp"
 #include "Particle.hpp"
-#include <math.h>
+
 #include <armadillo>
 
 //q = particle_[0].q_;
@@ -99,12 +99,10 @@ void PenningTrap::evolve_RK4(double dt){
     arma::vec a = arma::vec(3).fill(0.);
 
     if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
-      std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
+      //std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
       particles_[i].outofbounds_ = true;
     } else {
-      a = total_force(i)/m;
-      //std::cout << "in! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) <<  std::endl;
-      
+      a = total_force(i)/m;    
     }
 
     // 1
