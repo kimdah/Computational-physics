@@ -30,7 +30,7 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
 
-    // ------------- PROBLEM 9 -----------
+/*     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
     simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
@@ -53,14 +53,14 @@ int main(int argc, char const *argv[]) {
         simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
         simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
     }
-
+ */
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
     // particles that are still trapped after 500μs as a function of the applied angular frequency ω_V
-    problem_10(0.4);
-    problem_10(0.4);
+    //problem_10(0.1);
+    //problem_10(0.4);
     problem_10(0.7);
-    //simulator(1000, 100, 1, "tz", false, false, false, true, 0.1, 1.0*pow(10,6), true);
+    
    
     return 0;
 }
@@ -75,7 +75,7 @@ void problem_10(double f) {
     ofile << std::setw(width) << std::setprecision(prec) << std::scientific << "fraction";
     ofile << std::endl;
     for (int n = 2; n<26; n++){
-        //std::cout << n << "----------------------" << std::endl;
+        std::cout << n << "----------------------" << std::endl;
         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << (n/10.0)*pow(10,6);
         double fraction = simulator(10000, 500, 100, "w", false, false, true, true, f, (n/10.0)*pow(10,6), false);
         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << fraction;
@@ -119,7 +119,7 @@ double simulator(int iterations, int duration, int particles, std::string output
 
     // For problem 10:
     if (pertrubation) {
-        penning_trap.V0_= 2.41250*pow(10,5);
+        penning_trap.V0_= 2.412131395*pow(10,5);
         penning_trap.d_ = 500;
     }
 
@@ -168,7 +168,7 @@ double simulator(int iterations, int duration, int particles, std::string output
 
         if (pertrubation) {
             //std::cout << "pertrubating " << penning_trap.V0_;
-            penning_trap.V0_ = penning_trap.V0_ * (1 + f * cos (w_v * h*i*1000000));
+            penning_trap.V0_ = penning_trap.V0_ * (1 + f * cos (w_v * h*i*pow(10,6)));
             //std::cout << penning_trap.V0_;
         }
 
@@ -185,5 +185,6 @@ double simulator(int iterations, int duration, int particles, std::string output
       }
 
       ofile.close();
+      std::cout << "extreme " << penning_trap.extreme_ << std::endl;
       return penning_trap.particles_inside()/penning_trap.particles_.size();
 }

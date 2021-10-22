@@ -1,6 +1,6 @@
 #include "PenningTrap.hpp"
 #include "Particle.hpp"
-
+#include <math.h>
 #include <armadillo>
 
 //q = particle_[0].q_;
@@ -13,6 +13,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
   V0_ = V0_in;
   particle_interactions_ = true;
   d_ = d_in;
+  extreme_ = 0.0;
 
 }
 
@@ -97,7 +98,7 @@ void PenningTrap::evolve_RK4(double dt){
     
     arma::vec a = arma::vec(3).fill(0.);
 
-    if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
+    if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
       std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
       particles_[i].outofbounds_ = true;
     } else {
@@ -155,8 +156,12 @@ void PenningTrap::evolve_RK4(double dt){
     // 5
     particles_[i].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
     particles_[i].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
-
-
+    double R = sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)); 
+    if ( R > extreme_) {extreme_ = R;}
+    //if (std::abs(particles_[i].pos_(1)) > extreme_) {extreme_ = particles_[i].pos_(1);}
+    
+    
+    
   }
 
 }
