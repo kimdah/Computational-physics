@@ -4,19 +4,22 @@ import matplotlib.pyplot as plt
 
 # pi:   0: no interactions, 1:interactions
 
-data0 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_txy.txt', skiprows=1)
-data1 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_txy.txt', skiprows=1)
+data0 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data1 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
 
-# Particle 1
-x01 = np.array(data0[:,1])
-y01 = np.array(data0[:,2])
-x11 = np.array(data1[:,1])
-y11 = np.array(data1[:,2])
-# Particle 2
-x02 = np.array(data0[:,3])
-y02 = np.array(data0[:,4])
-x12 = np.array(data1[:,3])
-y12 = np.array(data1[:,4])
+
+# No interactions:
+x01 = np.array(data0[:,0])
+y01 = np.array(data0[:,1])
+x02 = np.array(data0[:,2])
+y02 = np.array(data0[:,3])
+
+# Interactions: x $interaction $particle
+x11 = np.array(data1[:,0])
+y11 = np.array(data1[:,1])
+x12 = np.array(data1[:,2])
+y12 = np.array(data1[:,3])
+
 
 fig, (ax1, ax2)= plt.subplots(1,2, sharex = True, sharey=True)
 fig.suptitle('Motion in xy-plane w/ and w/o particle interactions') # remove later?
@@ -34,14 +37,28 @@ ax2.grid()
 
 ax1.set(xlabel = 'x', ylabel='y', title='No interaction')
 ax2.set(xlabel = 'x', title = 'Interaction')
+#plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)#plt.legend()
 
-#plt.legend()
-plt.legend(bbox_to_anchor=(1.1, 1.05))
+#plt.legend(bbox_to_anchor=(1.05, 1), loc='best') # x,y position
+plt.legend(loc='best')
 plt.savefig('./Figures/xy.pdf')
 plt.show()
 
 """
 # plotting Particle 1 vs 2:
+
+# Particle 1
+x01 = np.array(data0[:,1])
+y01 = np.array(data0[:,2])
+x11 = np.array(data1[:,1])
+y11 = np.array(data1[:,2])
+# Particle 2
+x02 = np.array(data0[:,3])
+y02 = np.array(data0[:,4])
+x12 = np.array(data1[:,3])
+y12 = np.array(data1[:,4])
+
+
 fig, (ax1, ax2)= plt.subplots(1,2, sharex = True, sharey=True)
 fig.suptitle('Motion in xy-plane w/ and w/o particle interactions')
 

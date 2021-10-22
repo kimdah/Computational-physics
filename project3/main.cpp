@@ -35,9 +35,9 @@ int main(int argc, char const *argv[]) {
     simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
     // interactions on
-    simulator(100, 100, 2, "txy", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true);
     // interactions off
-    simulator(100, 100, 2, "txy", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xy", false, false, false, false, 0.0, 0.0, true);
     // Point 3: Phase space plots
     simulator(100, 100, 2, "xv", true, false, false, false, 0.0, 0.0, true);
     simulator(100, 100, 2, "xv", false, false, false, false, 0.0, 0.0, true);
@@ -46,14 +46,14 @@ int main(int argc, char const *argv[]) {
     simulator(100, 100, 2, "zv", true, false, false, false, 0.0, 0.0, true);
     simulator(100, 100, 2, "zv", false, false, false, false, 0.0, 0.0, true);
     // Point 4: 3D plot
-    simulator(10000, 100, 2, "txyz", true, false, false, false, 0.0, 0.0, true);
-    simulator(10000, 100, 2, "txyz", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xyz", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
     // Point 5: step sizes
     for (int i = 1; i < 6; i++) {
         simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
         simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
     }
-    
+
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
     // particles that are still trapped after 500μs as a function of the applied angular frequency ω_V
@@ -145,12 +145,12 @@ double simulator(int iterations, int duration, int particles, std::string output
     if (outputs.find('t') != std::string::npos && out) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << 0;}
 
     for (int j = 0; j < penning_trap.particles_.size(); j++) {
-        if (outputs.find('x') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[0];}
-        if (outputs.find('y') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[1];}
-        if (outputs.find('z') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].pos_[2];}
-        if (outputs.find('v') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].vel_[0]
-                                                                  << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].vel_[1]
-                                                                  << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[0].vel_[2];}
+        if (outputs.find('x') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[0];} //endret particles_0 =particles_j
+        if (outputs.find('y') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[1];}
+        if (outputs.find('z') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[2];}
+        if (outputs.find('v') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[0]
+                                                                  << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[1]
+                                                                  << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[2];}
 
     }
     ofile<< std::endl;

@@ -4,7 +4,7 @@ import matplotlib.ticker as ticker
 
 # Plot of z-trajectory of 1 particle
 
-data = np.loadtxt('./Results/RK4_i_10000_d_100_p_1_pi_1_outputs_tz.txt', skiprows=1)
+data = np.loadtxt('./Results/RK4_i_10000_d_100_p_1_pi_1_outputs_tz_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
 t = np.array(data[:,0])
 z = np.array(data[:,1])
 

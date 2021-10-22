@@ -104,7 +104,7 @@ int main(int argc, const char * argv[]) {
     filename3 << "errors" << N << ".txt";
     ofile3.open(filename3.str());
     for (int i=0 ; i <= n-1 ; i++){
-      double abs_err =std::abs(u(i+1)-v(i));
+      double abs_err = std::abs(u(i+1)-v(i));
       double rel_err = std::abs(abs_err / u(i+1));
       ofile3 << setw(width) << setprecision(prec) << scientific << x(i+1)//log10(x(i+1))
             << setw(width) << setprecision(prec) << scientific << log10(abs_err)
@@ -114,10 +114,10 @@ int main(int argc, const char * argv[]) {
         }
     }
     ofile3.close();
-    
+
     cout << setw(width) << setprecision(prec) << scientific << "The max relative error is:" << largestvalue
     << setw(width) << setprecision(prec) << scientific << "for N=" << N << endl;
-    
+
 
     // Problem 9:
     // A is tridiagonal matrix. Solve Av^ = g where v^ denotes v using special algorithm.
