@@ -29,7 +29,7 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 }
 
 int main(int argc, char const *argv[]) {
-/* 
+
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
     simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
@@ -52,7 +52,7 @@ int main(int argc, char const *argv[]) {
     for (int i = 1; i < 6; i++) {
         simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
         simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
-    } */
+    }
     
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
