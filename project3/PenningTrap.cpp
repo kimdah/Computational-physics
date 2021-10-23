@@ -10,6 +10,7 @@
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   B0_ = B0_in; // definer disse
+  E_ = V0_;
   V0_ = V0_in;
   particle_interactions_ = true;
   d_ = d_in;
@@ -24,7 +25,7 @@ void PenningTrap::add_particle(Particle p_in){
 
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r){
-  double v0d = 9.65; // V0_/d^2
+  double v0d = E_/pow(d_, 2); // V0_/d^2
   arma::vec E_field = arma::vec(3).fill(0);
   E_field(0) = r(0)*v0d;
   E_field(1) = r(1)*v0d;
