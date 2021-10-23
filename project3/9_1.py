@@ -19,7 +19,5 @@ plt.xlabel('time, [t] = microsec.')
 plt.ylabel('Position in z-direction, z(t), [z] = micrometer')
 plt.grid()
 
-
-
 plt.savefig('./Figures/zt.pdf')
 plt.show()

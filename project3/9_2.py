@@ -4,24 +4,24 @@ import matplotlib.pyplot as plt
 
 # pi:   0: no interactions, 1:interactions
 
-data0 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
-data1 = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data0 = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data1 = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
 
 
-# No interactions:
+# No interactions: $axis $interaction $particle
 x01 = np.array(data0[:,0])
 y01 = np.array(data0[:,1])
 x02 = np.array(data0[:,2])
 y02 = np.array(data0[:,3])
 
-# Interactions: x $interaction $particle
+# Interactions: $axis $interaction $particle
 x11 = np.array(data1[:,0])
 y11 = np.array(data1[:,1])
 x12 = np.array(data1[:,2])
 y12 = np.array(data1[:,3])
 
 
-fig, (ax1, ax2)= plt.subplots(1,2, sharex = True, sharey=True)
+fig, (ax1, ax2) = plt.subplots(1,2, sharex = True, sharey=True)
 fig.suptitle('Motion in xy-plane w/ and w/o particle interactions') # remove later?
 
 # Plotting no interaction vs interaction:
