@@ -12,7 +12,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
   B0_ = B0_in; // definer disse
   
   V0_ = V0_in;
-  E_ = 0.0;
+  E_ = V0_in;
   pertrubation = false;
   particle_interactions_ = true;
   d_ = d_in;
