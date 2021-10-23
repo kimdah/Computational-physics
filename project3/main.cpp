@@ -69,8 +69,8 @@ int main(int argc, char const *argv[]) {
     
     
     problem_10(0.4, freqs1, false);
-    //problem_10(0.7, freqs1, false);
-    //problem_10(0.1, freqs1, false);
+    problem_10(0.7, freqs1, false);
+    problem_10(0.1, freqs1, false);
     vector<double> freqs2;
     for (double i = 0.2; i<0.81; i+=0.001) {
         freqs2.push_back(i); //*pow(10,6)
