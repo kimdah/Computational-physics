@@ -138,7 +138,7 @@ double simulator(int iterations, int duration, int particles, std::string output
     penning_trap.particle_interactions_ = interactions;
     // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
     for (int j = 0; j < particles; j++) {
-        Particle new_particle(1, 40.08, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); // Ca ATOM!
+        Particle new_particle(1, 40.78, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); 
         penning_trap.add_particle(new_particle);
     }
 
