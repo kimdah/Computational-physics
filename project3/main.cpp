@@ -30,7 +30,7 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
 
-/*     // ------------- PROBLEM 9 -----------
+    // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
     simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
@@ -53,15 +53,12 @@ int main(int argc, char const *argv[]) {
         simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
         simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
     }
- */
+
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
     // particles that are still trapped after 500μs as a function of the applied angular frequency ω_V
 
-   /*  simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true);
-    // interactions off
-    simulator(10000, 100, 2, "xy", false, false, false, false, 0.0, 0.0, true);
- */
+
     vector<double> freqs1;
     for (double i = 0.2; i<2.51; i+=0.05) {
         freqs1.push_back(i); //*pow(10,6)
@@ -75,7 +72,9 @@ int main(int argc, char const *argv[]) {
     for (double i = 0.2; i<0.81; i+=0.001) {
         freqs2.push_back(i); //*pow(10,6)
     }
-    //problem_10(0.4, freqs2, false);
+    problem_10(0.1, freqs2, false);
+    problem_10(0.4, freqs2, false);
+    problem_10(0.7, freqs2, false);
     return 0;
 }
 
