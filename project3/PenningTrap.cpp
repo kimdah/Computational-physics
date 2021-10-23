@@ -10,8 +10,9 @@
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   B0_ = B0_in; // definer disse
-  E_ = V0_;
+  //E_ = V0_;
   V0_ = V0_in;
+  E_ = V0_;
   particle_interactions_ = true;
   d_ = d_in;
   extreme_ = 0.0;
