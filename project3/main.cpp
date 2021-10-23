@@ -61,7 +61,7 @@ int main(int argc, char const *argv[]) {
     for (int i = 32; i<401; i++) {
         freqs1.push_back((i/160.0)*pow(10,6));
     }
-    
+
     problem_10(0.1, freqs1, false);
     problem_10(0.4, freqs1, false);
     problem_10(0.7, freqs1, false);

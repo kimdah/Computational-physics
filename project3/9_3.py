@@ -1,33 +1,46 @@
-# Phase space plots - position vs velocity in each direction
+# Phase space plots - position vs velocity in each direction for two particles!!!
 import numpy as np
 import matplotlib.pyplot as plt
 
-# without interactions
-# Positions:
+# WITHOUT INTERACTIONS
 data0x = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_xv.txt', skiprows = 1)
 data0y = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_yv.txt', skiprows = 1)
 data0z = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_0_outputs_zv.txt', skiprows = 1)
+# Positions:
+x0 = np.array(data0x[:,0])
+y0 = np.array(data0y[:,0])
+z0 = np.array(data0z[:,0])
 # Velocities
+vx0 = np.array(data0x[:,1])
+vy0 = np.array(data0y[:,1])
+vz0 = np.array(data0z[:,1])
 
-# RART MED PLOTFIL?
+# Plot:
+plt.plot(x0,v0, label='x-v_x plot')
+plt.show()
+plt.plot(y0,v0, label='y-v_y plot')
+plt.show()
+plt.plot(z0,v0, label='z-v_z plot')
+plt.show()
 
-# With interactions
-
+# WITH INTERACTIONS
 data1x = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_xv.txt', skiprows = 1)
 data1y = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_yv.txt', skiprows = 1)
 data1z = np.loadtxt('./Results/RK4_i_100_d_100_p_2_pi_1_outputs_zv.txt', skiprows = 1)
 
-# Plot:
-fig, (ax1, ax2, ax3)= plt.subplots(1,3, sharex = True, sharey=True)
-fig.suptitle('Phase-space plots w/ and w/o particle interactions') # fjern senere?
+# Positions
+x1 = np.array(data1x[:,0])
+y1 = np.array(data1y[:,0])
+z1 = np.array(data1z[:,0])
+# Velocities
+vx1 = np.array(data1x[:,1])
+vy1 = np.array(data1y[:,1])
+vz1 = np.array(data1z[:,1])
 
-ax1.plot(data0x,)
-
-
-
-
-
-
-    #axis = ax%d %interactions
-    ax1.plot(x1, y1, '-', color=colors[interactions], label=label)
-    ax2.plot(x2, y2, '-', color=colors[interactions], label=label)
+# Plot
+plt.plot(x1,v1, label='x-v_x w/interaction')
+plt.show()
+plt.plot(y1,v1, label='y-v_y w/interaction')
+plt.show()
+plt.plot(z1,v1, title='z-v_z w/interaction')
+plt.show()

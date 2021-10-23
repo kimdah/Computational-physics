@@ -91,18 +91,18 @@ arma::vec PenningTrap::total_force(int i){
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
   for (int i = 0; i < particles_.size(); i++){
-    
+
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
     double m = particles_[i].m_;
-    
+
     arma::vec a = arma::vec(3).fill(0.);
 
     if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
       //std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
       particles_[i].outofbounds_ = true;
     } else {
-      a = total_force(i)/m;    
+      a = total_force(i)/m;
     }
 
     // 1
@@ -114,7 +114,7 @@ void PenningTrap::evolve_RK4(double dt){
     particles_[i].vel_ = v + 0.5*k1v; // etter k2r?
 
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
-    
+
     //if (particle is outside |d|, set a to 0)
     arma::vec k2r = dt * particles_[i].vel_;
     arma::vec k2v = dt * a;
@@ -123,7 +123,7 @@ void PenningTrap::evolve_RK4(double dt){
     particles_[i].pos_ = r + 0.5*k2r;
     particles_[i].vel_ = v + 0.5*k2v; // etter k3r?
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
-    
+
     //if (particle is outside |d|, set a to 0)
     arma::vec k3r = dt * particles_[i].vel_;
     arma::vec k3v = dt * a;
@@ -132,34 +132,18 @@ void PenningTrap::evolve_RK4(double dt){
     particles_[i].pos_ = r + k3r;
     particles_[i].vel_ = v + k3v; // etter k3r?
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
-    
+
     //if (particle is outside |d|, set a to 0)
     arma::vec k4r = dt * particles_[i].vel_;
     arma::vec k4v = dt * a;
 
-    //  *dt * (v + 0.5 * k1r))
-    //(v + 0.5 *dt * (a + 0.5 * k1v))
-    //arma::vec k2r = dt * (r + 0.5 *dt * (v + 0.5 * k1r));
-  //  arma::vec k2v = dt * (v + 0.5 *dt * (a + 0.5 * k1v));
-
-    // // 3
-    // particles_[i].pos_ = r + 0.5*k2r;
-    // arma::vec k3r = dt * (r + 0.5 * dt * (v + 0.5 * k2r));
-    // arma::vec k3v = dt * (v + 0.5 * dt * (a + 0.5 * k2v));
-    //
-    // // 4
-    // arma::vec k4r = dt * (r + dt * (v + k3r));
-    // arma::vec k4v = dt * (v + dt * (a + k3v));
-
     // 5
     particles_[i].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
     particles_[i].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
-    double R = sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)); 
+    double R = sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2));
     if ( R > extreme_) {extreme_ = R;}
     //if (std::abs(particles_[i].pos_(1)) > extreme_) {extreme_ = particles_[i].pos_(1);}
-    
-    
-    
+
   }
 
 }
@@ -171,14 +155,14 @@ void PenningTrap::evolve_Euler_Cromer(double dt){
     arma::vec v = particles_[i].vel_;
     double m = particles_[i].m_;
     arma::vec a = arma::vec(3).fill(0.);
-    
+
 
     if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
       particles_[i].outofbounds_ = true;
     } else {
       a = total_force(i)/m;
     }
-    
+
     v = v + (dt * a);
     r = r + dt*v;
 
@@ -197,5 +181,3 @@ double PenningTrap::particles_inside() {
    }
   return count;
  }
-
-
