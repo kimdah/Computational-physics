@@ -12,7 +12,7 @@ class PenningTrap
   public:
     std::vector<Particle> particles_;  // container of particles
 
-    double B0_, V0_, d_;
+    double B0_, V0_, d_, extreme_, E_;
     bool particle_interactions_;
 
     // Constructor
@@ -44,6 +44,9 @@ class PenningTrap
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_Euler_Cromer(double dt);
+
+    // Count how many particles is inside the d-region
+    double particles_inside();
 
 };
 

@@ -10,9 +10,11 @@
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   B0_ = B0_in; // definer disse
+  E_ = V0_;
   V0_ = V0_in;
   particle_interactions_ = true;
   d_ = d_in;
+  extreme_ = 0.0;
 
 }
 
@@ -23,7 +25,7 @@ void PenningTrap::add_particle(Particle p_in){
 
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r){
-  double v0d = 9.65;
+  double v0d = E_/pow(d_, 2); // V0_/d^2
   arma::vec E_field = arma::vec(3).fill(0);
   E_field(0) = r(0)*v0d;
   E_field(1) = r(1)*v0d;
@@ -68,10 +70,7 @@ arma::vec PenningTrap::total_force_particles(int i){
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
-      
   }
-  
-  
   return total_force_internal;
 
 
@@ -80,58 +79,106 @@ arma::vec PenningTrap::total_force_particles(int i){
 // The total force on particle_i from both external fields and other particles
 arma::vec PenningTrap::total_force(int i){
   arma::vec Fexternal = total_force_external(i);
-  arma::vec Finternal = total_force_particles(i);
+  arma::vec Finternal;
   if (particle_interactions_) {
+    Finternal = total_force_particles(i);
     return Fexternal+Finternal;
   } else {
     return Fexternal;
   }
-  
+
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
-  for (int p = 0; p < particles_.size(); p++){
-    arma::vec r = particles_[p].pos_;
-    arma::vec v = particles_[p].vel_;
-    double m = particles_[p].m_;
-    arma::vec a = total_force(p)/m;
+  for (int i = 0; i < particles_.size(); i++){
+
+    arma::vec r = particles_[i].pos_;
+    arma::vec v = particles_[i].vel_;
+    double m = particles_[i].m_;
+
+    arma::vec a = arma::vec(3).fill(0.);
+
+    if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
+      //std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
+      particles_[i].outofbounds_ = true;
+    } else {
+      a = total_force(i)/m;
+    }
 
     // 1
     arma::vec k1r = dt * v; // rekkefølge?
     arma::vec k1v = dt * a;
 
     // 2
-    arma::vec k2r = dt * (r + 0.5 *dt * (v + 0.5 * k1r));
-    arma::vec k2v = dt * (v + 0.5 *dt * (a + 0.5 * k1v));
+    particles_[i].pos_ = r + 0.5*k1r;
+    particles_[i].vel_ = v + 0.5*k1v; // etter k2r?
+
+    if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
+
+    //if (particle is outside |d|, set a to 0)
+    arma::vec k2r = dt * particles_[i].vel_;
+    arma::vec k2v = dt * a;
 
     // 3
-    arma::vec k3r = dt * (r + 0.5 * dt * (v + 0.5 * k2r));
-    arma::vec k3v = dt * (v + 0.5 * dt * (a + 0.5 * k2v));
+    particles_[i].pos_ = r + 0.5*k2r;
+    particles_[i].vel_ = v + 0.5*k2v; // etter k3r?
+    if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
+
+    //if (particle is outside |d|, set a to 0)
+    arma::vec k3r = dt * particles_[i].vel_;
+    arma::vec k3v = dt * a;
 
     // 4
-    arma::vec k4r = dt * (r + dt * (v + k3r));
-    arma::vec k4v = dt * (v + dt * (a + k3v));
-    
+    particles_[i].pos_ = r + k3r;
+    particles_[i].vel_ = v + k3v; // etter k3r?
+    if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
+
+    //if (particle is outside |d|, set a to 0)
+    arma::vec k4r = dt * particles_[i].vel_;
+    arma::vec k4v = dt * a;
+
     // 5
-    particles_[p].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
-    particles_[p].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
-    
-    
+    particles_[i].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
+    particles_[i].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
+    double R = sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2));
+    if ( R > extreme_) {extreme_ = R;}
+    //if (std::abs(particles_[i].pos_(1)) > extreme_) {extreme_ = particles_[i].pos_(1);}
+
   }
 
 }
 
 // Evolve the system one time step (dt) using Euler-Cromer
 void PenningTrap::evolve_Euler_Cromer(double dt){
-  for (int p = 0; p < particles_.size(); p++){
-    arma::vec r = particles_[p].pos_;
-    arma::vec v = particles_[p].vel_;
-    double m = particles_[p].m_;
+  for (int i = 0; i < particles_.size(); i++){
+    arma::vec r = particles_[i].pos_;
+    arma::vec v = particles_[i].vel_;
+    double m = particles_[i].m_;
+    arma::vec a = arma::vec(3).fill(0.);
 
-    v = v + (dt * total_force(p)/m);
+
+    if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
+      particles_[i].outofbounds_ = true;
+    } else {
+      a = total_force(i)/m;
+    }
+
+    v = v + (dt * a);
     r = r + dt*v;
 
-  }
+    particles_[i].vel_ = v;
+    particles_[i].pos_ = r;
 
+  }
 }
+  // Count how many particles is inside the d-region
+double PenningTrap::particles_inside() {
+  double count = 0;
+  for (int i = 0; i < particles_.size(); i++) {
+    if (!particles_[i].outofbounds_) {
+      count += 1;
+    }
+   }
+  return count;
+ }
