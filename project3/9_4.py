@@ -33,3 +33,4 @@ for i in range(0,2):
     plt.legend()
     plt.savefig('./Figures/xyz%d.pdf'%i)
     plt.show()
+    plt.close()

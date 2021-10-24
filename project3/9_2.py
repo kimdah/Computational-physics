@@ -22,58 +22,31 @@ x12 = np.array(data1[:,2])
 y12 = np.array(data1[:,3])
 
 
-fig, (ax1, ax2) = plt.subplots(1,2, sharex = True, sharey=True)
+fig, axes = plt.subplots(1,2)#, figsize=(7, 7)) # default:6.4, 4.8 sharex = True, sharey=True
 fig.suptitle('Motion in xy-plane w/ and w/o particle interactions') # remove later?
+#fig.set_size()
 
 # Plotting no interaction vs interaction:
 
-ax1.plot(x01,y01,label='Particle 1')
-ax1.plot(x02,y02,label='Particle 2')
-ax1.grid()
+axes[0].plot(x01,y01,label='Particle 1')
+axes[0].plot(x02,y02,label='Particle 2')
+
+axes[1].plot(x11,y11,label='Particle 1')
+axes[1].plot(x12,y12,label='Particle 2')
 
 
-ax2.plot(x11,y11,label='Particle 1')
-ax2.plot(x12,y12,label='Particle 2')
-ax2.grid()
+for ax in axes:
+    ax.set_xlim([-10**4, 10**4])
+    ax.set_ylim([-10**4, 10**4])
+    ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
+    ax.grid()
 
-ax1.set(xlabel = 'x', ylabel='y', title='No interaction')
-ax2.set(xlabel = 'x', title = 'Interaction')
+axes[0].set(xlabel = 'x', ylabel='y', title='No interaction')
+axes[1].set(xlabel = 'x', title = 'Interaction')
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)#plt.legend()
 
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='best') # x,y position
+
 plt.legend(loc='best')
 plt.savefig('./Figures/xy.pdf')
 plt.show()
-
-"""
-# plotting Particle 1 vs 2:
-
-# Particle 1
-x01 = np.array(data0[:,1])
-y01 = np.array(data0[:,2])
-x11 = np.array(data1[:,1])
-y11 = np.array(data1[:,2])
-# Particle 2
-x02 = np.array(data0[:,3])
-y02 = np.array(data0[:,4])
-x12 = np.array(data1[:,3])
-y12 = np.array(data1[:,4])
-
-
-fig, (ax1, ax2)= plt.subplots(1,2, sharex = True, sharey=True)
-fig.suptitle('Motion in xy-plane w/ and w/o particle interactions')
-
-ax1.plot(x01,y01,label='w/o particle interactions')
-ax1.plot(x11,y11,label='w/ interactions')
-
-ax2.plot(x02,y02,label='w/o interactions')
-ax2.plot(x12,y12,label='w/ interactions')
-ax1.set(xlabel = 'x', ylabel='y', title='Particle 1')
-ax2.set(xlabel = 'x', title = 'Particle 2')
-
-ax1.grid()
-ax2.grid()
-plt.legend()
-plt.savefig('9_1.pdf')
-plt.show()
-"""

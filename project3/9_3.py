@@ -56,6 +56,9 @@ vy12 = np.array(data1y[:,3])
 vz12 = np.array(data1z[:,3])
 
 
+
+
+
 # ------ PLOT---------
 
 figx = plt.figure()
@@ -67,6 +70,7 @@ plt.plot(x12, vx12, label='p2 w/')
 plt.legend()
 plt.savefig('./Figures/xvx.pdf')
 plt.show()
+plt.close()
 
 figy = plt.figure()
 plt.title('y-v_y plot')
@@ -77,6 +81,7 @@ plt.plot(y12, vy12, label='p2 w/')
 plt.legend()
 plt.savefig('./Figures/yvy.pdf')
 plt.show()
+plt.close()
 
 figz = plt.figure()
 plt.title('z-v_z plot')
@@ -87,3 +92,4 @@ plt.plot(z12, vz12, label='p2 w/')
 plt.legend()
 plt.savefig('./Figures/zvz.pdf')
 plt.show()
+plt.close()
