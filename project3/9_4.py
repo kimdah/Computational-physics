@@ -19,8 +19,10 @@ for i in range(0,2):
     ax = plt.axes(projection ='3d')
 
     # plotting
-    ax.plot3D(x1, y1, z1, 'green', label='p1')
-    ax.plot3D(x2, y2, z2, 'red', label='p2')
+    ax.plot3D(x1, y1, z1, label='p1')
+    ax.plot3D(x2, y2, z2, label='p2')
+    ax.set(xlabel='x', ylabel='y', zlabel='z')
+    ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 
 
     if i==0:
@@ -28,8 +30,15 @@ for i in range(0,2):
         inter = ' w/0 interactions'
     else:
         inter = ' w/ interactions'
+        # ax.set_xlim([-10**4, 10**4])
+        # ax.set_ylim([-10**4, 10**4])
+        # ax.set_zlim([-10**4, 10**4])
+        ax.set_xlim([-10**4, 10**4])
+        ax.set_ylim([-10**4, 10**4])
+        ax.set_zlim([-10**4, 10**4])
 
-    ax.set_title('3D plot of the trajectory' + inter)
-    plt.legend()
-    plt.savefig('xyz%d.pdf'%i)
+    #ax.set_title('3D plot of the trajectory' + inter)
+    #plt.legend()
+    plt.savefig('./Figures/xyz%d.pdf'%i)
     plt.show()
+    plt.close()
