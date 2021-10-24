@@ -30,8 +30,10 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
    
-
-    // ------------- PROBLEM 9 -----------
+    simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true);
+    // interactions off
+    simulator(10000, 100, 2, "xy", false, false, false, false, 0.0, 0.0, true);
+ /*    // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
     simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
@@ -75,7 +77,7 @@ int main(int argc, char const *argv[]) {
     }
     problem_10(0.1, freqs2, false);
     problem_10(0.4, freqs2, false);
-    problem_10(0.7, freqs2, false);
+    problem_10(0.7, freqs2, false); */
     return 0;
 }
 
