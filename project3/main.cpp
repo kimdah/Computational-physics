@@ -57,12 +57,14 @@ int main(int argc, char const *argv[]) {
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
     // particles that are still trapped after 500μs as a function of the applied angular frequency ω_V
+
+
     vector<double> freqs1;
     for (double i = 0.2; i<2.51; i+=0.05) {
         freqs1.push_back(i); //*pow(10,6)
     }
-
-
+    
+    
     problem_10(0.4, freqs1, false);
     problem_10(0.7, freqs1, false);
     problem_10(0.1, freqs1, false);
@@ -70,7 +72,9 @@ int main(int argc, char const *argv[]) {
     for (double i = 0.2; i<0.81; i+=0.001) {
         freqs2.push_back(i); //*pow(10,6)
     }
-    //problem_10(0.4, freqs2, false);
+    problem_10(0.1, freqs2, false);
+    problem_10(0.4, freqs2, false);
+    problem_10(0.7, freqs2, false);
     return 0;
 }
 
@@ -130,16 +134,18 @@ double simulator(int iterations, int duration, int particles, std::string output
     // For problem 10:
     if (pertrubation) {
         penning_trap.V0_= 2.412131395*pow(10,5);
+        penning_trap.E_= 2.412131395*pow(10,5);
         penning_trap.d_ = 500;
     }
 
     // Set random seed so that we have comparable results
-    arma_rng::set_seed(1);
-    if (randomseed) {arma_rng::set_seed_random();}
+    
+    arma_rng::set_seed_random();
     // Turn on or off particle/coloumb interactions
     penning_trap.particle_interactions_ = interactions;
     // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
     for (int j = 0; j < particles; j++) {
+        if(!randomseed) {arma_rng::set_seed(j*3);}
         Particle new_particle(1, 40.078, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); // Ca ATOM!
         penning_trap.add_particle(new_particle);
     }
@@ -178,6 +184,7 @@ double simulator(int iterations, int duration, int particles, std::string output
 
         if (pertrubation) {
             //std::cout << "pertrubating " << penning_trap.V0_;
+            penning_trap.pertrubation = true;
             penning_trap.E_ = penning_trap.V0_ * (1 + f * cos (w_v * h*i)); //*pow(10,6)
             //std::cout << penning_trap.V0_;
         }

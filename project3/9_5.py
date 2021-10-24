@@ -18,8 +18,6 @@ for j in range(0,2):
         y = np.array(data[:,2])
         z = np.array(data[:,3])
 
-        # Analytical
-        x_a =
 
 
 #------Analytical solution-----
