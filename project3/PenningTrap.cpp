@@ -52,8 +52,8 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 arma::vec PenningTrap::force_particle(int i, int j){
   double ke = 1.38935333 * pow (10 , 5);
   double qj = particles_[j].q_;
-  arma::vec ipos = particles_[i].pos_;
-  arma::vec jpos = particles_[j].pos_;
+  arma::vec ipos = particles_previous_state_[i].pos_;
+  arma::vec jpos = particles_previous_state_[j].pos_;
   return ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
 
 }
@@ -72,7 +72,7 @@ arma::vec PenningTrap::total_force_external(int i){
 // The total force on particle_i from the other particles
 arma::vec PenningTrap::total_force_particles(int i){
   arma::vec total_force_internal = arma::vec(3).fill(0.);
-  for(int j=0 ; j < particles_.size(); j++){
+  for(int j=0 ; j < particles_previous_state_.size(); j++){
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
@@ -97,6 +97,8 @@ arma::vec PenningTrap::total_force(int i){
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
+  
+  particles_previous_state_ = particles_;
   for (int i = 0; i < particles_.size(); i++){
 
     arma::vec r = particles_[i].pos_;
@@ -157,6 +159,7 @@ void PenningTrap::evolve_RK4(double dt){
 
 // Evolve the system one time step (dt) using Euler-Cromer
 void PenningTrap::evolve_Euler_Cromer(double dt){
+  particles_previous_state_ = particles_;
   for (int i = 0; i < particles_.size(); i++){
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
@@ -164,7 +167,7 @@ void PenningTrap::evolve_Euler_Cromer(double dt){
     arma::vec a = arma::vec(3).fill(0.);
 
 
-    if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
+    if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
       particles_[i].outofbounds_ = true;
     } else {
       a = total_force(i)/m;
