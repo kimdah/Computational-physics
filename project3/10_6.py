@@ -35,7 +35,7 @@ w3 = np.array(data3[:,0])
 f3 = np.array(data3[:,1])
 plt.plot(w3,f3, label ="f= 0.7")
 
-plt.xlabel("Angular frequency $\omega_V$")
+plt.xlabel("$\omega_V$,[$\omega_V$] = MHz")
 plt.ylabel("Fraction of remaining particles")
 plt.legend()
 plt.grid()
