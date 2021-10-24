@@ -41,8 +41,8 @@ for ax in axes:
     ax.grid()
     ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 
-axes[0].set(xlabel = 'x', ylabel='y', title='No interaction')
-axes[1].set(xlabel = 'x', title = 'Interaction')
+axes[0].set(xlabel = 'x(t), [x(t)] = $\mu m$', ylabel='y(t), [y(t)] = $\mu m$', title='No interaction')
+axes[1].set(xlabel = 'x(t), [x(t)] = $\mu m$', title = 'Interaction')
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)#plt.legend()
 
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='best') # x,y position
