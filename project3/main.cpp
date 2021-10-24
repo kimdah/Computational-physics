@@ -63,8 +63,8 @@ int main(int argc, char const *argv[]) {
     for (double i = 0.2; i<2.51; i+=0.05) {
         freqs1.push_back(i); //*pow(10,6)
     }
-    
-    
+
+
     problem_10(0.4, freqs1, false);
     problem_10(0.7, freqs1, false);
     problem_10(0.1, freqs1, false);
@@ -139,7 +139,7 @@ double simulator(int iterations, int duration, int particles, std::string output
     }
 
     // Set random seed so that we have comparable results
-    
+
     arma_rng::set_seed_random();
     // Turn on or off particle/coloumb interactions
     penning_trap.particle_interactions_ = interactions;

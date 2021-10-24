@@ -55,10 +55,15 @@ vx12 = np.array(data1x[:,3])
 vy12 = np.array(data1y[:,3])
 vz12 = np.array(data1z[:,3])
 
+# --------- PLOT w/subplots
+fig, axes = plt.subplots(23)
+
+
+
+
 
 
 # ------ PLOT---------
-
 figx0 = plt.figure()
 plt.title('x-v_x plot w/o')
 plt.plot(x01, vx01, label='p1 w/o ')
