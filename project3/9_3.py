@@ -82,7 +82,7 @@ axes[0,0].plot(x02, vx02, label='p2')
 #axes[0,0].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 #axes[0,0].set_xlim([-3*10**3, 3*10**3])
 
-axes[1,0].set(xlabel = 'x', ylabel='$Velocity(w/interaction)$')#, title='Interaction')
+axes[1,0].set(xlabel = 'x(t), [x(t)] = $ \mu m$', ylabel='$Velocity(w/interaction)$')#, title='Interaction')
 axes[1,0].plot(x11, vx11, label='p1')
 axes[1,0].plot(x12, vx12, label='p2')
 axes[1,0].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
@@ -96,7 +96,7 @@ axes[0,1].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 #axes[0,1].set_xlim([-3*10**3, 3*10**3])
 
 # y w/
-axes[1,1].set(xlabel = 'y')
+axes[1,1].set(xlabel = 'y(t), [y(t)] = $ \mu m$')
 axes[1,1].plot(y11, vy11, label='p1 w/')
 axes[1,1].plot(y12, vy12, label='p2 w/')
 #axes[1,1].set_xlim([-10**4, 10**4])
@@ -108,7 +108,7 @@ axes[0,2].plot(z02, vz02, label='p2 w/o')
 #axes[0,2].set_xlim([-3*10**3, 3*10**3])
 
 # z w/
-axes[1,2].set(xlabel = 'z')#, title='interaction y')
+axes[1,2].set(xlabel = 'z(t), [z(t)] = $ \mu m$')#, title='interaction y')
 axes[1,2].plot(z11, vz11, label='p1 w/')
 axes[1,2].plot(z12, vz12, label='p2 w/')
 #axes[1,2].set_xlim([-10**4, 10**4])
