@@ -97,10 +97,12 @@ arma::vec PenningTrap::total_force(int i){
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
+  std::vector<Particle> particles_previous_state;
+  particles_previous_state = particles_;
   for (int i = 0; i < particles_.size(); i++){
 
-    arma::vec r = particles_[i].pos_;
-    arma::vec v = particles_[i].vel_;
+    arma::vec r = particles_previous_state[i].pos_;
+    arma::vec v = particles_previous_state[i].vel_;
     double m = particles_[i].m_;
 
     arma::vec a = arma::vec(3).fill(0.);
@@ -123,7 +125,7 @@ void PenningTrap::evolve_RK4(double dt){
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     //if (particle is outside |d|, set a to 0)
-    arma::vec k2r = dt * particles_[i].vel_;
+    arma::vec k2r = dt * particles_previous_state[i].vel_;
     arma::vec k2v = dt * a;
 
     // 3
@@ -132,7 +134,7 @@ void PenningTrap::evolve_RK4(double dt){
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     //if (particle is outside |d|, set a to 0)
-    arma::vec k3r = dt * particles_[i].vel_;
+    arma::vec k3r = dt * particles_previous_state[i].vel_;
     arma::vec k3v = dt * a;
 
     // 4
@@ -141,7 +143,7 @@ void PenningTrap::evolve_RK4(double dt){
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     //if (particle is outside |d|, set a to 0)
-    arma::vec k4r = dt * particles_[i].vel_;
+    arma::vec k4r = dt * particles_previous_state[i].vel_;
     arma::vec k4v = dt * a;
 
     // 5
