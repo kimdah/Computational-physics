@@ -50,11 +50,16 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 
 // Force on particle_i from particle_j, ignoring the magnetic forces
 arma::vec PenningTrap::force_particle(int i, int j){
-  double ke = 1.38935333 * pow (10 , 5);
+  double ke = 1.38935333 * pow (10, 5);
   double qj = particles_[j].q_;
   arma::vec ipos = particles_old_state_[i].pos_;
   arma::vec jpos = particles_old_state_[j].pos_;
-  return ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
+  double testy = (ipos[1] - jpos[1]);
+  double out1 = ke*qj*(ipos[1] - jpos[1])/(pow(abs(ipos[1] - jpos[1]) , 3));
+  arma::vec out = ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
+   //    std::cout << "hmm " << i << std::endl;
+   // std::cout << testy << std::endl;
+  return out;
 
 }
 
@@ -73,6 +78,7 @@ arma::vec PenningTrap::total_force_external(int i){
 arma::vec PenningTrap::total_force_particles(int i){
   arma::vec total_force_internal = arma::vec(3).fill(0.);
   for(int j=0 ; j < particles_.size(); j++){
+    
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
@@ -101,9 +107,10 @@ void PenningTrap::evolve_RK4(double dt){
   for (int i = 0; i < particles_.size(); i++){
 
     arma::vec r = particles_[i].pos_;
+    
     arma::vec v = particles_[i].vel_;
     double m = particles_[i].m_;
-
+    
     arma::vec a = arma::vec(3).fill(0.);
 
     if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
@@ -120,7 +127,7 @@ void PenningTrap::evolve_RK4(double dt){
     // 2
     particles_[i].pos_ = r + 0.5*k1r;
     particles_[i].vel_ = v + 0.5*k1v; // etter k2r?
-
+         
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     //if (particle is outside |d|, set a to 0)
@@ -135,7 +142,7 @@ void PenningTrap::evolve_RK4(double dt){
     //if (particle is outside |d|, set a to 0)
     arma::vec k3r = dt * particles_[i].vel_;
     arma::vec k3v = dt * a;
-
+    
     // 4
     particles_[i].pos_ = r + k3r;
     particles_[i].vel_ = v + k3v; // etter k3r?
@@ -151,13 +158,14 @@ void PenningTrap::evolve_RK4(double dt){
     double R = sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2));
     if ( R > extreme_) {extreme_ = R;}
     //if (std::abs(particles_[i].pos_(1)) > extreme_) {extreme_ = particles_[i].pos_(1);}
-
+    
   }
 
 }
 
 // Evolve the system one time step (dt) using Euler-Cromer
 void PenningTrap::evolve_Euler_Cromer(double dt){
+  particles_old_state_ = particles_;
   for (int i = 0; i < particles_.size(); i++){
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
