@@ -150,11 +150,11 @@ double simulator(int iterations, int duration, int particles, std::string output
     for (int j = 0; j < particles; j++) {
         if(!randomseed) {arma_rng::set_seed(j);}
         Particle new_particle(1, 40.078, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); // Ca ATOM!
-        if(!randomseed) {
+        /* if(!randomseed) {
             new_particle.pos_(1) = 0.0;
             new_particle.vel_(0) = 0.0;
             new_particle.vel_(2) = 0.0;
-        }
+        } */
         penning_trap.add_particle(new_particle);
     }
 
