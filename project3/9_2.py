@@ -22,12 +22,12 @@ x12 = np.array(data1[:,2])
 y12 = np.array(data1[:,3])
 
 
-SMALL_SIZE = 17
+SMALL_SIZE = 13
 MEDIUM_SIZE = 17
 BIGGER_SIZE = 17
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
 plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
 plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
@@ -47,9 +47,9 @@ axes[1].plot(x12,y12,label='Particle 2')
 
 
 for ax in axes:
-    ax.set_xlim([-10**4, 10**4])
-    ax.set_ylim([-10**4, 10**4])
-    ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
+    ax.set_xlim([-0.4*10**4, 0.4*10**4])
+    ax.set_ylim([-0.4*10**4, 0.4*10**4])
+    #ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
     ax.set(adjustable='box', aspect='equal')
     ax.grid()
     ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
