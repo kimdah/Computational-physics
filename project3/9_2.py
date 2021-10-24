@@ -22,7 +22,20 @@ x12 = np.array(data1[:,2])
 y12 = np.array(data1[:,3])
 
 
-fig, axes = plt.subplots(1,2, sharey=True)#,figsize=(7, 7)) # default:6.4, 4.8 sharex = True, sharey=True
+SMALL_SIZE = 13
+MEDIUM_SIZE = 17
+BIGGER_SIZE = 17
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+
+fig, axes = plt.subplots(1,2, sharey=True,figsize=(8,4))#,figsize=(7, 7)) # default:6.4, 4.8 sharex = True, sharey=True
 
 # Plotting no interaction vs interaction:
 
@@ -34,9 +47,9 @@ axes[1].plot(x12,y12,label='Particle 2')
 
 
 for ax in axes:
-    ax.set_xlim([-10**4, 10**4])
-    ax.set_ylim([-10**4, 10**4])
-    ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
+    ax.set_xlim([-0.4*10**4, 0.4*10**4])
+    ax.set_ylim([-0.4*10**4, 0.4*10**4])
+    #ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
     ax.set(adjustable='box', aspect='equal')
     ax.grid()
     ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
@@ -52,5 +65,16 @@ axes[1].set(xlabel = 'x(t), [x(t)] = $\mu m$', title = 'Interaction')
 # handles, labels = ax.get_legend_handles_labels()
 # fig.legend(handles, labels, loc='upper center')
 
+
+plt.subplots_adjust(
+    top=0.915,
+    bottom=0.165,
+    left=0.13,
+    right=0.95,
+    hspace=0.2,
+    wspace=0.2
+)
+
 plt.savefig('./Figures/xy.pdf', bbox_inches='tight')
 plt.show()
+
