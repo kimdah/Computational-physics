@@ -108,6 +108,7 @@ for axis in axes:
 
 
 plt.show()
+plt.savefig('phase_space.pdf')
 plt.close()
 
 
