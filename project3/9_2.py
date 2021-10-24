@@ -22,7 +22,7 @@ x12 = np.array(data1[:,2])
 y12 = np.array(data1[:,3])
 
 
-fig, axes = plt.subplots(1,2)#, figsize=(7, 7)) # default:6.4, 4.8 sharex = True, sharey=True
+fig, axes = plt.subplots(1,2, sharey=True)#,figsize=(7, 7)) # default:6.4, 4.8 sharex = True, sharey=True
 fig.suptitle('Motion in xy-plane w/ and w/o particle interactions') # remove later?
 #fig.set_size()
 
@@ -39,6 +39,7 @@ for ax in axes:
     ax.set_xlim([-10**4, 10**4])
     ax.set_ylim([-10**4, 10**4])
     ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
+    ax.set(adjustable='box', aspect='equal')
     ax.grid()
 
 axes[0].set(xlabel = 'x', ylabel='y', title='No interaction')
@@ -47,6 +48,9 @@ axes[1].set(xlabel = 'x', title = 'Interaction')
 
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='best') # x,y position
 
-plt.legend(loc='best')
+#plt.legend(loc='best')
+handles, labels = ax.get_legend_handles_labels()
+fig.legend(handles, labels, loc='upper center')
+
 plt.savefig('./Figures/xy.pdf')
 plt.show()

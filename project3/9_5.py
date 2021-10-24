@@ -20,13 +20,13 @@ for j in range(0,2):
 
 
 #------Analytical solution-----
-x_0 = x[0]; y_0 = 0; z_0 = z[0]; v_0 = 1
+x_0 = x[0], y_0 = 0, z_0 = z[0], v_0 = 1
 
-m = 40.078; q=1
+m = 40.078, q=1
 
-B_0 = 9.65*10**1; V_0=9.65 *10**8; d=10**4;
+B_0 = 9.65*10**1, V_0=9.65 *10**8, d=10**4
 
-omega_0 =(q*B_0)/m ; omega_z = np.sqrt((2*q*V_0)/(m*d**2))
+omega_0 =(q*B_0)/m , omega_z = np.sqrt((2*q*V_0)/(m*d**2))
 
 
 omega_plus = (omega_0 + np.sqrt(omega_0**2 - 2*omega_z**2))/2
