@@ -65,5 +65,16 @@ axes[1].set(xlabel = 'x(t), [x(t)] = $\mu m$', title = 'Interaction')
 # handles, labels = ax.get_legend_handles_labels()
 # fig.legend(handles, labels, loc='upper center')
 
+
+plt.subplots_adjust(
+    top=0.915,
+    bottom=0.165,
+    left=0.13,
+    right=0.95,
+    hspace=0.2,
+    wspace=0.2
+)
+
 plt.savefig('./Figures/xy.pdf', bbox_inches='tight')
 plt.show()
+
