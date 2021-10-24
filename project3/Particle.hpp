@@ -16,7 +16,7 @@ class Particle
     // Constructor
     Particle(double q_in, double m_in, arma::vec pos_in, arma::vec vel_in);
 
-
+    void set_y_zero(); 
     /* Only if private parameters:
     // Method that returns the charge
     int charge();
