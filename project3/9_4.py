@@ -31,5 +31,5 @@ for i in range(0,2):
 
     ax.set_title('3D plot of the trajectory' + inter)
     plt.legend()
-    plt.savefig('xyz%d.pdf'%i)
+    plt.savefig('./Figures/xyz%d.pdf'%i)
     plt.show()
