@@ -3,7 +3,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#max_error = np.zeros(5)
+SMALL_SIZE = 15
+MEDIUM_SIZE = 15
+BIGGER_SIZE = 15
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=13)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 max_error_EC = []
 max_error_RK4 = []
@@ -87,30 +97,28 @@ for j in range(0,2):
         if method == 'RK4':
             max_error_RK4.append(max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
 
-
-        #print("Max() = ", np.max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
-        #print("Min() = ", np.min(np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)))
-        
-        #plt.plot(t,y,label ="sim")
-        #plt.plot(t,y_exact,label ="exact")
-        #plt.plot(t,x-x_exact,label="x")
-        #plt.plot(t,y-y_exact,label="y")
-        #plt.plot(t,z-z_exact,label="z")
-        
-        #plt.plot(x,y,label="est")
-        #plt.plot(x_exact,y_exact,label="ex")
-
-
+        this_stepsize =t[-1]/iterations
         plt.yscale("log")
-        plt.plot(t,relative_error, label ="iterations= "+str(iterations))
+        plt.plot(t,relative_error, label ="Stepsize $h_k$= "+str(this_stepsize)+"$\mu s$")
 
     plt.xlabel("Time in $\mu s$")
     plt.ylabel("Relative error")
     plt.title(method)
-    plt.legend()
+    plt.legend(loc='lower right', ncol=2, fancybox=True, shadow=True, prop={'size':11})
     plt.grid()
 
+
+    plt.subplots_adjust(
+    top=0.93,
+    bottom=0.135,
+    left=0.16,
+    right=0.985,
+    hspace=0.2,
+    wspace=0.2
+    )
+    plt.savefig('./Figures/relative_error_%s.pdf'%(method), bbox_inches='tight')
     plt.show()
+
 
 
 r_err_sum_RK4 = 0
@@ -123,3 +131,6 @@ r_err_sum_EC = r_err_sum_EC*(1/4)
 r_err_sum_RK4 = r_err_sum_RK4 *(1/4)
 print("Convergence rate for Euler is = ", r_err_sum_EC)
 print("Convergence rate for RK4 is = ", r_err_sum_RK4)
+
+
+
