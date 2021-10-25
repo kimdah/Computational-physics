@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]) {
 
     // Broad scan of 0.2-2.5 MHz
     vector<double> freqs1;
-    for (double i = 0.2; i<2.51; i+=0.05) {
+    for (double i = 0.2; i<2.51; i+=0.01) {
         freqs1.push_back(i); //*pow(10,6)
     }
     std::cout << "Performing broad frequency scans..." << std::endl;
