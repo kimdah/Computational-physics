@@ -3,8 +3,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#max_error = np.zeros(5)
+SMALL_SIZE = 15
+MEDIUM_SIZE = 15
+BIGGER_SIZE = 15
 
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=13)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+max_error_EC = []
+max_error_RK4 = []
+stepsize =[]
 
 for j in range(0,2):
     if (j == 0):
@@ -12,8 +25,12 @@ for j in range(0,2):
     else:
         method = 'RK4'
 
+
     for i in range(1,6):
         iterations = 10**i
+
+
+
         data = np.loadtxt('./Results/%s_i_%d_d_100_p_1_pi_1_outputs_txyzv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%(method,iterations), skiprows=1)
 
         t = np.array(data[:,0])
@@ -24,6 +41,8 @@ for j in range(0,2):
         v_y = np.array(data[:,5])
         v_z = np.array(data[:,6])
 
+        if j==0:
+            stepsize.append(t[-1]/iterations)
         #r = np.array(x,y,z)
 
         # --------- Error convergence rate (9.6)--------
@@ -67,29 +86,51 @@ for j in range(0,2):
         y_exact = -(A_plus*np.sin(omega_plus*t) + A_minus*np.sin(omega_minus*t)) 
         z_exact = z_0*np.cos(omega_z*t)
 
-        #relative_error = (np.sqrt(x**2+y**2+z**2)/np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2))-1
-        relative_error = np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)/np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)
-        #print("Max() = ", np.max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
-        #print("Min() = ", np.min(np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)))
-        
-        #plt.plot(t,y,label ="sim")
-        #plt.plot(t,y_exact,label ="exact")
-        #plt.plot(t,x-x_exact,label="x")
-        #plt.plot(t,y-y_exact,label="y")
-        #plt.plot(t,z-z_exact,label="z")
-        
-        #plt.plot(x,y,label="est")
-        #plt.plot(x_exact,y_exact,label="ex")
 
+        relative_error = np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)/np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)
+
+        
+        #appending delta max
+        if method == 'EC':
+            max_error_EC.append(max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
+
+        if method == 'RK4':
+            max_error_RK4.append(max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
+
+        this_stepsize =t[-1]/iterations
         plt.yscale("log")
-        plt.plot(t,relative_error, label ="iterations= "+str(iterations))
+        plt.plot(t,relative_error, label ="Stepsize $h_k$= "+str(this_stepsize)+"$\mu s$")
 
     plt.xlabel("Time in $\mu s$")
     plt.ylabel("Relative error")
     plt.title(method)
-    plt.legend()
+    plt.legend(loc='lower right', ncol=2, fancybox=True, shadow=True, prop={'size':11})
     plt.grid()
 
+
+    plt.subplots_adjust(
+    top=0.93,
+    bottom=0.135,
+    left=0.16,
+    right=0.985,
+    hspace=0.2,
+    wspace=0.2
+    )
+    plt.savefig('./Figures/relative_error_%s.pdf'%(method), bbox_inches='tight')
     plt.show()
+
+
+
+r_err_sum_RK4 = 0
+r_err_sum_EC = 0
+for i in range(1,5):
+    r_err_sum_RK4 += np.log(max_error_RK4[i]/max_error_RK4[i-1])/np.log(stepsize[i]/stepsize[i-1])
+    r_err_sum_EC += np.log(max_error_EC[i]/max_error_EC[i-1])/np.log(stepsize[i]/stepsize[i-1])
+
+r_err_sum_EC = r_err_sum_EC*(1/4)
+r_err_sum_RK4 = r_err_sum_RK4 *(1/4)
+print("Convergence rate for Euler is = ", r_err_sum_EC)
+print("Convergence rate for RK4 is = ", r_err_sum_RK4)
+
 
 
