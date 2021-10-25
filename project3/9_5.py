@@ -1,6 +1,9 @@
 # relative error  agianst time for 5 different step sizes for 1 particle
+# also plot the error convergence rate
 import numpy as np
 import matplotlib.pyplot as plt
+
+#max_error = np.zeros(5)
 
 
 for j in range(0,2):
@@ -21,6 +24,13 @@ for j in range(0,2):
         v_y = np.array(data[:,5])
         v_z = np.array(data[:,6])
 
+        r = np.array(x,y,z)
+
+        # --------- Error convergence rate (9.6)--------
+        # max_error[i-1] = np.max(....)
+
+
+
 
         #------Analytical solution-----
         #Fetches the initial values and propertied for the particle
@@ -33,9 +43,12 @@ for j in range(0,2):
         q=1     #charge and mass
 
         #Defined constants from task
+
         B_0 = 9.65*10**1
         V_0=9.65 *10**8
         d=10**4
+
+
 
         #Constants
         omega_0 =(q*B_0)/m 
@@ -73,11 +86,3 @@ for j in range(0,2):
     plt.show()
 
 
-# x_exact = np.zeros(len(t))
-# y_exact = np.zeros(len(t))
-# z_exact = np.zeros(len(t))
-#
-# for i in range(len(t)):
-#     x_exact[i] = A_plus*np.cos(omega_plus*t[i]) + A_minus*np.cos(omega_minus*t[i])
-#     y_exact[i] = A_plus*np.sin(omega_plus*t[i]) + A_minus*np.sin(omega_minus*t[i])
-#     z_exact[i] = z_0*np.cos(omega_z*t[i])
