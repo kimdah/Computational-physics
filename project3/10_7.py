@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 
 
-SMALL_SIZE = 17
-MEDIUM_SIZE = 17
+SMALL_SIZE = 13
+MEDIUM_SIZE = 13
 BIGGER_SIZE = 17
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
@@ -31,7 +31,7 @@ plt.plot(w1, f1, label ="w/")
 
 
 plt.title("Amplitude f = 0.1")
-plt.xlabel("$\omega_V$,[$\omega_V$] = MHz")
+plt.xlabel("$\omega_V$, [$\omega_V$] = MHz")
 plt.ylabel("Fraction of remaining particles")
 plt.legend()
 plt.grid()
