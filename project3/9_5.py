@@ -76,7 +76,9 @@ for j in range(0,2):
         y_exact = -(A_plus*np.sin(omega_plus*t) + A_minus*np.sin(omega_minus*t)) 
         z_exact = z_0*np.cos(omega_z*t)
 
+
         relative_error = np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)/np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)
+
         
         #appending delta max
         if method == 'EC':
@@ -84,6 +86,7 @@ for j in range(0,2):
 
         if method == 'RK4':
             max_error_RK4.append(max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
+
 
         #print("Max() = ", np.max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
         #print("Min() = ", np.min(np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)))
