@@ -34,7 +34,7 @@ int main(int argc, char const *argv[]) {
     std::cout << "Problem 9 running..." << std::endl;
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
-    simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 1, "tzv", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
     // interactions on
     simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true);
@@ -52,8 +52,8 @@ int main(int argc, char const *argv[]) {
     simulator(10000, 100, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
     // Point 5: step sizes
     for (int i = 1; i < 6; i++) {
-        simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
-        simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
+        simulator(pow(10,i), 100, 1, "txyzv", true, false, false, false, 0.0, 0.0, true); // RK4
+        simulator(pow(10,i), 100, 1, "txyzv", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
     }
     std::cout << "Problem 10 running..." << std::endl;
     // ------------- PROBLEM 10 -----------
