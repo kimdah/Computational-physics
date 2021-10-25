@@ -10,13 +10,12 @@
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   B0_ = B0_in; // definer disse
-  
   V0_ = V0_in;
   E_ = V0_in;
   pertrubation = false;
   particle_interactions_ = true;
   d_ = d_in;
-  extreme_ = 0.0;
+  extreme_ = 0.0; // Just a value that records the most lost particle
 
 }
 
@@ -54,11 +53,16 @@ arma::vec PenningTrap::force_particle(int i, int j){
   double qj = particles_[j].q_;
   arma::vec ipos = particles_old_state_[i].pos_;
   arma::vec jpos = particles_old_state_[j].pos_;
-  double testy = (ipos[1] - jpos[1]);
-  double out1 = ke*qj*(ipos[1] - jpos[1])/(pow(abs(ipos[1] - jpos[1]) , 3));
-  arma::vec out = ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
-   //    std::cout << "hmm " << i << std::endl;
-   // std::cout << testy << std::endl;
+  arma::vec result = ipos - jpos;
+  double abss = arma::norm(result);
+  //arma::vec out = ke*qj*((arma::norm(result))/(abs(result*result)));
+  //arma::vec out = ke*qj*result/(abss*abss);
+  arma::vec out = ke*qj*result/pow(abs(result), 3);
+  for (int i = 0; i < 3; ++i) {
+    if (std::isnan(out(i))) {out(i) = 0.0;} // Deals with division by zero resulting in nan and other numerical errors
+    //std::cout << "NAN :((((";
+  }
+  
   return out;
 
 }
@@ -105,23 +109,20 @@ arma::vec PenningTrap::total_force(int i){
 void PenningTrap::evolve_RK4(double dt){
   particles_old_state_ = particles_;
   for (int i = 0; i < particles_.size(); i++){
-
     arma::vec r = particles_[i].pos_;
-    
     arma::vec v = particles_[i].vel_;
-    double m = particles_[i].m_;
-    
     arma::vec a = arma::vec(3).fill(0.);
-
+    double m = particles_[i].m_;
+   
     if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
-      //std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
-      particles_[i].outofbounds_ = true;
+      particles_[i].outofbounds_ = true; // Particle is now considered out of bounds.
     } else {
-      a = total_force(i)/m;
+      a = total_force(i)/m; 
     }
-
+    //std::cout << "hmm " << i << std::endl;
+    //std::cout << a[1] << std::endl;
     // 1
-    arma::vec k1r = dt * v; // rekkefølge?
+    arma::vec k1r = dt * v; 
     arma::vec k1v = dt * a;
 
     // 2

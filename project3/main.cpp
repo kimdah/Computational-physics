@@ -31,10 +31,10 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 int main(int argc, char const *argv[]) {
    
       
-  
+    std::cout << "Problem 9 running..." << std::endl;
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
-    simulator(10000, 100, 1, "tz", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 1, "tzv", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
     // interactions on
     simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true);
@@ -52,10 +52,10 @@ int main(int argc, char const *argv[]) {
     simulator(10000, 100, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
     // Point 5: step sizes
     for (int i = 1; i < 6; i++) {
-        simulator(pow(10,i), 100, 1, "txyz", true, false, false, false, 0.0, 0.0, true); // RK4
-        simulator(pow(10,i), 100, 1, "txyz", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
+        simulator(pow(10,i), 100, 1, "txyzv", true, false, false, false, 0.0, 0.0, true); // RK4
+        simulator(pow(10,i), 100, 1, "txyzv", true, true, false, false, 0.0, 0.0, true); // Euler Cromer
     }
-
+    std::cout << "Problem 10 running..." << std::endl;
     // ------------- PROBLEM 10 -----------
     // For each of the amplitudes f=0.1,0.4,0.7, produce a graph that shows the fraction of
     // particles that are still trapped after 500μs as a function of the applied angular frequency ω_V
@@ -65,24 +65,32 @@ int main(int argc, char const *argv[]) {
     for (double i = 0.2; i<2.51; i+=0.05) {
         freqs1.push_back(i); //*pow(10,6)
     }
-    problem_10(0.4, freqs1, false, "broad");
-    problem_10(0.7, freqs1, false, "broad");
+    std::cout << "Performing broad frequency scans..." << std::endl;
+     
     problem_10(0.1, freqs1, false, "broad");
+   
+    problem_10(0.4, freqs1, false, "broad");
+   
+    problem_10(0.7, freqs1, false, "broad");
 
     // Narrow scan of 0.2 to 0.8 MHz
     vector<double> freqs2;
     for (double i = 0.2; i<0.81; i+=0.001) {
         freqs2.push_back(i); //*pow(10,6)
     }
+    //std::cout << "Performing narrow frequency scans at f=0.1..." << std::endl;
+    //std::cout << "Without particle interactions...";
     problem_10(0.1, freqs2, false, "narrow w/o interactions");
+    //std::cout << "With particle interactions..." << std::endl;
     problem_10(0.1, freqs2, true, "narrow with interactions");
     
   
-    
+       
     return 0;
 }
 
 void problem_10(double f, vec frequencies, bool interactions, string range) {
+    std::cout << "f=" << f << "...";
     int width = 16;
     int prec  = 8;
     double min_freq = frequencies[0];
@@ -94,7 +102,7 @@ void problem_10(double f, vec frequencies, bool interactions, string range) {
     ofile << std::setw(width) << std::setprecision(prec) << std::scientific << "fraction";
     ofile << std::endl;
     for (double x : frequencies){
-        std::cout << x << "----------------------" << std::endl;
+        std::cout << x << "...";
         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << x;
         double fraction = simulator(10000, 500, 100, "w", interactions, false, true, true, f, x, false);
         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << fraction;
@@ -152,8 +160,9 @@ double simulator(int iterations, int duration, int particles, std::string output
         if(!randomseed) {arma_rng::set_seed(j);}
                 
         Particle new_particle(1, 40.078, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); // Ca ATOM!
-        if(!randomseed) {
-            //new_particle.set_y_zero();
+        // Set initial conditions for 1 particle for problem 5 and 9.
+        if(!randomseed && particles == 1) { // 
+            new_particle.pos_(1) = 0.0;
             new_particle.vel_(0) = 0.0;
             new_particle.vel_(2) = 0.0;
         }
