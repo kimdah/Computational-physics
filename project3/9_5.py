@@ -12,7 +12,7 @@ for j in range(0,2):
     else:
         method = 'RK4'
 
-    for i in range(5,6):
+    for i in range(1,6):
         iterations = 10**i
         data = np.loadtxt('./Results/%s_i_%d_d_100_p_1_pi_1_outputs_txyzv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%(method,iterations), skiprows=1)
 
@@ -24,7 +24,7 @@ for j in range(0,2):
         v_y = np.array(data[:,5])
         v_z = np.array(data[:,6])
 
-        r = np.array(x,y,z)
+        #r = np.array(x,y,z)
 
         # --------- Error convergence rate (9.6)--------
         # max_error[i-1] = np.max(....)
@@ -64,18 +64,25 @@ for j in range(0,2):
 
         #calculates exact values based on t(at timestep) and initial conditions
         x_exact = A_plus*np.cos(omega_plus*t) + A_minus*np.cos(omega_minus*t)
-        y_exact = A_plus*np.sin(omega_plus*t) + A_minus*np.sin(omega_minus*t)
+        y_exact = -(A_plus*np.sin(omega_plus*t) + A_minus*np.sin(omega_minus*t)) 
         z_exact = z_0*np.cos(omega_z*t)
 
         relative_error = np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)/np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)
+        
         #print("Max() = ", np.max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
         #print("Min() = ", np.min(np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)))
+        
+        #plt.plot(t,y,label ="sim")
+        #plt.plot(t,y_exact,label ="exact")
+        #plt.plot(t,x-x_exact,label="x")
+        #plt.plot(t,y-y_exact,label="y")
+        #plt.plot(t,z-z_exact,label="z")
+        
+        #plt.plot(x,y,label="est")
+        #plt.plot(x_exact,y_exact,label="ex")
 
-        plt.plot(x,y,label="est")
-        plt.plot(x_exact,y_exact,label="ex")
-
-        #plt.yscale("log")
-        #plt.plot(t,relative_error, label ="iterations= "+str(iterations))
+        plt.yscale("log")
+        plt.plot(t,relative_error, label ="iterations= "+str(iterations))
 
     plt.xlabel("Time in $\mu s$")
     plt.ylabel("Relative error")
