@@ -18,19 +18,24 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
 # f = 0.1
-data1 = np.loadtxt('./Results/problem10_f_0.1.txt', skiprows=1)
+data1 = np.loadtxt('./Results/problem10_f0.1broad.txt', skiprows=1)
 w1 = np.array(data1[:,0])
 f1 = np.array(data1[:,1])
 plt.plot(w1, f1, label ="f = 0.1")
 
 # f = 0.4
-data2 = np.loadtxt('./Results/problem10_f_0.4.txt', skiprows=1)
+data2 = np.loadtxt('./Results/problem10_f0.4broad.txt', skiprows=1)
 w2= np.array(data2[:,0])
 f2 = np.array(data2[:,1])
 plt.plot(w2,f2, label ="f = 0.4")
 
+<<<<<<< HEAD
 # f = 0.7
 data3 = np.loadtxt('./Results/problem10_f_0.7.txt', skiprows=1)
+=======
+# f= 0.7
+data3 = np.loadtxt('./Results/problem10_f0.7broad.txt', skiprows=1)
+>>>>>>> cb846b54567924f90b2b88fcb755c0633e0b8416
 w3 = np.array(data3[:,0])
 f3 = np.array(data3[:,1])
 plt.plot(w3,f3, label ="f = 0.7")
