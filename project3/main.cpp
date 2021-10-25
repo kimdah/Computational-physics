@@ -29,8 +29,8 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 }
 
 int main(int argc, char const *argv[]) {
-   
-      
+
+
     std::cout << "Problem 9 running..." << std::endl;
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
@@ -62,15 +62,15 @@ int main(int argc, char const *argv[]) {
 
     // Broad scan of 0.2-2.5 MHz
     vector<double> freqs1;
-    for (double i = 0.2; i<2.51; i+=0.05) {
+    for (double i = 0.2; i<2.51; i+=0.01) {
         freqs1.push_back(i); //*pow(10,6)
     }
     std::cout << "Performing broad frequency scans..." << std::endl;
-     
+
     problem_10(0.1, freqs1, false, "broad");
-   
+
     problem_10(0.4, freqs1, false, "broad");
-   
+
     problem_10(0.7, freqs1, false, "broad");
 
     // Narrow scan of 0.2 to 0.8 MHz
@@ -83,9 +83,9 @@ int main(int argc, char const *argv[]) {
     problem_10(0.1, freqs2, false, "narrow without interactions");
     //std::cout << "With particle interactions..." << std::endl;
     problem_10(0.1, freqs2, true, "narrow with interactions");
-    
-  
-       
+
+
+
     return 0;
 }
 
@@ -158,10 +158,10 @@ double simulator(int iterations, int duration, int particles, std::string output
     // double q_in, double m_in, arma::vec pos_in, arma::vec vel_in
     for (int j = 0; j < particles; j++) {
         if(!randomseed) {arma_rng::set_seed(j);}
-                
+
         Particle new_particle(1, 40.078, vec(3).randn()*0.1*penning_trap.d_, vec(3).randn()*0.1*penning_trap.d_); // Ca ATOM!
         // Set initial conditions for 1 particle for problem 5 and 9.
-        if(!randomseed && particles == 1) { // 
+        if(!randomseed && particles == 1) { //
             new_particle.pos_(1) = 0.0;
             new_particle.vel_(0) = 0.0;
             new_particle.vel_(2) = 0.0;
@@ -184,7 +184,7 @@ double simulator(int iterations, int duration, int particles, std::string output
     // Adds the first line of data before entering loop
     if (outputs.find('t') != std::string::npos && out) {ofile<< std::setw(width) << std::setprecision(prec) << std::scientific << 0;}
     for (int j = 0; j < penning_trap.particles_.size(); j++) {
-        if (outputs.find('x') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[0];} 
+        if (outputs.find('x') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[0];}
         if (outputs.find('y') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[1];}
         if (outputs.find('z') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].pos_[2];}
         if (outputs.find('v') != std::string::npos && outputs.find('x') != std::string::npos && out) {ofile << std::setw(width) << std::setprecision(prec) << std::scientific << penning_trap.particles_[j].vel_[0];}
@@ -201,11 +201,11 @@ double simulator(int iterations, int duration, int particles, std::string output
         } else {
             penning_trap.evolve_RK4(h);
         }
-        
+
         // For problem 10, adds a time-dependent perturbation to the applied potential
         if (pertrubation) {
             penning_trap.pertrubation = true;
-            penning_trap.E_ = penning_trap.V0_ * (1 + f * cos (w_v * h*i)); 
+            penning_trap.E_ = penning_trap.V0_ * (1 + f * cos (w_v * h*i));
         }
 
         // Adds data points for each time-step to file

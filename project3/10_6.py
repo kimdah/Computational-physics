@@ -31,7 +31,6 @@ plt.plot(w2,f2, label ="f = 0.4")
 
 # f= 0.7
 data3 = np.loadtxt('./Results/problem10_f0.7broad.txt', skiprows=1)
-
 w3 = np.array(data3[:,0])
 f3 = np.array(data3[:,1])
 plt.plot(w3,f3, label ="f = 0.7")
