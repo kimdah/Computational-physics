@@ -27,13 +27,13 @@ plt.plot(w1, f1, label ="f = 0.1")
 data2 = np.loadtxt('./Results/problem10_f_0.4.txt', skiprows=1)
 w2= np.array(data2[:,0])
 f2 = np.array(data2[:,1])
-plt.plot(w2,f2, label ="f= 0.4")
+plt.plot(w2,f2, label ="f = 0.4")
 
-# f= 0.7
+# f = 0.7
 data3 = np.loadtxt('./Results/problem10_f_0.7.txt', skiprows=1)
 w3 = np.array(data3[:,0])
 f3 = np.array(data3[:,1])
-plt.plot(w3,f3, label ="f= 0.7")
+plt.plot(w3,f3, label ="f = 0.7")
 
 plt.xlabel("$\omega_V$,[$\omega_V$] = MHz")
 plt.ylabel("Fraction of remaining particles")
@@ -50,4 +50,3 @@ plt.subplots_adjust(
 
 plt.savefig('./Figures/fraction_vs_angfreq.pdf')
 plt.show()
-
