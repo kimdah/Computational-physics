@@ -49,7 +49,7 @@ for i in range(0,2):
         # ax.set_zlim([-10**4, 10**4])
 
 
-    #ax.set_title('3D plot of the trajectory' + inter)
+    ax.set_title('3D plot of the trajectory' + inter)
     #plt.legend()
     plt.savefig('./Figures/xyz%d.pdf'%i)
     plt.show()

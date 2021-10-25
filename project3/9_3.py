@@ -76,7 +76,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
 fig, axes = plt.subplots(2,3)#, sharey=True, sharex = True)
-axes[0,0].set(ylabel='$Velocity(Wo/interaction)$')#, title='No interaction')
+axes[0,0].set(ylabel='$Velocity(w/o interaction)$')#, title='No interaction')
 axes[0,0].plot(x01, vx01, label='p1')
 axes[0,0].plot(x02, vx02, label='p2')
 #axes[0,0].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
