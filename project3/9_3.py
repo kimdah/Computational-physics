@@ -128,9 +128,8 @@ plt.subplots_adjust(
     wspace=0.2
     )
 
-
-#plt.show()
 plt.savefig('./Figures/phase_space.pdf')
+plt.show()
 plt.close()
 
 """
