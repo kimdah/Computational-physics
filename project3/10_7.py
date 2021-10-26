@@ -45,4 +45,4 @@ plt.subplots_adjust(
 )
 
 plt.savefig('./Figures/fract_vs_angfreq_zoom.pdf')
-plt.show()
+#plt.show()

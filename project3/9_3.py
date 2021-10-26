@@ -120,17 +120,17 @@ for axis in axes:
         #ax.set_xlim([-10**4, 10**4])
 
 plt.subplots_adjust(
-    top=0.945,
-    bottom=0.09,
+    top=0.965,
+    bottom=0.095,
     left=0.085,
-    right=0.98,
+    right=0.99,
     hspace=0.2,
     wspace=0.2
     )
 
 
-plt.show()
-plt.savefig('phase_space.pdf')
+#plt.show()
+plt.savefig('./Figures/phase_space.pdf')
 plt.close()
 
 """

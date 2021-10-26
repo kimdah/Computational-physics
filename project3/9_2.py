@@ -76,4 +76,4 @@ plt.subplots_adjust(
 )
 
 plt.savefig('./Figures/xy.pdf', bbox_inches='tight')
-plt.show()
+#plt.show()

@@ -49,4 +49,4 @@ plt.subplots_adjust(
 )
 
 plt.savefig('./Figures/fraction_vs_angfreq.pdf')
-plt.show()
+#plt.show()
