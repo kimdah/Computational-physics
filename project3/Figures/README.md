@@ -6,8 +6,7 @@ Filenames indicate the axes of the plot,
 i.e. xvx.py is a plot of the relation between position in x-direction, x, and
 velocity in x-direction, v_x.
 
-Figures from Problem 9:
-------------------------
+**Figures from Problem 9**
 
 Motion of a single particle in z-direction:
 
@@ -23,9 +22,8 @@ Relative error plots:
 - relative_error_EC.pdf   (for Euler-Cromer method)
 - relative_error_RK4.pdf (for 4th order Runge-Kutta method)
 
-
-Figures from Problem 10 regarding applied angular frequency and the fraction of remaining
-particles in the trap:
+**Figures from Problem 10 regarding applied angular frequency and the fraction of remaining
+particles in the trap when the electric field is not constant**
 
 fraction_vs_angfreq.pdf
 
