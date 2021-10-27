@@ -12,9 +12,6 @@ Particle::Particle(double q_in, double m_in, arma::vec pos_in, arma::vec vel_in)
 
 }
 
-void Particle::set_y_zero() {
-  pos_(1) = 0.0;
-}
 /*
 If you cant it to be private
 

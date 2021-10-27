@@ -41,7 +41,7 @@ for i in range(0,2):
 
     if i==0:
         # no interactions
-        inter = ' w/0 interactions'
+        inter = ' w/o interactions'
     else:
         inter = ' w/ interactions'
         # ax.set_xlim([-10**4, 10**4])

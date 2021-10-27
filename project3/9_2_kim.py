@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 # pi:   0: no interactions, 1:interactions
 
-data0 = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
-data1 = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data0 = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data1 = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
 
 
 # No interactions: $axis $interaction $particle
@@ -40,8 +40,8 @@ ax2.set(xlabel = 'x', title = 'Interaction')
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)#plt.legend()
 
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='best') # x,y position
-plt.legend(loc='best')
-plt.savefig('./Figures/xy.pdf')
+#plt.legend(loc='best')
+plt.savefig('./Figures/9_2xy.pdf')
 plt.show()
 
 """
