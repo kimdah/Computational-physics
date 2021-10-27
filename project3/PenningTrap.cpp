@@ -52,16 +52,13 @@ arma::vec PenningTrap::force_particle(int i, int j) {
   arma::vec ipos = particles_old_state_[i].pos_;
   arma::vec jpos = particles_old_state_[j].pos_;
   arma::vec result = ipos - jpos;
-  
-  //arma::vec out = ke*qj*((arma::norm(result))/(abs(result*result)));
-  //arma::vec out = ke*qj*result/(abss*abss);
+
   arma::vec out = ke*qj*result/pow(abs(result), 3);
   double r_temp = sqrt(pow(result(0), 2) + pow(result(1), 2) + pow(result(2), 2));
   for (int i = 0; i < 3; ++i) {
     if (std::isnan(out(i))) {out(i) = 0.0;} // Deals with division by zero resulting in nan and other numerical errors
     // Set force to 0 if below threshold for how close particles can get along a plane for sensible results but not if they are actually close 
     if (abs(result(i)) < sense_ && r_temp > 2*sense_) {out(i) = 0.0;} 
-    //std::cout << "NAN :((((";
   }
   
   return out;

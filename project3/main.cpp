@@ -75,7 +75,7 @@ int main(int argc, char const *argv[]) {
 
     // Narrow scan of 0.2 to 0.8 MHz
     vector<double> freqs2;
-    for (double i = 0.3; i<0.61; i+=0.01) {
+    for (double i = 0.3; i<0.61; i+=0.001) {
         freqs2.push_back(i); //*pow(10,6)
     }
     std::cout << "Performing narrow frequency scans at f=0.1..." << std::endl;
@@ -83,6 +83,17 @@ int main(int argc, char const *argv[]) {
     problem_10(0.1, freqs2, false, "narrow without interactions");
     std::cout << "With particle interactions..." << std::endl;
     problem_10(0.1, freqs2, true,  "narrow with interactions");
+     vector<double> freqs1;
+    for (double i = 0.2; i<2.51; i+=0.01) {
+        freqs1.push_back(i); //*pow(10,6)
+    }
+    std::cout << "Performing broad frequency scans..." << std::endl;
+
+    problem_10(0.1, freqs1, false, "broad");
+
+    problem_10(0.4, freqs1, false, "broad");
+
+    problem_10(0.7, freqs1, false, "broad");
     return 0;
 }
 

@@ -21,6 +21,7 @@ x12 = np.array(data1[:,2])
 y12 = np.array(data1[:,3])
 
 
+
 fig, (ax1, ax2) = plt.subplots(1,2, sharex = True, sharey=True)
 fig.suptitle('Motion in xy-plane w/ and w/o particle interactions') # remove later?
 
@@ -34,13 +35,14 @@ ax1.grid()
 ax2.plot(x11,y11,label='Particle 1')
 ax2.plot(x12,y12,label='Particle 2')
 ax2.grid()
-
+plt.xticks(fontsize=14)
 ax1.set(xlabel = 'x', ylabel='y', title='No interaction')
 ax2.set(xlabel = 'x', title = 'Interaction')
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)#plt.legend()
 
 #plt.legend(bbox_to_anchor=(1.05, 1), loc='best') # x,y position
 #plt.legend(loc='best')
+
 plt.savefig('./Figures/9_2xy.pdf')
 plt.show()
 
