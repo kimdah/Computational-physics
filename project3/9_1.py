@@ -28,9 +28,6 @@ ax.xaxis.set_major_locator(ticker.MultipleLocator(10)) # 5 = tick increment
 
 
 plt.plot(t, z)
-
-
-
 plt.xlabel('time, [t] = $\mu s$')
 plt.ylabel('Position z(t), [z] = $\mu m$')
 plt.grid()
