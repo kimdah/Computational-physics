@@ -16,9 +16,13 @@
 using namespace std;
 using namespace arma;
 
+// Performs simulations for problem 10
 void problem_10(double f, vec frequencies, bool interactions, string range);
+
+// Performs simulations based on parameter inputs
 double simulator(int iterations, int duration, int particles, std::string outputs, bool interactions, bool euler_cromer, bool pertrubation, bool randomseed, double f, double w_v, bool out);
 
+//Returns a string version of input with decimal precision
 template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 1)
 {
@@ -83,17 +87,6 @@ int main(int argc, char const *argv[]) {
     problem_10(0.1, freqs2, false, "narrow without interactions");
     std::cout << "With particle interactions..." << std::endl;
     problem_10(0.1, freqs2, true,  "narrow with interactions");
-     vector<double> freqs1;
-    for (double i = 0.2; i<2.51; i+=0.01) {
-        freqs1.push_back(i); //*pow(10,6)
-    }
-    std::cout << "Performing broad frequency scans..." << std::endl;
-
-    problem_10(0.1, freqs1, false, "broad");
-
-    problem_10(0.4, freqs1, false, "broad");
-
-    problem_10(0.7, freqs1, false, "broad");
     return 0;
 }
 
