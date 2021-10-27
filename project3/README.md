@@ -1,7 +1,5 @@
-Simulation of a Penning Trap
+Simulation of a Penning Trap (Project 3)
 -------------------------------------------------
-This folder contains all the files for project 3
-
 To build the code:
 $ make
 
