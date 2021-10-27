@@ -41,7 +41,7 @@ for i in range(0,2):
 
     if i==0:
         # no interactions
-        inter = ' w/0 interactions'
+        inter = ' w/o interactions'
     else:
         inter = ' w/ interactions'
         # ax.set_xlim([-10**4, 10**4])
@@ -52,5 +52,5 @@ for i in range(0,2):
     ax.set_title('3D plot of the trajectory' + inter)
     #plt.legend()
     plt.savefig('./Figures/xyz%d.pdf'%i)
-    plt.show()
+    #plt.show()
     plt.close()

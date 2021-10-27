@@ -120,78 +120,14 @@ for axis in axes:
         #ax.set_xlim([-10**4, 10**4])
 
 plt.subplots_adjust(
-    top=0.945,
-    bottom=0.09,
+    top=0.965,
+    bottom=0.095,
     left=0.085,
-    right=0.98,
+    right=0.99,
     hspace=0.2,
     wspace=0.2
     )
 
-
-plt.show()
-plt.savefig('phase_space.pdf')
+plt.savefig('./Figures/phase_space.pdf')
+#plt.show()
 plt.close()
-
-"""
-# ------ PLOT---------
-figx0 = plt.figure()
-plt.title('x-v_x plot w/o')
-plt.plot(x01, vx01, label='p1 w/o ')
-plt.plot(x02, vx02, label='p2 w/o')
-#plt.xlim([-10**4, 10**4])
-plt.legend()
-plt.savefig('./Figures/xvx_0.pdf')
-plt.show()
-plt.close()
-
-figx1 = plt.figure()
-plt.title('x-v_x plot w/')
-plt.plot(x11, vx11, label='p1 w/')
-plt.plot(x12, vx12, label='p2 w/')
-plt.xlim([-10**4, 10**4])
-plt.legend()
-plt.savefig('./Figures/xvx_1.pdf')
-plt.show()
-plt.close()
-
-figy0 = plt.figure()
-plt.title('y-v_y plot w/o')
-plt.plot(y01, vy01, label='p1 w/o ')
-plt.plot(y02, vy02, label='p2 w/o')
-#plt.xlim([-10**4, 10**4])
-plt.legend()
-plt.savefig('./Figures/yvy_0.pdf')
-plt.show()
-plt.close()
-
-figy1 = plt.figure()
-plt.title('y-v_y plot w/')
-plt.plot(y11, vy11, label='p1 w/')
-plt.plot(y12, vy12, label='p2 w/')
-plt.xlim([-10**4, 10**4])
-plt.legend()
-plt.savefig('./Figures/yvy_1.pdf')
-plt.show()
-plt.close()
-
-figz0 = plt.figure()
-plt.title('z-v_z plot w/o')
-plt.plot(z01, vz01, label='p1 w/o ')
-plt.plot(z02, vz02, label='p2 w/o')
-#plt.xlim([-10**4, 10**4])
-plt.legend()
-plt.savefig('./Figures/zvz_0.pdf')
-plt.show()
-plt.close()
-
-figz1 = plt.figure()
-plt.title('z-v_z plot w/')
-plt.plot(z11, vz11, label='p1 w/')
-plt.plot(z12, vz12, label='p2 w/')
-plt.xlim([-10**4, 10**4])
-plt.legend()
-plt.savefig('./Figures/zvz_1.pdf')
-plt.show()
-plt.close()
-"""

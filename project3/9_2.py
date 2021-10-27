@@ -47,8 +47,8 @@ axes[1].plot(x12,y12,label='Particle 2')
 
 
 for ax in axes:
-    ax.set_xlim([-0.7*10**4, 0.7*10**4])
-    ax.set_ylim([-0.7*10**4, 0.7*10**4])
+    ax.set_xlim([-0.4*10**4, 0.4*10**4])
+    ax.set_ylim([-0.4*10**4, 0.4*10**4])
     #ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
     ax.set(adjustable='box', aspect='equal')
     ax.grid()
@@ -76,4 +76,4 @@ plt.subplots_adjust(
 )
 
 plt.savefig('./Figures/xy.pdf', bbox_inches='tight')
-plt.show()
+#plt.show()
