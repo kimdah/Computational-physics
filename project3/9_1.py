@@ -46,4 +46,4 @@ plt.subplots_adjust(
 
 
 plt.savefig('./Figures/zt.pdf')
-plt.show()
+#plt.show()

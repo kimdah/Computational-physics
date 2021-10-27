@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 #read out w_v and N for each f as w_1,w_2,w_3,N_1,N_2,N_3
 
 
-SMALL_SIZE = 17
-MEDIUM_SIZE = 17
+SMALL_SIZE = 13
+MEDIUM_SIZE = 13
 BIGGER_SIZE = 17
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
@@ -35,7 +35,7 @@ w3 = np.array(data3[:,0])
 f3 = np.array(data3[:,1])
 plt.plot(w3,f3, label ="f = 0.7")
 
-plt.xlabel("$\omega_V$,[$\omega_V$] = MHz")
+plt.xlabel("$\omega_V$, [$\omega_V$] = MHz")
 plt.ylabel("Fraction of remaining particles")
 plt.legend()
 plt.grid()
@@ -49,4 +49,4 @@ plt.subplots_adjust(
 )
 
 plt.savefig('./Figures/fraction_vs_angfreq.pdf')
-plt.show()
+#plt.show()
