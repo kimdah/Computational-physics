@@ -48,8 +48,8 @@ int main(int argc, char const *argv[]) {
     simulator(10000, 100, 2, "zv", true, false, false, false, 0.0, 0.0, true);
     simulator(10000, 100, 2, "zv", false, false, false, false, 0.0, 0.0, true);
     // Point 4: 3D plot
-    simulator(10000, 1000, 2, "xyz", true, false, false, false, 0.0, 0.0, true);
-    simulator(10000, 1000, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xyz", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
     // Point 5: step sizes
     for (int i = 1; i < 6; i++) {
         simulator(pow(10,i), 100, 1, "txyzv", true, false, false, false, 0.0, 0.0, true); // RK4
