@@ -62,13 +62,13 @@ vz12 = np.array(data1z[:,3])
 # activate pylustrator
 #pylustrator.start()
 
-SMALL_SIZE = 13
+SMALL_SIZE = 9
 MEDIUM_SIZE = 13
 BIGGER_SIZE = 13
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
-plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('axes', labelsize=SMALL_SIZE)    # fontsize of the x and y labels
 plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
@@ -77,55 +77,56 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 fig, axes = plt.subplots(2,3)#, sharey=True, sharex = True)
 axes[0,0].set(ylabel='$Velocity(w/o interaction)$')#, title='No interaction')
-axes[0,0].plot(x01, vx01, label='p1')
-axes[0,0].plot(x02, vx02, label='p2')
+axes[0,0].plot(x01, vx01, label='p1',linewidth=0.5)
+axes[0,0].plot(x02, vx02, label='p2',linewidth=0.5)
 #axes[0,0].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 #axes[0,0].set_xlim([-3*10**3, 3*10**3])
 
 axes[1,0].set(xlabel = 'x(t), [x(t)] = $ \mu m$', ylabel='$Velocity(w/interaction)$')#, title='Interaction')
-axes[1,0].plot(x11, vx11, label='p1')
-axes[1,0].plot(x12, vx12, label='p2')
+axes[1,0].plot(x11, vx11, label='p1',linewidth=0.5)
+axes[1,0].plot(x12, vx12, label='p2',linewidth=0.5)
 axes[1,0].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 #axes[1,0].set_xlim([-10**4, 10**4])
 
 # y w/o
 axes[0,1].set()#, title='No interaction y')
-axes[0,1].plot(y01, vy01, label='p1')
-axes[0,1].plot(y02, vy02, label='p2')
+axes[0,1].plot(y01, vy01, label='p1',linewidth=0.5)
+axes[0,1].plot(y02, vy02, label='p2',linewidth=0.5)
 axes[0,1].ticklabel_format(axis="both", style="sci", scilimits=(0,0))
 #axes[0,1].set_xlim([-3*10**3, 3*10**3])
 
 # y w/
 axes[1,1].set(xlabel = 'y(t), [y(t)] = $ \mu m$')
-axes[1,1].plot(y11, vy11, label='p1 w/')
-axes[1,1].plot(y12, vy12, label='p2 w/')
+axes[1,1].plot(y11, vy11, label='p1 w/',linewidth=0.5)
+axes[1,1].plot(y12, vy12, label='p2 w/',linewidth=0.5)
 #axes[1,1].set_xlim([-10**4, 10**4])
 
 # z w/o
 axes[0,2].set()#, title='No interaction y')
-axes[0,2].plot(z01, vz01, label='p1 w/o ')
-axes[0,2].plot(z02, vz02, label='p2 w/o')
+axes[0,2].plot(z01, vz01, label='p1 w/o ',linewidth=0.5)
+axes[0,2].plot(z02, vz02, label='p2 w/o',linewidth=0.5)
 #axes[0,2].set_xlim([-3*10**3, 3*10**3])
 
 # z w/
 axes[1,2].set(xlabel = 'z(t), [z(t)] = $ \mu m$')#, title='interaction y')
-axes[1,2].plot(z11, vz11, label='p1 w/')
-axes[1,2].plot(z12, vz12, label='p2 w/')
+axes[1,2].plot(z11, vz11, label='p1 w/',linewidth=0.5)
+axes[1,2].plot(z12, vz12, label='p2 w/',linewidth=0.5)
 #axes[1,2].set_xlim([-10**4, 10**4])
 
 
 for axis in axes:
     for ax in axis:
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
-        #ax.set_xlim([-10**4, 10**4])
+        
+        #ax.set_xlim([-3**4, 3**4])
 
 plt.subplots_adjust(
-    top=0.965,
-    bottom=0.095,
-    left=0.085,
-    right=0.99,
-    hspace=0.2,
-    wspace=0.2
+    top=1,
+    bottom=0.1,
+    left=0.1,
+    right=0.95,
+    hspace=0.3,
+    wspace=0.3
     )
 
 plt.savefig('./Figures/phase_space.pdf')

@@ -16,9 +16,13 @@
 using namespace std;
 using namespace arma;
 
+// Performs simulations for problem 10
 void problem_10(double f, vec frequencies, bool interactions, string range);
+
+// Performs simulations based on parameter inputs
 double simulator(int iterations, int duration, int particles, std::string outputs, bool interactions, bool euler_cromer, bool pertrubation, bool randomseed, double f, double w_v, bool out);
 
+//Returns a string version of input with decimal precision
 template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 1)
 {
@@ -75,7 +79,7 @@ int main(int argc, char const *argv[]) {
 
     // Narrow scan of 0.2 to 0.8 MHz
     vector<double> freqs2;
-    for (double i = 0.3; i<0.61; i+=0.01) {
+    for (double i = 0.3; i<0.61; i+=0.001) {
         freqs2.push_back(i); //*pow(10,6)
     }
     std::cout << "Performing narrow frequency scans at f=0.1..." << std::endl;

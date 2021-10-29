@@ -1,7 +1,5 @@
-Simulation of a Penning Trap
+Simulation of a Penning Trap (Project 3)
 -------------------------------------------------
-This folder contains all the files for project 3
-
 To build the code:
 $ make
 
@@ -11,5 +9,5 @@ $ make run
 To make plots:
 $ make plot
 
-The folder Figures contains all figures from the .py files. \
-The folder Results contains all output files from main.cpp.
+The folder *Figures* contains all figures from the .py files. \
+The folder *Results* contains all output files from main.cpp.
