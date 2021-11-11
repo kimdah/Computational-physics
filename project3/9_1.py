@@ -4,7 +4,7 @@ import matplotlib.ticker as ticker
 
 # Plot of z-trajectory of 1 particle
 
-data = np.loadtxt('./Results/RK4_i_10000_d_100_p_1_pi_1_outputs_tz_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data = np.loadtxt('./Results/RK4_i_10000_d_100_p_1_pi_1_outputs_tzv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
 t = np.array(data[:,0])
 z = np.array(data[:,1])
 
@@ -28,9 +28,6 @@ ax.xaxis.set_major_locator(ticker.MultipleLocator(10)) # 5 = tick increment
 
 
 plt.plot(t, z)
-
-
-
 plt.xlabel('time, [t] = $\mu s$')
 plt.ylabel('Position z(t), [z] = $\mu m$')
 plt.grid()
@@ -46,4 +43,4 @@ plt.subplots_adjust(
 
 
 plt.savefig('./Figures/zt.pdf')
-plt.show()
+#plt.show()

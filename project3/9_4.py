@@ -20,7 +20,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 for i in range(0,2):
     #iter = 10**i
-    data = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_%d_outputs_xyz_pert_0_rs_0_f_0.0_w_v_0.0.txt' %i, skiprows=1) #%iter
+    data = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_%d_outputs_xyz_pert_0_rs_0_f_0.0_w_v_0.0.txt' %i, skiprows=1) #%iter
     x1 = np.array(data[:,0])
     y1 = np.array(data[:,1])
     z1 = np.array(data[:,2])
@@ -33,24 +33,32 @@ for i in range(0,2):
 
 
     # plotting
-    ax.plot3D(x1, y1, z1, label='p1')
-    ax.plot3D(x2, y2, z2, label='p2')
+    ax.plot3D(x1, y1, z1, label='p1',linewidth=0.5)
+    ax.plot3D(x2, y2, z2, label='p2',linewidth=0.5)
     ax.set(xlabel='x(t)', ylabel='y(t)', zlabel='z(t)')
     ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
-
+    ax.set_xlim([-0.22*10**4, 0.22*10**4])
+    ax.set_ylim([-0.22*10**4, 0.22*10**4])
+    ax.set_zlim([-0.22*10**4, 0.22*10**4])
 
     if i==0:
         # no interactions
-        inter = ' w/0 interactions'
+        inter = ' w/o interactions'
     else:
         inter = ' w/ interactions'
         # ax.set_xlim([-10**4, 10**4])
         # ax.set_ylim([-10**4, 10**4])
         # ax.set_zlim([-10**4, 10**4])
 
-
-    #ax.set_title('3D plot of the trajectory' + inter)
+    plt.subplots_adjust(
+    top=0.915,
+    bottom=0.165,
+    left=0.0,
+    right=1,
+    hspace=0.0,
+    wspace=0.0
+)
     #plt.legend()
-    plt.savefig('./Figures/xyz%d.pdf'%i)
+    plt.savefig('./Figures/xyz%d_1000.pdf'%i,bbox_inches='tight')
     plt.show()
     plt.close()

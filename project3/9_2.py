@@ -27,8 +27,8 @@ MEDIUM_SIZE = 17
 BIGGER_SIZE = 17
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
-plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=SMALL_SIZE)    # fontsize of the x and y labels
 plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
@@ -39,16 +39,16 @@ fig, axes = plt.subplots(1,2, sharey=True,figsize=(8,4))#,figsize=(7, 7)) # defa
 
 # Plotting no interaction vs interaction:
 
-axes[0].plot(x01,y01,label='Particle 1')
-axes[0].plot(x02,y02,label='Particle 2')
+axes[0].plot(x01,y01,label='Particle 1',linewidth=0.5)
+axes[0].plot(x02,y02,label='Particle 2',linewidth=0.5)
 
-axes[1].plot(x11,y11,label='Particle 1')
-axes[1].plot(x12,y12,label='Particle 2')
+axes[1].plot(x11,y11,label='Particle 1',linewidth=0.5)
+axes[1].plot(x12,y12,label='Particle 2',linewidth=0.5)
 
 
 for ax in axes:
-    ax.set_xlim([-0.4*10**4, 0.4*10**4])
-    ax.set_ylim([-0.4*10**4, 0.4*10**4])
+    ax.set_xlim([-0.22*10**4, 0.22*10**4])
+    ax.set_ylim([-0.22*10**4, 0.22*10**4])
     #ax.add_patch(plt.Circle((0, 0), 10**4, linestyle="--", color='grey', fill=False)) # for penningtrap circle
     ax.set(adjustable='box', aspect='equal')
     ax.grid()
@@ -76,5 +76,4 @@ plt.subplots_adjust(
 )
 
 plt.savefig('./Figures/xy.pdf', bbox_inches='tight')
-plt.show()
-
+#plt.show()
