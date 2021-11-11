@@ -10,10 +10,10 @@ class PenningTrap
 {
 
   public:
-    std::vector<Particle> particles_;  // container of particles
-
+    std::vector<Particle> particles_, particles_old_state_;  // container of particles
+  
     double B0_, V0_, d_, extreme_, E_;
-    bool particle_interactions_;
+    bool particle_interactions_, pertrubation;
 
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);

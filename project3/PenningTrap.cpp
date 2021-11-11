@@ -10,11 +10,12 @@
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   B0_ = B0_in; // definer disse
-  E_ = V0_;
   V0_ = V0_in;
+  E_ = V0_in;
+  pertrubation = false;
   particle_interactions_ = true;
   d_ = d_in;
-  extreme_ = 0.0;
+  extreme_ = 0.0; // Just a value that records the most lost particle
 
 }
 
@@ -25,7 +26,11 @@ void PenningTrap::add_particle(Particle p_in){
 
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r){
-  double v0d = E_/pow(d_, 2); // V0_/d^2
+  double v0d; 
+  if (pertrubation) {v0d = E_/pow(d_, 2);
+  } else {
+    v0d = V0_/pow(d_, 2);
+  }
   arma::vec E_field = arma::vec(3).fill(0);
   E_field(0) = r(0)*v0d;
   E_field(1) = r(1)*v0d;
@@ -44,11 +49,21 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 
 // Force on particle_i from particle_j, ignoring the magnetic forces
 arma::vec PenningTrap::force_particle(int i, int j){
-  double ke = 1.38935333 * pow (10 , 5);
+  double ke = 1.38935333 * pow (10, 5);
   double qj = particles_[j].q_;
-  arma::vec ipos = particles_[i].pos_;
-  arma::vec jpos = particles_[j].pos_;
-  return ke*qj*(ipos - jpos)/(pow(abs(ipos - jpos) , 3));
+  arma::vec ipos = particles_old_state_[i].pos_;
+  arma::vec jpos = particles_old_state_[j].pos_;
+  arma::vec result = ipos - jpos;
+  double abss = arma::norm(result);
+  //arma::vec out = ke*qj*((arma::norm(result))/(abs(result*result)));
+  //arma::vec out = ke*qj*result/(abss*abss);
+  arma::vec out = ke*qj*result/pow(abs(result), 3);
+  for (int i = 0; i < 3; ++i) {
+    if (std::isnan(out(i))) {out(i) = 0.0;} // Deals with division by zero resulting in nan and other numerical errors
+    //std::cout << "NAN :((((";
+  }
+  
+  return out;
 
 }
 
@@ -67,6 +82,7 @@ arma::vec PenningTrap::total_force_external(int i){
 arma::vec PenningTrap::total_force_particles(int i){
   arma::vec total_force_internal = arma::vec(3).fill(0.);
   for(int j=0 ; j < particles_.size(); j++){
+    
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
@@ -91,29 +107,28 @@ arma::vec PenningTrap::total_force(int i){
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt){
+  particles_old_state_ = particles_;
   for (int i = 0; i < particles_.size(); i++){
-
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
-    double m = particles_[i].m_;
-
     arma::vec a = arma::vec(3).fill(0.);
-
+    double m = particles_[i].m_;
+   
     if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
-      //std::cout << "out! x " << particles_[i].pos_(0) << " y " << particles_[i].pos_(1) << " z " << particles_[i].pos_(2) << std::endl;
-      particles_[i].outofbounds_ = true;
+      particles_[i].outofbounds_ = true; // Particle is now considered out of bounds.
     } else {
-      a = total_force(i)/m;
+      a = total_force(i)/m; 
     }
-
+    //std::cout << "hmm " << i << std::endl;
+    //std::cout << a[1] << std::endl;
     // 1
-    arma::vec k1r = dt * v; // rekkefølge?
+    arma::vec k1r = dt * v; 
     arma::vec k1v = dt * a;
 
     // 2
     particles_[i].pos_ = r + 0.5*k1r;
     particles_[i].vel_ = v + 0.5*k1v; // etter k2r?
-
+         
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     //if (particle is outside |d|, set a to 0)
@@ -128,7 +143,7 @@ void PenningTrap::evolve_RK4(double dt){
     //if (particle is outside |d|, set a to 0)
     arma::vec k3r = dt * particles_[i].vel_;
     arma::vec k3v = dt * a;
-
+    
     // 4
     particles_[i].pos_ = r + k3r;
     particles_[i].vel_ = v + k3v; // etter k3r?
@@ -144,13 +159,14 @@ void PenningTrap::evolve_RK4(double dt){
     double R = sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2));
     if ( R > extreme_) {extreme_ = R;}
     //if (std::abs(particles_[i].pos_(1)) > extreme_) {extreme_ = particles_[i].pos_(1);}
-
+    
   }
 
 }
 
 // Evolve the system one time step (dt) using Euler-Cromer
 void PenningTrap::evolve_Euler_Cromer(double dt){
+  particles_old_state_ = particles_;
   for (int i = 0; i < particles_.size(); i++){
     arma::vec r = particles_[i].pos_;
     arma::vec v = particles_[i].vel_;
@@ -158,7 +174,7 @@ void PenningTrap::evolve_Euler_Cromer(double dt){
     arma::vec a = arma::vec(3).fill(0.);
 
 
-    if (std::abs(particles_[i].pos_(0)) > d_ || std::abs(particles_[i].pos_(1))  > d_ || std::abs(particles_[i].pos_(2))  > d_) {
+    if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
       particles_[i].outofbounds_ = true;
     } else {
       a = total_force(i)/m;
