@@ -24,7 +24,7 @@ void PenningTrap::add_particle(Particle p_in) {
 
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r) {
-  double v0d; 
+  double v0d;
   if (pertrubation) {v0d = E_/pow(d_, 2);
   } else {
     v0d = V0_/pow(d_, 2);
@@ -57,10 +57,10 @@ arma::vec PenningTrap::force_particle(int i, int j) {
   double r_temp = sqrt(pow(result(0), 2) + pow(result(1), 2) + pow(result(2), 2));
   for (int i = 0; i < 3; ++i) {
     if (std::isnan(out(i))) {out(i) = 0.0;} // Deals with division by zero resulting in nan and other numerical errors
-    // Set force to 0 if below threshold for how close particles can get along a plane for sensible results but not if they are actually close 
-    if (abs(result(i)) < sense_ && r_temp > 2*sense_) {out(i) = 0.0;} 
+    // Set force to 0 if below threshold for how close particles can get along a plane for sensible results but not if they are actually close
+    if (abs(result(i)) < sense_ && r_temp > 2*sense_) {out(i) = 0.0;}
   }
-  
+
   return out;
 }
 
@@ -79,6 +79,7 @@ arma::vec PenningTrap::total_force_external(int i) {
 arma::vec PenningTrap::total_force_particles(int i) {
   arma::vec total_force_internal = arma::vec(3).fill(0.);
   for(int j=0 ; j < particles_.size(); j++){
+
      if (i!= j) {
       total_force_internal += force_particle(i, j);
     }
@@ -108,21 +109,22 @@ void PenningTrap::evolve_RK4(double dt) {
     arma::vec v = particles_[i].vel_;
     arma::vec a = arma::vec(3).fill(0.);
     double m = particles_[i].m_;
-   
+
     if (sqrt(pow(particles_[i].pos_(0), 2) + pow(particles_[i].pos_(1), 2) +pow(particles_[i].pos_(2), 2)) > d_) {
       particles_[i].outofbounds_ = true; // Particle is now considered out of bounds.
     } else {
-      a = total_force(i)/m; 
+      a = total_force(i)/m;
     }
-
+    //std::cout << "hmm " << i << std::endl;
+    //std::cout << a[1] << std::endl;
     // 1
-    arma::vec k1r = dt * v; 
+    arma::vec k1r = dt * v;
     arma::vec k1v = dt * a;
 
     // 2
     particles_[i].pos_ = r + 0.5*k1r;
     particles_[i].vel_ = v + 0.5*k1v;
-         
+
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     arma::vec k2r = dt * particles_[i].vel_;
@@ -130,15 +132,15 @@ void PenningTrap::evolve_RK4(double dt) {
 
     // 3
     particles_[i].pos_ = r + 0.5*k2r;
-    particles_[i].vel_ = v + 0.5*k2v; 
+    particles_[i].vel_ = v + 0.5*k2v;
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     arma::vec k3r = dt * particles_[i].vel_;
     arma::vec k3v = dt * a;
-    
+
     // 4
     particles_[i].pos_ = r + k3r;
-    particles_[i].vel_ = v + k3v; 
+    particles_[i].vel_ = v + k3v;
     if (!particles_[i].outofbounds_) {a = total_force(i)/m;}
 
     arma::vec k4r = dt * particles_[i].vel_;
@@ -146,7 +148,7 @@ void PenningTrap::evolve_RK4(double dt) {
 
     // 5
     particles_[i].pos_ = r + (1./6) * (k1r + 2 * k2r + 2 * k3r + k4r);
-    particles_[i].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);    
+    particles_[i].vel_ = v + (1./6) * (k1v + 2 * k2v + 2 * k3v + k4v);
   }
 }
 

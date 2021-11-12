@@ -93,7 +93,7 @@ int main(int argc, char const *argv[]) {
 void problem_10(double f, vec frequencies, bool interactions, string range) {
     int width = 16;
     int prec  = 8;
-  
+
     std::string filename = "Results/problem10_f"+to_string_with_precision(f)+range+".txt";
     std::ofstream ofile;
     ofile.open(filename);
