@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 # $axis $interaction $particle
 
 # WITHOUT INTERACTIONS
-data0x = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_0_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data0y = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_0_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data0z = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_0_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data0x = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_0_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data0y = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_0_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data0z = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_0_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
 
 # ------Particle 1--------
 # positions
@@ -33,9 +33,9 @@ vz02 = np.array(data0z[:,3])
 
 # WITH INTERACTIONS
 
-data1x = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_1_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data1y = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_1_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data1z = np.loadtxt('./Results/RK4_i_10000_d_100_p_2_pi_1_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data1x = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_1_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data1y = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_1_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data1z = np.loadtxt('./Results/RK4_i_10000_d_1000_p_2_pi_1_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
 
 # -------Particle 1 --------
 # Positions
@@ -117,11 +117,11 @@ axes[1,2].plot(z12, vz12, label='p2 w/',linewidth=0.5)
 for axis in axes:
     for ax in axis:
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
-        
-        #ax.set_xlim([-3**4, 3**4])
+        ax.set_xlim([-0.24*10**4, 0.24*10**4])
+        ax.set_ylim([-0.13*10**4, 0.13*10**4])
 
 plt.subplots_adjust(
-    top=1,
+    top=0.9,
     bottom=0.1,
     left=0.1,
     right=0.95,
@@ -129,6 +129,6 @@ plt.subplots_adjust(
     wspace=0.3
     )
 
-plt.savefig('./Figures/phase_space.pdf')
+plt.savefig('./Figures/phase_space1000.pdf')
 #plt.show()
 plt.close()

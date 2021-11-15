@@ -34,7 +34,7 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
 
-
+/* 
     std::cout << "Problem 9 running..." << std::endl;
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
@@ -86,7 +86,14 @@ int main(int argc, char const *argv[]) {
     std::cout << "Without particle interactions..."<< std::endl;
     problem_10(0.1, freqs2, false, "narrow without interactions");
     std::cout << "With particle interactions..." << std::endl;
-    problem_10(0.1, freqs2, true,  "narrow with interactions");
+    problem_10(0.1, freqs2, true,  "narrow with interactions"); */
+    // Point 3: Phase space plots
+    simulator(100000, 1000, 2, "xv", true, false, false, false, 0.0, 0.0, true);
+    simulator(100000, 1000, 2, "xv", false, false, false, false, 0.0, 0.0, true);
+    simulator(100000, 1000, 2, "yv", true, false, false, false, 0.0, 0.0, true);
+    simulator(100000, 1000, 2, "yv", false, false, false, false, 0.0, 0.0, true);
+    simulator(100000, 1000, 2, "zv", true, false, false, false, 0.0, 0.0, true);
+    simulator(100000, 1000, 2, "zv", false, false, false, false, 0.0, 0.0, true);
     return 0;
 }
 
