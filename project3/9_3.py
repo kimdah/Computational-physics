@@ -117,8 +117,8 @@ axes[1,2].plot(z12, vz12, label='p2 w/',linewidth=0.5)
 for axis in axes:
     for ax in axis:
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
-        ax.set_xlim([-0.24*10**4, 0.24*10**4])
-        ax.set_ylim([-0.13*10**4, 0.13*10**4])
+
+        #ax.set_xlim([-3**4, 3**4])
 
 plt.subplots_adjust(
     top=0.9,

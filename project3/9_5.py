@@ -56,7 +56,7 @@ for j in range(0,2):
         x_0 = x[0]
         y_0 = 0
         z_0 = z[0]
-        v_0 = v_y[0]    
+        v_0 = v_y[0]
 
         m = 40.078
         q=1     #charge and mass
@@ -70,7 +70,7 @@ for j in range(0,2):
 
 
         #Constants
-        omega_0 =(q*B_0)/m 
+        omega_0 =(q*B_0)/m
         omega_z = np.sqrt((2*q*V_0)/(m*d**2))
 
         #constants
@@ -83,13 +83,13 @@ for j in range(0,2):
 
         #calculates exact values based on t(at timestep) and initial conditions
         x_exact = A_plus*np.cos(omega_plus*t) + A_minus*np.cos(omega_minus*t)
-        y_exact = -(A_plus*np.sin(omega_plus*t) + A_minus*np.sin(omega_minus*t)) 
+        y_exact = -(A_plus*np.sin(omega_plus*t) + A_minus*np.sin(omega_minus*t))
         z_exact = z_0*np.cos(omega_z*t)
 
 
         relative_error = np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)/np.sqrt((x_exact)**2+(y_exact)**2+(z_exact)**2)
 
-        
+
         #appending delta max
         if method == 'EC':
             max_error_EC.append(max(np.sqrt((x-x_exact)**2+(y-y_exact)**2+(z-z_exact)**2)))
@@ -132,6 +132,3 @@ r_err_sum_EC = r_err_sum_EC*(1/4)
 r_err_sum_RK4 = r_err_sum_RK4 *(1/4)
 print("Convergence rate for Euler is = ", r_err_sum_EC)
 print("Convergence rate for RK4 is = ", r_err_sum_RK4)
-
-
-

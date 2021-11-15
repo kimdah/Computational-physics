@@ -11,7 +11,7 @@ class PenningTrap
 
   public:
     std::vector<Particle> particles_, particles_old_state_;  // container of particles
-  
+
     double B0_, V0_, d_, extreme_, E_, sense_;
     bool particle_interactions_, pertrubation;
 
