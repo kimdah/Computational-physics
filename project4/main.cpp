@@ -67,10 +67,10 @@ std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current
     // examining surrounding spins to figure out index in boltzmann_factor vector
     // for computing the probability ratio
 
-    int sumofsurroundingspins = s_current[(randRow - 1 + L) % L][randCol] // Neighbour below
-                              + s_current[randRow][(randCol - 1 + L) % L] // Neighbour to the left
+    int sumofsurroundingspins = s_current[randRow][(randCol - 1 + L) % L] // Neighbour to the left 
+                              + s_current[randRow][(randCol + 1) % L]; // Neighbour to the right 
                               + s_current[(randRow + 1) % L][randCol] // Neighbour above
-                              + s_current[randRow][(randCol + 1) % L]; // Neighbour to the right
+                              + s_current[(randRow - 1 + L) % L][randCol] // Neighbour below
 
 
     
