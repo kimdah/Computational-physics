@@ -16,7 +16,6 @@ int N;
 
 int main(int argc, char const *argv[]) {
 
-
   // ------ FROM EXAMPLE CODE-------
   // Check number of command line arguments
   // assert(argc == 4);
@@ -50,15 +49,11 @@ int main(int argc, char const *argv[]) {
 
 
 
-  //std::cout << s_candidate[randRow][randCol] << endl;
-
-
-
-
   return 0;
 }
 
 std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current, double T, double totalenergy){
+  // running one MC cycle for sampling
   std::vector<double> boltzmann_factors = boltzmann_factor(T);
 
   for (int c = 0; c < N; c++){ // one MC cycle
@@ -69,9 +64,9 @@ std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current
 
     // find p(s')/p(s_i)=e^(-beta(E(sdash)-(E(s_i))=e^(-beta*deltaE)
 
-
-    int sumofsurroundingspins;
-
+    // examining surrounding spins to figure out index in boltzmann_factor vector
+    // for computing the probability ratio
+    int sumofsurroundingspins; // NOT energy, simply sum to get a sense of how many +1 neighbour spins there are
     if(randRow != 0 && randRow != L-1 && randCol != 0 && randCol != L-1){
       sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][randCol-1]
        + s_current[randRow+1][randCol] + s_current[randRow][randCol+1];
@@ -108,23 +103,29 @@ std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current
       sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][randCol-1]
        + s_current[randRow+1][randCol] + s_current[randRow][0];
     }
+
+    // finding the index to use in Boltzmann
     int index;
     int deltaE = sumofsurroundingspins*2;
-    int m = sumofsurroundingspins;
+    //int m = sumofsurroundingspins;
+
+    // boltzmann factor depends on flipping a +1 to -1, so the value will have
+    // reverse index when a negative spin is flipped to positive.
     if(s_current[randRow][randCol] == 1){
-      index = 5 - sumofsurroundingspins/2 + 2;
+      index = 5 - sumofsurroundingspins/2 + 2; // reversing index
     }else{
       index = sumofsurroundingspins/2 + 2;
     }
 
-    double probabilityratio = boltzmann_factors[index];
-
+    // Acceptance ratio
+    double probability_ratio = boltzmann_factors[index];
     double r = rand()/RAND_MAX;
 
-    if(r>probabilityratio){ //Rejected spin-flip
+    if(r > probability_ratio){ //Rejected spin-flip
       s_current[randRow][randCol] *= -1;
     }
     else{
+      // Accept spin configuration candidate
       double totalenergy = totalenergy + deltaE;
       double epsilon = totalenergy/N;
     }
@@ -142,6 +143,7 @@ std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current
 }
 
 double energy_of_state(std::vector<std::vector<int> > s){
+  // finding the energy of a particular spin configuration s
   double energy;
   for(int i=1 ; i<L+1 ; i++){ //the first row will be the Lth row
     for(int j=1 ; j<L+1 ; j++){ //the first column will be the Lth column
@@ -156,8 +158,7 @@ double energy_of_state(std::vector<std::vector<int> > s){
 
 
 std::vector<double> boltzmann_factor(double T){
-  double kB = 1.38064852 * pow(10, -23); //
-  double beta = 1. / (kB*T);
+  double beta = 1. / T;
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
   boltzmann_values.push_back(exp(-beta*(-4))); // 1 +1 spins
@@ -165,5 +166,4 @@ std::vector<double> boltzmann_factor(double T){
   boltzmann_values.push_back(exp(-beta*(4))); // 3 +1 spins
   boltzmann_values.push_back(exp(-beta*(8))); // 4 +1 spins
   return boltzmann_values;
-
 }
