@@ -29,40 +29,46 @@ int main(int argc, char const *argv[]) {
   // Monte Carlo temporary
   int L = 2;
   int N = L*L;
-  
-  vector< vector<int> > s_candid;
+
+  vector< vector<int> > s_current ; // sample
   for (int i = 0; i < L; i++){
     vector<int> s_row(L, 1);
-    s_candid.push_back(s_row);
+    s_current.push_back(s_row);
   }
 
-  // random from pr3: vec(3).randn()*0.1*penning_trap.d_
-  int randRow = rand() % L;
-  int randCol = rand() % L;
-  s_candid[randRow][randCol] *= -1;
-
-  std::cout << s_candid[randRow][randCol]<< endl;
-  
 
 
 
+  //std::cout << s_candidate[randRow][randCol] << endl;
 
-
-  // for (int i = 0; i < L; i++){
-  //   for (int j = 0; j < L; j++){
-  //     //s_config()
-  //   }
-  // }
 
 
 
   return 0;
 }
 
+std::vector<double> sampling(std::vector<double> s){
+  for (int c = 0; c < N; c++){ // one MC cycle
+    // flip random spin
+    int randRow = rand() % L;
+    int randCol = rand() % L;
+    s_current[randRow][randCol] *= -1;
+
+    // find p(s')/p(s_i)
+
+
+
+  }
+}
+
+energy_of_state(std::vector<double> s){
+  
+}
+
 
 
 std::vector<double> boltzmann_factor(double T){
-  double kB = 1.38064852 * pow(10, -23); // 
+  double kB = 1.38064852 * pow(10, -23); //
   double beta = 1. / (kB*T);
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
