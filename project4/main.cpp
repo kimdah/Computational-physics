@@ -8,6 +8,11 @@
 using namespace std;
 
 std::vector<double> boltzmann_factor(double T);
+std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current, double T, double totalenergy);
+double energy_of_state(std::vector<std::vector<int> > s);
+
+int L;
+int N;
 
 int main(int argc, char const *argv[]) {
 
@@ -27,42 +32,131 @@ int main(int argc, char const *argv[]) {
 
 
   // Monte Carlo temporary
-  int L = 2;
-  int N = L*L;
-  
-  vector< vector<int> > s_candid;
+  L = 2;
+  N = L*L;
+
+  vector< vector<int> > s ; // sample
   for (int i = 0; i < L; i++){
     vector<int> s_row(L, 1);
-    s_candid.push_back(s_row);
+    s.push_back(s_row);
   }
 
-  // random from pr3: vec(3).randn()*0.1*penning_trap.d_
-  int randRow = rand() % L;
-  int randCol = rand() % L;
-  s_candid[randRow][randCol] *= -1;
-
-  std::cout << s_candid[randRow][randCol]<< endl;
-  
-
+  double totalenergy = energy_of_state(s);
+  double T = 1.0;
+  int n_cycles = 1;
+  for(int i=1 ; i<=n_cycles ; i++){
+    sampling(s, T, totalenergy);
+  }
 
 
 
+  //std::cout << s_candidate[randRow][randCol] << endl;
 
-  // for (int i = 0; i < L; i++){
-  //   for (int j = 0; j < L; j++){
-  //     //s_config()
-  //   }
-  // }
 
 
 
   return 0;
 }
 
+std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current, double T, double totalenergy){
+  std::vector<double> boltzmann_factors = boltzmann_factor(T);
+
+  for (int c = 0; c < N; c++){ // one MC cycle
+    // flip random spin
+    int randRow = rand() % L;
+    int randCol = rand() % L;
+    s_current[randRow][randCol] *= -1;
+
+    // find p(s')/p(s_i)=e^(-beta(E(sdash)-(E(s_i))=e^(-beta*deltaE)
+
+
+    int sumofsurroundingspins;
+
+    if(randRow != 0 && randRow != L-1 && randCol != 0 && randCol != L-1){
+      sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][randCol-1]
+       + s_current[randRow+1][randCol] + s_current[randRow][randCol+1];
+    }
+    else if(randRow==0 && randCol==0){
+      sumofsurroundingspins = s_current[L-1][randCol] + s_current[randRow][L-1]
+       + s_current[randRow+1][randCol] + s_current[randRow][randCol+1];
+    }
+    else if(randRow==L-1 && randCol==L-1){
+      sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][randCol-1]
+       + s_current[0][randCol] + s_current[randRow][0];
+    }
+    else if(randRow==0 && randCol==L-1){
+      sumofsurroundingspins = s_current[L-1][randCol] + s_current[randRow][randCol-1]
+       + s_current[randRow+1][randCol] + s_current[randRow][0];
+    }
+    else if(randRow==L-1 && randCol==0){
+      sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][L-1]
+       + s_current[0][randCol] + s_current[randRow][randCol+1];
+    }
+    else if(randRow==0){
+      sumofsurroundingspins = s_current[L-1][randCol] + s_current[randRow][randCol-1]
+       + s_current[randRow+1][randCol] + s_current[randRow][randCol+1];
+    }
+    else if(randCol==0){
+      sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][L-1]
+       + s_current[randRow+1][randCol] + s_current[randRow][randCol+1];
+    }
+    else if(randRow==L-1){
+      sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][randCol-1]
+       + s_current[0][randCol] + s_current[randRow][randCol+1];
+    }
+    else if(randCol==L-1){
+      sumofsurroundingspins = s_current[randRow-1][randCol] + s_current[randRow][randCol-1]
+       + s_current[randRow+1][randCol] + s_current[randRow][0];
+    }
+    int index;
+    int deltaE = sumofsurroundingspins*2;
+    int m = sumofsurroundingspins;
+    if(s_current[randRow][randCol] == 1){
+      index = 5 - sumofsurroundingspins/2 + 2;
+    }else{
+      index = sumofsurroundingspins/2 + 2;
+    }
+
+    double probabilityratio = boltzmann_factors[index];
+
+    double r = rand()/RAND_MAX;
+
+    if(r>probabilityratio){ //Rejected spin-flip
+      s_current[randRow][randCol] *= -1;
+    }
+    else{
+      double totalenergy = totalenergy + deltaE;
+      double epsilon = totalenergy/N;
+    }
+
+    /*
+    double randRow_index = (randRow + L)%L;
+    double randCol_index = (randCol + L)%L;
+    double sumofsurroundingspins = s_current[randRow_index-1][randCol] + s_current[randRow][randCol_index-1] + s_current[randRow_index+1][randCol] + s_currenct[randRow]
+    [randCol_index+1];
+    */
+
+
+  }
+  return s_current;
+}
+
+double energy_of_state(std::vector<std::vector<int> > s){
+  double energy;
+  for(int i=1 ; i<L+1 ; i++){ //the first row will be the Lth row
+    for(int j=1 ; j<L+1 ; j++){ //the first column will be the Lth column
+      int i_index = (i + L)%L;
+      int j_index = (j + L)%L;
+      energy += s[i_index][j_index]*s[i_index-1][j_index] + s[i_index][j_index]*s[i_index][j_index-1];
+    }
+  }
+  return energy;
+}
+
 
 
 std::vector<double> boltzmann_factor(double T){
-  double kB = 1.38064852 * pow(10, -23); // 
+  double kB = 1.38064852 * pow(10, -23); //
   double beta = 1. / (kB*T);
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
