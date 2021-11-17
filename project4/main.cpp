@@ -56,7 +56,7 @@ std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current
   // running one MC cycle for sampling
   std::vector<double> boltzmann_factors = boltzmann_factor(T);
 
-  for (int c = 0; c < N; c++){ // one MC cycle
+  for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
     int randCol = rand() % L;
@@ -140,6 +140,30 @@ std::vector<std::vector<int> > sampling(std::vector<std::vector<int> > s_current
 
   }
   return s_current;
+}
+
+void alternative_sampling(std::vector<std::vector<int> > s_current, double T){
+  // cecilie
+  std::vector<double> boltzmann_factors = boltzmann_factor(T);
+
+  double energy_before = energy_of_state(s_current);
+
+  for (int i = 0; i < N; i++){ // one MC cycle
+    // flip random spin
+    int randRow = rand() % L;
+    int randCol = rand() % L;
+
+    s_current[randRow][randCol] *= -1; // flip spin
+
+    double energy_after = energy_of_state(s_current);
+    double delta_energy = energy_after - energy_before;
+    // ....
+
+
+
+
+
+  }
 }
 
 double energy_of_state(std::vector<std::vector<int> > s){
