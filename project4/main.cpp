@@ -55,15 +55,10 @@ std::vector<double> sampling(std::vector<double> s){
     s_current[randRow][randCol] *= -1;
 
     // find p(s')/p(s_i)
-
-
-
   }
 }
 
-energy_of_state(std::vector<double> s){
-  
-}
+
 
 
 
@@ -77,5 +72,17 @@ std::vector<double> boltzmann_factor(double T){
   boltzmann_values.push_back(exp(-beta*(4))); // 3 +1 spins
   boltzmann_values.push_back(exp(-beta*(8))); // 4 +1 spins
   return boltzmann_values;
+
+}
+
+analytical_2x2(double temp){
+  vector<double> boltzmann_factors = boltzmann_factor(temp);
+  double Z = 2*boltzmann_factors[-]
+
+}
+
+
+
+analytical_energy_per_spin_2x2(){
 
 }
