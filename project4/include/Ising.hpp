@@ -16,14 +16,15 @@ class Ising {
         uniform_int_distribution<int> lattice_uniform_distribution_, up_or_down_spin_;
 
 
-    Ising(int lattice_side, double T, int seed);
-    Ising(std::vector<std::vector<int> > s_current, double T, int seed);
+      Ising(int lattice_side, double T, int seed);
+      Ising(std::vector<std::vector<int> > s_current, double T, int seed);
 
-    void generate_unordered_lattice()
-    std::vector<std::vector<int>> run_metropolis_MCMC();
-    double calc_tot_energy_of_state(std::vector<std::vector<int> > s);
-    double calc_tot_magnetization_of_state(std::vector<std::vector<int> > s)
-    std::vector<double> calc_boltzmann_factors(double T);
+      void generate_unordered_lattice()
+      std::vector<std::vector<int>> run_metropolis_MCMC();
+      double calc_tot_energy_of_state(std::vector<std::vector<int> > s);
+      double calc_tot_magnetization_of_state(std::vector<std::vector<int> > s)
+      std::vector<double> calc_boltzmann_factors(double T);
+
 
 }
 #endif
