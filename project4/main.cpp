@@ -10,17 +10,19 @@
 using namespace std;
 
 
-
 int main(int argc, char const *argv[]) {
 
   // ------ FROM EXAMPLE CODE-------
   // Check number of command line arguments
+  // if (argc != 5){
+  //   cout << "Wrong!";
+  // }
   assert(argc == 5);
 
   // // Read command line arguments
   const int L = atoi(argv[1]);
   const int n_cycles = atoi(argv[2]);
-  const int ordered_spin = atoi(argv[3]); // 0 = unordered, ordereded: -1 or 1
+  const int ordered_spin = atoi(argv[3]); // 0 = unordered, ordered: -1 or 1
   const string output_file_name = argv[4];
   // Prepare for file output
   // const int print_prec = 10;
@@ -34,7 +36,6 @@ int main(int argc, char const *argv[]) {
   int T = 1.0;
   int seed = 1; // ?
   Ising ising(L, T, seed, ordered_spin);
-
 
 
 

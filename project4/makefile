@@ -6,10 +6,10 @@ CPPflags = g++ -std=c++11 -O2
 all: compile link clean
 
 compile:
-	${CPPflags} -c main.cpp ./src/Ising.cpp #${LIB}
+	${CPPflags} -c main.cpp src/Ising.cpp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.out main.o ./src/Ising.o #${LIB}
+	${CPPflags} -o main.out main.o Ising.o # ${LIB}
 
 run:
 	./main.out
