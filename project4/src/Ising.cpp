@@ -1,4 +1,4 @@
-#include "project4/Ising.hpp"
+#include "project4/include/Ising.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
