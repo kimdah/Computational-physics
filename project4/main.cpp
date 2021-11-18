@@ -42,11 +42,13 @@ int main(int argc, char const *argv[]) {
   int temporary_exp_eps = 0;
   int temporary_exp_m = 0;
   int temporary_exp_E = 0;
+  int temporary_exp_M = 0;
   for(int i=1 ; i<=n_cycles ; i++){
     sampling(s, T, totalenergy);
     temporary_exp_eps += exp_val_eps_per_cycle;
     temporary_exp_m += exp_val_m_per_cycle;
     temporary_exp_E +=exp_val_E_per_cycle;
+    temporary_exp_M += exp_val_M_per_cycle;
   }
   double exp_val_eps_all_cycles = temporary_exp_eps/n_cycles;
   double exp_val_eps_all_cycles_squared = pow(temporary_exp_eps,2)/n_cycles;
@@ -54,8 +56,12 @@ int main(int argc, char const *argv[]) {
   double exp_val_m_all_cycles_squared = pow(temporary_exp_m,2)/n_cycles;
   double exp_val_E_all_cycles = temporary_exp_E/n_cycles;
   double exp_val_E_all_cycles_squared = pow(temporary_exp_E,2)/n_cycles;
+  double exp_val_M_all_cycles = temporary_exp_M/n_cycles;
+  double exp_val_M_all_cycles_squared = pow(temporary_exp_M,2)/n_cycles;
   double headcapacity_all_cycles = (1./N)*(1./pow(T,2))*(exp_val_E_all_cycles_squared
      - pow(exp_val_E_all_cycles,2));
+  double susceptibility_all_cycles = (1./N)*(1./pow(T,2))*(exp_val_M_all_cycles_squared
+     - pow(exp_val_M_all_cycles,2));
 
 
   return 0;

@@ -9,35 +9,43 @@
 
 using namespace std;
 
-Ising::Ising(int lattice_side_length, double T, int seed, bool generate_new_lattice) {
-    make_new_lattice = generate_new_lattice;
-    L = lattice_side_length;
-    N = L*L;
+Ising::Ising(int lattice_side_length, double T, int seed) {
+    L_ = lattice_side_length;
+    N_ = L_*L_;
+    T_ = T;
+    //Initalise randomness with Mersenne Twister 19937 random number generator
+    generator.seed(seed);
+    proposal_pdf_ = normal_distribution(0.0,1.0);
+    lattice_uniform_distribution_ = uniform_int_distribution(0, L-1);
+    up_or_down_spin_ = uniform_int_distribution(0, 1);
+
+    boltzmann_factors_ = calc_boltzmann_factors(T);
+
+    generate_random_lattice();
+
+}
+
+Ising::Ising(std::vector<std::vector<int> > s_current, double T, int seed) {
+    s_ = s_current;
+    L_ = s_current.size();
+    N_ = L_*L_;
+    T_ = T;
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator.seed(seed);
     proposal_pdf = normal_distribution(0.0,1.0);
     lattice_uniform_distribution = uniform_int_distribution(0, L-1);
     up_or_down_spin = uniform_int_distribution(0, 1);
-
     boltzmann_factors = boltzmann_factor(T);
-
-    if (make_new_lattice) { generate_unordered_lattice(); }
-
 }
 
 void Ising::generate_unordered_lattice() {
      vector<vector<int>> lattice(L, vector<int>(L, 1));
      for (int i=0; i<L; i++){
         for (int j=0; j<L; j++){
-            lattice[i][j] = lattice[i][j] - 2*up_or_down_spin(generator);
+            lattice[i][j] = lattice[i][j] - 2 * up_or_down_spin_(generator); // Generates a 1 or a -1
         }
     }
-    s_current = lattice;
-}
-
-void Ising::generate_ordered_lattice(int spin) {
-    vector<vector<int>> lattice(L, vector<int>(L, spin));
-
+    s_ = lattice;
 }
 
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
@@ -52,15 +60,15 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
     // flip random spin
     int randRow = rand() % L;
     int randCol = rand() % L;
-    s_current[randRow][randCol] *= -1; // flip the spin
+    s_[randRow][randCol] *= -1;
 
     // examining surrounding spins to figure out index in boltzmann_factor vector
     // for computing the probability ratio
-    int deltaE = s_current[randRow][randCol] * 2 * (
-                 s_current[randRow][(randCol - 1 + L) % L] // Neighbour to the left
-               + s_current[randRow][(randCol + 1) % L]; // Neighbour to the right
-               + s_current[(randRow + 1) % L][randCol] // Neighbour above
-               + s_current[(randRow - 1 + L) % L][randCol]) // Neighbour below
+    int deltaE = s_[randRow][randCol] * 2 * (
+                 s_[randRow][(randCol - 1 + L) % L] // Neighbour to the left
+               + s_[randRow][(randCol + 1) % L]; // Neighbour to the right
+               + s_[(randRow + 1) % L][randCol] // Neighbour above
+               + s_[(randRow - 1 + L) % L][randCol]) // Neighbour below
 
     // finding the index to use in Boltzmann
     int index;
