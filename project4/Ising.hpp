@@ -5,7 +5,7 @@
 class Ising {
     public:
         int L, N, seed;
-        double T, totalenergy;
+        double T, totalenergy, epsilon;
         bool make_new_lattice;
         mt19937 generator;
         std::vector<double> calc_boltzmann_factors;

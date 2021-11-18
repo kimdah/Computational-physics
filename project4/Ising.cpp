@@ -72,31 +72,15 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
     }
     else{
       // Accept spin configuration candidate
-      double totalenergy = totalenergy + deltaE;
-      double epsilon = totalenergy/N;
+      double totalenergy = totalenergy + deltaE; //
+      epsilon += totalenergy/N;
     }
   }
+  exp_val_eps = epsilon / N;
   return s_current;
 }
 
-void Ising::alternative_sampling(std::vector<std::vector<int> > s_current, double T){
-  // cecilie
-  std::vector<double> boltzmann_factors = boltzmann_factor(T);
 
-  double energy_before = calc_tot_energy_of_state(s_current);
-
-  for (int i = 0; i < N; i++){ // one MC cycle
-    // flip random spin
-    int randRow = rand() % L;
-    int randCol = rand() % L;
-
-    s_current[randRow][randCol] *= -1; // flip spin
-
-    double energy_after = calc_tot_energy_of_state(s_current);
-    double delta_energy = energy_after - energy_before;
-    // ....
-  }
-}
 
 double Ising::calc_tot_energy_of_state(std::vector<std::vector<int> > s){
   // finding the energy of a particular spin configuration s
