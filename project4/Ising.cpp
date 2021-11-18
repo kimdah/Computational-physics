@@ -76,7 +76,7 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       epsilon += totalenergy/N;
     }
   }
-  exp_val_eps = epsilon / N;
+  exp_val_eps = epsilon / N; //?
   return s_current;
 }
 
