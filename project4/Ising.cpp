@@ -21,11 +21,11 @@ Ising::Ising(int lattice_side_length, double T, int seed, bool generate_new_latt
 
     boltzmann_factors = boltzmann_factor(T);
 
-    if (make_new_lattice) { generate_random_lattice(); }
+    if (make_new_lattice) { generate_unordered_lattice(); }
 
 }
 
-void Ising::generate_random_lattice() {
+void Ising::generate_unordered_lattice() {
      vector<vector<int>> lattice(L, vector<int>(L, 1));
      for (int i=0; i<L; i++){
         for (int j=0; j<L; j++){
@@ -33,6 +33,11 @@ void Ising::generate_random_lattice() {
         }
     }
     s_current = lattice;
+}
+
+void Ising::generate_ordered_lattice(int spin) {
+    vector<vector<int>> lattice(L, vector<int>(L, spin));
+
 }
 
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
