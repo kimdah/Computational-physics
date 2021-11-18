@@ -124,7 +124,8 @@ double Ising::calc_tot_magnetization_of_state(std::vector<std::vector<int> > s){
 
 
 std::vector<double> Ising::calc_boltzmann_factors(double T){
-  double beta = 1. / T;
+  double kB = 1.38064852 * pow(10, -23);
+  double beta = 1. / (kB*T);
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
   boltzmann_values.push_back(exp(-beta*(-4))); // 1 +1 spins
@@ -135,7 +136,7 @@ std::vector<double> Ising::calc_boltzmann_factors(double T){
 }
 
 void analytical_2x2(double T){
-  double kB = 1.38064852 * pow(10, -23); //
+  double kB = 1.38064852 * pow(10, -23); 
   double beta = 1. / (kB*T);
 
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
