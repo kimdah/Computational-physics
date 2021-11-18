@@ -43,7 +43,8 @@ void Ising::generate_ordered_lattice(int spin) {
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   // running one MC cycle for sampling
 
-
+  int acceptedstates = 0; //Number of accepted states
+  int epsilon = 0;
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
@@ -79,9 +80,10 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       // Accept spin configuration candidate
       double totalenergy = totalenergy + deltaE; //
       epsilon += totalenergy/N;
+      acceptedstates += 1; //Counter for number of accepted states
     }
   }
-  exp_val_eps = epsilon / N;
+  exp_val_eps_per_cycle = epsilon / (1+acceptedstates); //1+ because it is initial state + all the accepted states???
   return s_current;
 }
 

@@ -34,14 +34,17 @@ int main(int argc, char const *argv[]) {
   L = 2;
   N = L*L;
 
- 
+
 
   double totalenergy = energy_of_state(s);
   double T = 1.0;
   int n_cycles = 1;
+  int temporary_exp_eps = 0;
   for(int i=1 ; i<=n_cycles ; i++){
     sampling(s, T, totalenergy);
+    temporary_exp_eps += exp_val_eps_per_cycle;
   }
+  int exp_val_eps_all_cycles = temporary_exp_eps/n_cycles;
 
 
 
