@@ -26,6 +26,7 @@ Ising::Ising(int lattice_side_length, double T, int seed) {
 }
 
 Ising::Ising(std::vector<std::vector<int> > s_current, double T, int seed) {
+    s_ = s_current;
     L_ = s_current.size();
     N_ = L_*L_;
     T_ = T;
