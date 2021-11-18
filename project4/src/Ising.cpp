@@ -46,6 +46,7 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   int acceptedstates = 1; //Number of accepted states
   int epsilon = 0;
   int E = 0;
+  int M = 0;
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
@@ -83,6 +84,7 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       epsilon += totalenergy/N;
       double magnetization = calc_tot_magnetization_of_state(s_current);
       E += totalenergy;
+      M += magnetization;
       acceptedstates += 1; //Counter for number of accepted states
     }
   }
@@ -92,8 +94,12 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   exp_val_m_per_cycle_squared = pow(magnetization,2) / acceptedstates; //<m^2>
   exp_val_E_per_cycle = E / acceptedstates; //<E>
   exp_val_E_per_cycle_squared = pow(E,2) / acceptedstates;
+  exp_val_M_per_cycle = M / acceptedstates; //<E>
+  exp_val_M_per_cycle_squared = pow(M,2) / acceptedstates;
   heatcapacity_per_cycle = (1./acceptedstates)*(1./pow(T,2))*(exp_val_E_per_cycle_squared - pow(exp_val_E_per_cycle
   ,2)); //C_v = 1/N 1/kbT^2 (<E^2>-<E>^2)
+  susceptibility_per_cycle = (1./acceptedstates)*(1./pow(T,2))*(exp_val_M_per_cycle_squared - pow(exp_val_M_per_cycle
+  ,2));
   return s_current;
 }
 
@@ -136,7 +142,7 @@ std::vector<double> Ising::calc_boltzmann_factors(double T){
 }
 
 void analytical_2x2(double T){
-  double kB = 1.38064852 * pow(10, -23); 
+  double kB = 1.38064852 * pow(10, -23);
   double beta = 1. / (kB*T);
 
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
