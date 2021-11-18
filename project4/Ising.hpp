@@ -12,6 +12,9 @@ class Ising {
         std::vector<std::vector<int>> s_current;
         normal_distribution<double> proposal_pdf;
         uniform_int_distribution<int> lattice_uniform_distribution, up_or_down_spin;
+        void generate_unordered_lattice();
+        void generate_ordered_lattice(int spin);
+
 
     Ising(int lattice_side, double T, int seed);
 
