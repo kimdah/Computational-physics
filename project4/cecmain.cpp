@@ -86,7 +86,7 @@ analytical_2x2(double temp){
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
   double exp_val_epsilon = (4./Z) * (exp(-beta*8) - exp(beta*8));
   double exp_val_abs_mag = (2./Z) * (exp(beta*8) + 2)
-  double heat_capacity = (32./(kB*pow(temp,2)*Z))*(exp(-beta*8)-exp(beta*8)- (2./Z)*(exp(-beta*16)+exp(beta*16)-2))
+  double heat_capacity = (32./(kB*pow(temp,2)*Z))*(exp(-beta*8)-exp(beta*8)- (2./Z)*(exp(-beta*16)+exp(beta*16)-2));
 
 
 }
