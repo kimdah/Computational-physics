@@ -22,7 +22,7 @@ Ising::Ising(int lattice_side_length, double T, int seed, bool generate_new_latt
     boltzmann_factors = boltzmann_factor(T);
 
     if (make_new_lattice) { generate_random_lattice(); }
-    
+
 }
 
 void Ising::generate_random_lattice() {
@@ -32,24 +32,24 @@ void Ising::generate_random_lattice() {
             lattice[i][j] = lattice[i][j] - 2*up_or_down_spin(generator);
         }
     }
-    s_current = lattice;   
+    s_current = lattice;
 }
 
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   // running one MC cycle for sampling
- 
+
 
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
     int randCol = rand() % L;
-    s_current[randRow][randCol] *= -1;
+    s_current[randRow][randCol] *= -1; // flip the spin
 
     // examining surrounding spins to figure out index in boltzmann_factor vector
     // for computing the probability ratio
     int deltaE = s_current[randRow][randCol] * 2 * (
-                 s_current[randRow][(randCol - 1 + L) % L] // Neighbour to the left 
-               + s_current[randRow][(randCol + 1) % L]; // Neighbour to the right 
+                 s_current[randRow][(randCol - 1 + L) % L] // Neighbour to the left
+               + s_current[randRow][(randCol + 1) % L]; // Neighbour to the right
                + s_current[(randRow + 1) % L][randCol] // Neighbour above
                + s_current[(randRow - 1 + L) % L][randCol]) // Neighbour below
 
@@ -57,7 +57,7 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
     int index;
     // boltzmann factor depends on flipping a +1 to -1, so the value will have
     // reverse index when a negative spin is flipped to positive.
-    if(s_current[randRow][randCol] == 1){
+    if(s_current[randRow][randCol] == 1){ // if spin has been flipped to positive
       index = 5 - sumofsurroundingspins/2 + 2; // reversing index
     }else{
       index = sumofsurroundingspins/2 + 2;
@@ -65,7 +65,7 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
 
     // Acceptance ratio
     double probability_ratio = calc_boltzmann_factors[index];
-    double r = rand()/RAND_MAX;
+    double r = uniform_int_distribution(0.0, 1.0);
 
     if(r > probability_ratio){ //Rejected spin-flip
       s_current[randRow][randCol] *= -1;
