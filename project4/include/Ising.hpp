@@ -1,6 +1,7 @@
 #ifndef ISING_HPP
 #define ISING_HPP
 #include <random>
+#include <vector>
 
 class Ising {
     public:

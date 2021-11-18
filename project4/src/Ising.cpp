@@ -15,11 +15,11 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     T_ = T;
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator.seed(seed);
-    proposal_pdf_ = normal_distribution(0.0,1.0);
+    proposal_pdf_ = normal_distribution(0.0, 1.0);
     lattice_uniform_distribution_ = uniform_int_distribution(0, L_-1);
     up_or_down_spin_ = uniform_int_distribution(0, 1);
 
-    boltzmann_factors_ = calc_boltzmann_factors(T);
+    std::vector<double> boltzmann_factors_ = calc_boltzmann_factors(T);
     if (ordered_spin != 0){
       generate_ordered_lattice(ordered_spin);
     } else {
@@ -78,6 +78,8 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
     // Acceptance ratio
     double probability_ratio = boltzmann_factors[index];
     double r = uniform_real_distribution(0.0, 1.0);
+    //std::uniform_real_distribution<double> distribution(0.0,1.0);
+    //double r = distribution()
     if (deltaE < 0 ){
 
     }
@@ -154,7 +156,7 @@ void analytical_2x2(double T){
 
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
   double exp_val_epsilon = (4./Z) * (exp(-beta*8) - exp(beta*8));
-  double exp_val_abs_mag = (2./Z) * (exp(beta*8) + 2)
+  double exp_val_abs_mag = (2./Z) * (exp(beta*8) + 2);
   double heat_capacity = (32./(kB*pow(temp,2)*Z))*(exp(-beta*8)-exp(beta*8)- (2./Z)*(exp(-beta*16)+exp(beta*16)-2));
   double susceptibility = (2/(kB*T*Z)) * (exp(8*beta) +1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
 
