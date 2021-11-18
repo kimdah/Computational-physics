@@ -9,55 +9,66 @@
 
 using namespace std;
 
-Ising::Ising(int lattice_side_length, double T, int seed, bool generate_new_lattice) {
-    make_new_lattice = generate_new_lattice;
-    L = lattice_side_length;
-    N = L*L;
+Ising::Ising(int lattice_side_length, double T, int seed) {
+    L_ = lattice_side_length;
+    N_ = L_*L_;
+    T_ = T;
+    //Initalise randomness with Mersenne Twister 19937 random number generator
+    generator.seed(seed);
+    proposal_pdf_ = normal_distribution(0.0,1.0);
+    lattice_uniform_distribution_ = uniform_int_distribution(0, L-1);
+    up_or_down_spin_ = uniform_int_distribution(0, 1);
+
+    boltzmann_factors_ = calc_boltzmann_factors(T);
+
+    generate_random_lattice();
+    
+}
+
+Ising::Ising(std::vector<std::vector<int> > s_current, double T, int seed) {
+    L_ = s_current.size();
+    N_ = L_*L_;
+    T_ = T;
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator.seed(seed);
     proposal_pdf = normal_distribution(0.0,1.0);
     lattice_uniform_distribution = uniform_int_distribution(0, L-1);
     up_or_down_spin = uniform_int_distribution(0, 1);
-
     boltzmann_factors = boltzmann_factor(T);
-
-    if (make_new_lattice) { generate_random_lattice(); }
-    
 }
 
 void Ising::generate_random_lattice() {
      vector<vector<int>> lattice(L, vector<int>(L, 1));
      for (int i=0; i<L; i++){
         for (int j=0; j<L; j++){
-            lattice[i][j] = lattice[i][j] - 2*up_or_down_spin(generator);
+            lattice[i][j] = lattice[i][j] - 2 * up_or_down_spin_(generator); // Generates a 1 or a -1
         }
     }
-    s_current = lattice;   
+    s_ = lattice;   
 }
 
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   // running one MC cycle for sampling
- 
 
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
     int randCol = rand() % L;
-    s_current[randRow][randCol] *= -1;
+    s_[randRow][randCol] *= -1;
 
     // examining surrounding spins to figure out index in boltzmann_factor vector
     // for computing the probability ratio
-    int deltaE = s_current[randRow][randCol] * 2 * (
-                 s_current[randRow][(randCol - 1 + L) % L] // Neighbour to the left 
-               + s_current[randRow][(randCol + 1) % L]; // Neighbour to the right 
-               + s_current[(randRow + 1) % L][randCol] // Neighbour above
-               + s_current[(randRow - 1 + L) % L][randCol]) // Neighbour below
+    int deltaE = s_[randRow][randCol] * 2 * (
+                 s_[randRow][(randCol - 1 + L) % L] // Neighbour to the left 
+               + s_[randRow][(randCol + 1) % L]; // Neighbour to the right 
+               + s_[(randRow + 1) % L][randCol] // Neighbour above
+               + s_[(randRow - 1 + L) % L][randCol]) // Neighbour below
 
     // finding the index to use in Boltzmann
     int index;
     // boltzmann factor depends on flipping a +1 to -1, so the value will have
     // reverse index when a negative spin is flipped to positive.
-    if(s_current[randRow][randCol] == 1){
+    if(s_[randRow][randCol] == 1){
       index = 5 - sumofsurroundingspins/2 + 2; // reversing index
     }else{
       index = sumofsurroundingspins/2 + 2;
@@ -68,15 +79,15 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
     double r = rand()/RAND_MAX;
 
     if(r > probability_ratio){ //Rejected spin-flip
-      s_current[randRow][randCol] *= -1;
+      s_[randRow][randCol] *= -1;
     }
     else{
       // Accept spin configuration candidate
-      double totalenergy = totalenergy + deltaE;
-      double epsilon = totalenergy/N;
+      double totalenergy_ = totalenergy_ + deltaE;
+      double epsilon = totalenergy_/N;
     }
   }
-  return s_current;
+  return s_;
 }
 
 void Ising::alternative_sampling(std::vector<std::vector<int> > s_current, double T){
