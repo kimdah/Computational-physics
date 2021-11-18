@@ -45,6 +45,7 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
 
   int acceptedstates = 1; //Number of accepted states
   int epsilon = 0;
+  int E = 0;
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
@@ -81,13 +82,18 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       double totalenergy = totalenergy + deltaE; //
       epsilon += totalenergy/N;
       double magnetization = calc_tot_magnetization_of_state(s_current);
+      E += totalenergy;
       acceptedstates += 1; //Counter for number of accepted states
     }
   }
-  exp_val_eps_per_cycle = epsilon / (acceptedstates);
-  exp_val_eps_per_cycle_squared = pow(epsilon,2) / (acceptedstates);
-  exp_val_m_per_cycle = magnetization/(acceptedstates);
-  exp_val_m_per_cycle_squared = pow(magnetization,2)/(acceptedstates);
+  exp_val_eps_per_cycle = epsilon / acceptedstates; // <eps>
+  exp_val_eps_per_cycle_squared = pow(epsilon,2) / acceptedstates; //<eps^2>
+  exp_val_m_per_cycle = magnetization/acceptedstates; //<m>
+  exp_val_m_per_cycle_squared = pow(magnetization,2) / acceptedstates; //<m^2>
+  exp_val_E_per_cycle = E / acceptedstates; //<E>
+  exp_val_E_per_cycle_squared = pow(E,2) / acceptedstates;
+  heatcapacity_per_cycle = (1./acceptedstates)*(1./pow(T,2))*(exp_val_E_per_cycle_squared - pow(exp_val_E_per_cycle
+  ,2)); //C_v = 1/N 1/kbT^2 (<E^2>-<E>^2)
   return s_current;
 }
 
