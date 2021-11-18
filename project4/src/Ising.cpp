@@ -43,7 +43,7 @@ void Ising::generate_ordered_lattice(int spin) {
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   // running one MC cycle for sampling
 
-  int acceptedstates = 0; //Number of accepted states
+  int acceptedstates = 1; //Number of accepted states
   int epsilon = 0;
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
@@ -80,10 +80,14 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       // Accept spin configuration candidate
       double totalenergy = totalenergy + deltaE; //
       epsilon += totalenergy/N;
+      double magnetization = calc_tot_magnetization_of_state(s_current);
       acceptedstates += 1; //Counter for number of accepted states
     }
   }
-  exp_val_eps_per_cycle = epsilon / (1+acceptedstates); //1+ because it is initial state + all the accepted states???
+  exp_val_eps_per_cycle = epsilon / (acceptedstates);
+  exp_val_eps_per_cycle_squared = pow(epsilon,2) / (acceptedstates);
+  exp_val_m_per_cycle = magnetization/(acceptedstates);
+  exp_val_m_per_cycle_squared = pow(magnetization,2)/(acceptedstates);
   return s_current;
 }
 
@@ -100,6 +104,16 @@ double Ising::calc_tot_energy_of_state(std::vector<std::vector<int> > s){
     }
   }
   return energy;
+}
+
+double Ising::calc_tot_magnetization_of_state(std::vector<std::vector<int> > s){
+  double magnetization;
+  for(int i=1 ; i<L+1 ; i++){ //the first row will be the Lth row
+    for(int j=1 ; j<L+1 ; j++){ //the first column will be the Lth column
+      magnetization +=s[i][j];
+    }
+  }
+  return abs(magnetization);
 }
 
 
