@@ -14,18 +14,16 @@ class Ising {
         std::vector<std::vector<int>> s_;
         normal_distribution<double> proposal_pdf_;
         uniform_int_distribution<int> lattice_uniform_distribution_, up_or_down_spin_;
-        void generate_unordered_lattice();
-        void generate_ordered_lattice(int spin);
 
 
     Ising(int lattice_side, double T, int seed);
     Ising(std::vector<std::vector<int> > s_current, double T, int seed);
-    
-    generate_random_lattice();
-    run_metropolis_MCMC();
-    alternative_sampling(std::vector<std::vector<int> > s_current, double T);
-    calc_tot_energy_of_state(std::vector<std::vector<int> > s);
-    calc_boltzmann_factors(double T);
+
+    void generate_unordered_lattice()
+    std::vector<std::vector<int>> run_metropolis_MCMC();
+    double calc_tot_energy_of_state(std::vector<std::vector<int> > s);
+    double calc_tot_magnetization_of_state(std::vector<std::vector<int> > s)
+    std::vector<double> calc_boltzmann_factors(double T);
 
 }
 #endif
