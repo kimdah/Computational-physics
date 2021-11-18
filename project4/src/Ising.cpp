@@ -1,4 +1,4 @@
-#include "project4/Ising.hpp"
+#include "project4/include/Ising.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -43,7 +43,9 @@ void Ising::generate_ordered_lattice(int spin) {
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   // running one MC cycle for sampling
 
-
+  int acceptedstates = 1; //Number of accepted states
+  int epsilon = 0;
+  int E = 0;
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
@@ -79,9 +81,19 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       // Accept spin configuration candidate
       double totalenergy = totalenergy + deltaE; //
       epsilon += totalenergy/N;
+      double magnetization = calc_tot_magnetization_of_state(s_current);
+      E += totalenergy;
+      acceptedstates += 1; //Counter for number of accepted states
     }
   }
-  exp_val_eps = epsilon / N; //?
+  exp_val_eps_per_cycle = epsilon / acceptedstates; // <eps>
+  exp_val_eps_per_cycle_squared = pow(epsilon,2) / acceptedstates; //<eps^2>
+  exp_val_m_per_cycle = magnetization/acceptedstates; //<m>
+  exp_val_m_per_cycle_squared = pow(magnetization,2) / acceptedstates; //<m^2>
+  exp_val_E_per_cycle = E / acceptedstates; //<E>
+  exp_val_E_per_cycle_squared = pow(E,2) / acceptedstates;
+  heatcapacity_per_cycle = (1./acceptedstates)*(1./pow(T,2))*(exp_val_E_per_cycle_squared - pow(exp_val_E_per_cycle
+  ,2)); //C_v = 1/N 1/kbT^2 (<E^2>-<E>^2)
   return s_current;
 }
 
@@ -98,6 +110,16 @@ double Ising::calc_tot_energy_of_state(std::vector<std::vector<int> > s){
     }
   }
   return energy;
+}
+
+double Ising::calc_tot_magnetization_of_state(std::vector<std::vector<int> > s){
+  double magnetization;
+  for(int i=1 ; i<L+1 ; i++){ //the first row will be the Lth row
+    for(int j=1 ; j<L+1 ; j++){ //the first column will be the Lth column
+      magnetization +=s[i][j];
+    }
+  }
+  return abs(magnetization);
 }
 
 
