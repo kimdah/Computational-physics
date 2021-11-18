@@ -1,4 +1,4 @@
-#include "project4/Ising.hpp"
+#include "project4/include/Ising.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -21,11 +21,11 @@ Ising::Ising(int lattice_side_length, double T, int seed, bool generate_new_latt
 
     boltzmann_factors = boltzmann_factor(T);
 
-    if (make_new_lattice) { generate_random_lattice(); }
+    if (make_new_lattice) { generate_unordered_lattice(); }
 
 }
 
-void Ising::generate_random_lattice() {
+void Ising::generate_unordered_lattice() {
      vector<vector<int>> lattice(L, vector<int>(L, 1));
      for (int i=0; i<L; i++){
         for (int j=0; j<L; j++){
@@ -35,10 +35,17 @@ void Ising::generate_random_lattice() {
     s_current = lattice;
 }
 
+void Ising::generate_ordered_lattice(int spin) {
+    vector<vector<int>> lattice(L, vector<int>(L, spin));
+
+}
+
 std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
   // running one MC cycle for sampling
 
-
+  int acceptedstates = 1; //Number of accepted states
+  int epsilon = 0;
+  int E = 0;
   for (int c = 0; c < N; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     int randRow = rand() % L;
@@ -74,9 +81,19 @@ std::vector<std::vector<int>>Ising::run_metropolis_MCMC(){
       // Accept spin configuration candidate
       double totalenergy = totalenergy + deltaE; //
       epsilon += totalenergy/N;
+      double magnetization = calc_tot_magnetization_of_state(s_current);
+      E += totalenergy;
+      acceptedstates += 1; //Counter for number of accepted states
     }
   }
-  exp_val_eps = epsilon / N;
+  exp_val_eps_per_cycle = epsilon / acceptedstates; // <eps>
+  exp_val_eps_per_cycle_squared = pow(epsilon,2) / acceptedstates; //<eps^2>
+  exp_val_m_per_cycle = magnetization/acceptedstates; //<m>
+  exp_val_m_per_cycle_squared = pow(magnetization,2) / acceptedstates; //<m^2>
+  exp_val_E_per_cycle = E / acceptedstates; //<E>
+  exp_val_E_per_cycle_squared = pow(E,2) / acceptedstates;
+  heatcapacity_per_cycle = (1./acceptedstates)*(1./pow(T,2))*(exp_val_E_per_cycle_squared - pow(exp_val_E_per_cycle
+  ,2)); //C_v = 1/N 1/kbT^2 (<E^2>-<E>^2)
   return s_current;
 }
 
@@ -95,9 +112,20 @@ double Ising::calc_tot_energy_of_state(std::vector<std::vector<int> > s){
   return energy;
 }
 
+double Ising::calc_tot_magnetization_of_state(std::vector<std::vector<int> > s){
+  double magnetization;
+  for(int i=1 ; i<L+1 ; i++){ //the first row will be the Lth row
+    for(int j=1 ; j<L+1 ; j++){ //the first column will be the Lth column
+      magnetization +=s[i][j];
+    }
+  }
+  return abs(magnetization);
+}
+
 
 std::vector<double> Ising::calc_boltzmann_factors(double T){
-  double beta = 1. / T;
+  double kB = 1.38064852 * pow(10, -23);
+  double beta = 1. / (kB*T);
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
   boltzmann_values.push_back(exp(-beta*(-4))); // 1 +1 spins
@@ -105,4 +133,16 @@ std::vector<double> Ising::calc_boltzmann_factors(double T){
   boltzmann_values.push_back(exp(-beta*(4))); // 3 +1 spins
   boltzmann_values.push_back(exp(-beta*(8))); // 4 +1 spins
   return boltzmann_values;
+}
+
+void analytical_2x2(double T){
+  double kB = 1.38064852 * pow(10, -23); 
+  double beta = 1. / (kB*T);
+
+  double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
+  double exp_val_epsilon = (4./Z) * (exp(-beta*8) - exp(beta*8));
+  double exp_val_abs_mag = (2./Z) * (exp(beta*8) + 2)
+  double heat_capacity = (32./(kB*pow(temp,2)*Z))*(exp(-beta*8)-exp(beta*8)- (2./Z)*(exp(-beta*16)+exp(beta*16)-2));
+  double susceptibility =
+
 }
