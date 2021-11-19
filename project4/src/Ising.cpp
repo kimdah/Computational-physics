@@ -17,6 +17,7 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     T_ = T;
     mag_per_spin_ = 0;
     epsilon_ = 0;
+    tot_cycles_ = 0;
 
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator_.seed(seed);
