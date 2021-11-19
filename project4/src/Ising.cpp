@@ -94,8 +94,11 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
       s_[randRow][randCol] *= -1;
     }
   }
+  //Adding the values from each cycle, so it can be used to find exp values.
   epsilon_ += totalenergy_/N_;
   mag_per_spin_ += magnetisation_/ N_;
+  accumulatedtotalenergy_ += totalenergy_;
+  accumulatedtotalmagnetization_ += magnetisation_;
   return s_; // not neccessary to return s_?
 }
 
@@ -115,11 +118,11 @@ double Ising::expval_mag_per_spin(int n_cycles){
 }
 
 double Ising::heat_capacity(int n_cycles){
-  return (1./N_)*(1./pow(T_,2))*(mean(pow(totalenergy_, 2), n_cycles) - pow(mean(totalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+  return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
 double Ising::susceptibility(int n_cycles){
-  return (1./N_)*(1./T_)*(mean(pow(magnetisation_, 2), n_cycles) - pow(mean(magnetisation_, n_cycles), 2));
+  return (1./N_)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
 }
 
 

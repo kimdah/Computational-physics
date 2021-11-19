@@ -12,7 +12,7 @@ using namespace std;
 class Ising {
     public:
         int L_, N_, seed, magnetisation_,sample_;
-        double T_, totalenergy_, epsilon_, mag_per_spin_;
+        double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
         vector<vector<int>> s_;
