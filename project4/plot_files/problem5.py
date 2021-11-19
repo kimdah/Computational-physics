@@ -29,13 +29,5 @@ y_name = "$\eta$"						#ylabel
 
 #Use 'seperate' to save as different plots and 'same' to plot in same plot
 
-makeplots(plotfiles,x_name,y_name, 'seperate')
-makeplots(plotfiles,x_name,y_name, 'same')
-
-
-
-
-
-
-
-
+makeplots(plotfiles, x_name, y_name, 'seperate')
+makeplots(plotfiles, x_name, y_name, 'same')
