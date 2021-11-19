@@ -13,33 +13,28 @@ using namespace std;
 double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
 
 int main(int argc, char const *argv[]) {
+  int T, L, n_cycles, ordered_spin, seed;
+  string output_file_name;
    if (argc != 6)
     {
       // Get the name of the executable file
       std::string executable_name = argv[0];
 
-      std::cerr << "Error: Wrong number of input arguments. 5 expected." << std::endl;
-      std::cerr << "Usage: " << executable_name << " <Temperature (integer)>"
+      std::cerr << "Running simulations for Project 4 specified in main.cpp. To run a specific simulation use 5 parameters like so:" << std::endl;
+      std::cerr << executable_name << " <Temperature (integer)>"
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"<< std::endl;
-      return 1;
-    } 
-
-  // Read command line arguments
-  const int T = atoi(argv[1]);
-  const int L = atoi(argv[2]);
-  const int n_cycles = atoi(argv[3])/100;
-  const int ordered_spin = atoi(argv[4]); // 0 = unordered, ordered: -1 or 1
-  const string output_file_name = argv[5];
-  const int seed = 2134;
-  simulator(n_cycles, L, T, seed, ordered_spin, output_file_name);
- 
-  int test, tester;
-  double svar;
-  test = 2;
-  tester = 3;
-  svar = 1.0*test/tester;
-  cout << svar;
+      project4();
+      return 0;
+    } else if (argc == 6) {
+      T = atoi(argv[1]);
+      L = atoi(argv[2]);
+      n_cycles = atoi(argv[3])/100;
+      int ordered_spin = atoi(argv[4]); // 0 = unordered, ordered: -1 or 1
+      output_file_name = argv[5];
+      seed = 2134;
+      simulator(n_cycles, L, T, seed, ordered_spin, output_file_name);
+    }
   return 0;
 }
 
@@ -64,7 +59,7 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
   Ising ising(lattice_side_length, T, seed, ordered_spin);
 
   // Run MCMC cycles:
-  for (int i = 0; i < n_cycles; i++) {
+  for (int i = 0; i < n_cycles+1; i++) {
     ising.write_parameters_to_file(ofile);
     for (int j = 0; j < n_cycles; j++) {
       ising.run_metropolis_MCMC();
