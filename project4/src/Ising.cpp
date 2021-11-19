@@ -99,6 +99,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
   mag_per_spin_ += magnetisation_/ N_;
   accumulatedtotalenergy_ += totalenergy_;
   accumulatedtotalmagnetization_ += magnetisation_;
+  tot_cycles_ += 1;
   return s_; // not neccessary to return s_?
 }
 
@@ -106,10 +107,10 @@ double Ising::mean(double value, int n_cycles){
   return value / n_cycles;
 }
 
-double Ising::expval_eps(int n_cycles){
+double Ising::expval_epsilon(){
   // totalenergy er ikke per cycle, burde den vaere det?
   //return totalenergy / N_;
-  return mean(epsilon_, n_cycles);
+  return mean(epsilon_, tot_cycles_);
 }
 
 double Ising::expval_mag_per_spin(int n_cycles){
@@ -206,7 +207,9 @@ vector<double> Ising::calc_boltzmann_factors(double T){
 void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
   int prec  = 8;
-  ofile << setw(width) << setprecision(prec) << scientific << sample_;
+
+  ofile << setw(width) << setprecision(prec) << scientific << tot_cycles_;
+  ofile << setw(width) << setprecision(prec) << scientific << expval_epsilon();
   ofile << setw(width) << setprecision(prec) << scientific << totalenergy_;
   ofile << setw(width) << setprecision(prec) << scientific << magnetisation_;
   ofile << endl;

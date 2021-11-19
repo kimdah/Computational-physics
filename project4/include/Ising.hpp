@@ -11,7 +11,7 @@ using namespace std;
 
 class Ising {
     public:
-        int L_, N_, seed, magnetisation_,sample_;
+        int L_, N_, seed, magnetisation_,sample_, tot_cycles_;
         double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
@@ -39,7 +39,7 @@ class Ising {
       vector<double> calc_boltzmann_factors(double T);
 
       double mean(double value, int n_cycles);
-      double expval_eps(int n_cycles);
+      double expval_epsilon();
       double expval_mag_per_spin(int n_cycles);
       double heat_capacity(int n_cycles);
       double susceptibility(int n_cycles);

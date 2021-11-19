@@ -40,6 +40,7 @@ int main(int argc, char const *argv[]) {
   int width = 16;
   int prec  = 8;
   ofile << setw(width) << setprecision(prec) << scientific << "Sample#";
+  ofile << setw(width) << setprecision(prec) << scientific << "Expval epsilon";
   ofile << setw(width) << setprecision(prec) << scientific << "E";
   ofile << setw(width) << setprecision(prec) << scientific << "M";
   ofile << endl;
@@ -59,7 +60,7 @@ int main(int argc, char const *argv[]) {
 
     }
   }
-  cout << "<eps>" << ising.expval_eps(n_cycles) << endl;
+  cout << "<eps>" << ising.expval_epsilon() << endl;
   ofile.close();
   cout << "The end\n";
   ising.print();
