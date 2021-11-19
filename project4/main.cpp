@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <vector>
 #include <cmath>
+#include <iomanip> 
 
 #include "./include/Ising.hpp"
 
@@ -11,33 +12,48 @@ using namespace std;
 
 
 int main(int argc, char const *argv[]) {
+   if (argc != 6)
+    {
+      // Get the name of the executable file
+      std::string executable_name = argv[0];
 
-  // ------ FROM EXAMPLE CODE-------
-  // Check number of command line arguments
-  // if (argc != 5){
-  //   cout << "Wrong!";
-  // }
-  assert(argc == 5);
+      std::cerr << "Error: Wrong number of input arguments. 5 expected." << std::endl;
+      std::cerr << "Usage: " << executable_name << " <Temperature (integer)>" 
+      << " <lattice side size (integer)>" << " <MCMC cycles (integer)>" 
+      << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"<< std::endl;
+      return 1;
+    }
 
-  // // Read command line arguments
-  const int L = atoi(argv[1]);
-  const int n_cycles = atoi(argv[2]);
-  const int ordered_spin = atoi(argv[3]); // 0 = unordered, ordered: -1 or 1
-  const string output_file_name = argv[4];
-  // Prepare for file output
-  // const int print_prec = 10;
-  // ofstream ofile;
-  // ofile.open(output_file_name.c_str(), ofstream::trunc);
-
-
-  // Monte Carlo temporary
-  // L = 2;
-  int N = L*L;
-  int T = 1.0;
-  int seed = 1; // ?
+  // Read command line arguments
+  const int T = atoi(argv[1]);
+  const int L = atoi(argv[2]);
+  const int n_cycles = atoi(argv[3])/100;
+  const int ordered_spin = atoi(argv[4]); // 0 = unordered, ordered: -1 or 1
+  const string output_file_name = argv[5];
+  const int seed = 2134;
+  string filename = "datafiles/" + output_file_name;
+  ofstream ofile;
+  ofile.open(filename);
+  // Some width and precision parameters we will use to format the output
+  int width = 16;
+  int prec  = 8;
+  ofile << setw(width) << setprecision(prec) << scientific << "Sample#";
+  ofile << setw(width) << setprecision(prec) << scientific << "E";
+  ofile << setw(width) << setprecision(prec) << scientific << "M";
+  ofile << endl;
   Ising ising(L, T, seed, ordered_spin);
-
-
+  //Ising ising(20, 10, 12087, 0);
+  cout << "The beginning\n";
+  ising.print();
+  for (int i = 0; i < n_cycles; i++) {
+    ising.write_parameters_to_file(ofile);
+    for (int j = 0; j < n_cycles/100; j++) {
+      ising.run_metropolis_MCMC();
+    }
+  }
+  ofile.close();
+  cout << "The end\n";
+  ising.print();
 
   //
   //

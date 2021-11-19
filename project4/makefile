@@ -9,10 +9,10 @@ compile:
 	${CPPflags} -c main.cpp src/Ising.cpp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.out main.o Ising.o # ${LIB}
+	${CPPflags} -o main.exe main.o Ising.o # ${LIB}
 
 run:
-	./main.out
+	./main.exe
 
 clean:
 	rm -f *.o *~

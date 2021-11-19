@@ -6,6 +6,8 @@
 #include <vector>
 #include <cmath>
 #include <random>
+#include <string>
+#include <iomanip> 
 
 using namespace std;
 
@@ -15,22 +17,21 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     T_ = T;
 
     //Initalise randomness with Mersenne Twister 19937 random number generator
-    generator.seed(seed);
-    // proposal_pdf_ = normal_distribution(0.0, 1.0);
-    // lattice_uniform_distribution_ = uniform_int_distribution(0, L_-1);
-    // up_or_down_spin_ = uniform_int_distribution(0, 1);
+    generator_.seed(seed);
+    proposal_pdf_ = normal_distribution<double>(0.0, 1.0);
+    uniform_real_ = uniform_real_distribution<double>(0, 1);
+    lattice_uniform_distribution_ = uniform_int_distribution<int>(0, L_-1);
+    up_or_down_spin_ = uniform_int_distribution<int>(0, 1);
 
-    normal_distribution<double> proposal_pdf_(0.0, 1.0);
-    uniform_int_distribution<int> lattice_uniform_distribution_(0, L_-1);
-    uniform_int_distribution<int> up_or_down_spin_(0, 1);
-
-
-    std::vector<double> boltzmann_factors_ = calc_boltzmann_factors(T);
+    boltzmann_factors_ = calc_boltzmann_factors(T);
+    
     if (ordered_spin != 0){
       generate_ordered_lattice(ordered_spin);
     } else {
       generate_unordered_lattice();
     }
+    calc_tot_magnetization_of_state();
+    calc_energy_of_lattice_state();
 }
 
 void Ising::generate_ordered_lattice(int spin) {
@@ -42,38 +43,32 @@ void Ising::generate_unordered_lattice() {
      vector<vector<int>> lattice(L_, vector<int>(L_, 1));
      for (int i=0; i<L_; i++){
         for (int j=0; j<L_; j++){
-            lattice[i][j] = lattice[i][j] - 2 * up_or_down_spin_(generator); // Generates a 1 or a -1
+            lattice[i][j] = lattice[i][j] - 2 * up_or_down_spin_(generator_); // Generates a 1 or a -1
         }
     }
     s_ = lattice;
 }
 
 std::vector<std::vector<int>> Ising::run_metropolis_MCMC(){
-  // running one MC cycle for sampling
+  int randRow, randCol, index, deltaE;
 
-  int epsilon = 0;
-  int E = 0;
-  double total_energy_per_cycle = 0;
-  double total_magnetization_per_cycle = 0;
-  double energy_of_new_state = calc_tot_energy_of_state(s_);
   for (int c = 0; c < N_; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
-    int randRow = rand() % L_;
-    int randCol = rand() % L_;
-    s_[randRow][randCol] *= -1;
+    randRow = lattice_uniform_distribution_(generator_);
+    randCol = lattice_uniform_distribution_(generator_);
+    s_[randRow][randCol] *= -1; // Flipping a random spin. Will get flipped back if it fails later
 
     // examining surrounding spins to figure out index in boltzmann_factor vector
-    // for computing the probability ratio
-    int deltaE = s_[randRow][randCol] * 2 * (
-                 s_[randRow][(randCol - 1 + L_) % L_] // Neighbour to the left
-               + s_[randRow][(randCol + 1) % L_] // Neighbour to the right
-               + s_[(randRow + 1) % L_][randCol] // Neighbour above
-               + s_[(randRow - 1 + L_) % L_][randCol]); // Neighbour below
+    // for computing the probability ratio. Computes the difference in energy after flipping a spin
+    deltaE = s_[randRow][randCol] * 2 
+           *(s_[randRow][(randCol - 1 + L_) % L_] // Neighbour to the left
+           + s_[randRow][(randCol + 1) % L_] // Neighbour to the right
+           + s_[(randRow + 1) % L_][randCol] // Neighbour above
+           + s_[(randRow - 1 + L_) % L_][randCol]); // Neighbour below
 
-    // finding the index to use in Boltzmann
-    int index;
     // boltzmann factor depends on flipping a +1 to -1, so the value will have
     // reverse index when a negative spin is flipped to positive.
+    
     if(s_[randRow][randCol] == 1){ // if spin has been flipped to positive
       index = 5 - deltaE/4 + 2; // reversing index
     }else{
@@ -82,32 +77,36 @@ std::vector<std::vector<int>> Ising::run_metropolis_MCMC(){
 
     // Acceptance ratio
     double probability_ratio = boltzmann_factors_[index];
-    uniform_real_distribution<double> uniform_real(0.0, 1.0);
-    double r = uniform_real(generator);
-    //std::uniform_real_distribution<double> distribution(0.0,1.0);
-    //double r = distribution()
-    if (deltaE < 0 ){
 
-    }
-    else if(r > probability_ratio){ //Rejected spin-flip
+    // Use uniform or normal? Wasn't normal suggested in lectures?
+    //double r = uniform_real_(generator_);
+    double r = proposal_pdf_(generator_);
+
+    if(r > probability_ratio){ //Rejected spin-flip
       s_[randRow][randCol] *= -1; // flip back
+    } else {// Accept spin configuration candidate
+      totalenergy_ += deltaE;
+      magnetisation_ += s_[randRow][randCol];
     }
-    else {
-      // Accept spin configuration candidate
+  }
+  return s_;
+}
+
+
+  /* int epsilon = 0;
+  int E = 0;
+  double total_energy_per_cycle = 0;
+  double total_magnetization_per_cycle = 0;
+  double energy_of_new_state = calc_tot_energy_of_state(s_); */
+
       //int totalenergy = totalenergy + deltaE; //
       //epsilon += totalenergy/N;
       //double magnetization += calc_tot_magnetization_of_state(s_current);
       //E += totalenergy; // metroplis
-      energy_of_new_state += deltaE;
-
-      total_magnetization_per_cycle += calc_tot_magnetization_of_state(s_);
-    }
-  }
-  E = total_energy_per_cycle;
-  total_energy_per_cycle = energy_of_new_state;
-
-  //
-  //
+      //energy_of_new_state += deltaE;
+      //total_magnetization_per_cycle += calc_tot_magnetization_of_state(s_);
+  // E = total_energy_per_cycle;
+  // total_energy_per_cycle = energy_of_new_state;
   // exp_val_eps_per_cycle = epsilon / acceptedstates; // <eps>
   // exp_val_eps_per_cycle_squared = pow(epsilon,2) / acceptedstates; //<eps^2>
   // exp_val_m_per_cycle = magnetization/acceptedstates; //<m>
@@ -116,11 +115,31 @@ std::vector<std::vector<int>> Ising::run_metropolis_MCMC(){
   // exp_val_E_per_cycle_squared = pow(E,2) / acceptedstates;
   // heatcapacity_per_cycle = (1./acceptedstates)*(1./pow(T,2))*(exp_val_E_per_cycle_squared - pow(exp_val_E_per_cycle
   // ,2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
-  return s_;
+
+// Working
+void Ising::calc_energy_of_lattice_state() {
+  double energy = 0;
+  for (int i=0; i<L_; i++){
+    for (int j=0; j<L_; j++){
+      energy +=  s_[i][j] * s_[(i+1)%L_][j]  +  s_[i][j] * s_[i][(j+1)%L_];
+    }
+  }
+  totalenergy_ = energy;
+}
+// Overload of function above
+// Working
+int Ising::calc_energy_of_lattice_state(std::vector<std::vector<int> > s) {
+  int energy = 0;
+  for (int i=0; i<L_; i++){
+    for (int j=0; j<L_; j++){
+      energy +=  s[i][j] * s[(i+1)%L_][j]  +  s[i][j] * s[i][(j+1)%L_];
+    }
+  }
+  totalenergy_ = energy;
+  return energy;
 }
 
-
-
+/* // Not working. Gives segmentation fault
 int Ising::calc_tot_energy_of_state(std::vector<std::vector<int> > s){
   // finding the energy of a particular spin configuration s
   int energy;
@@ -133,21 +152,34 @@ int Ising::calc_tot_energy_of_state(std::vector<std::vector<int> > s){
   }
   return energy;
 }
+ */
 
-int Ising::calc_tot_magnetization_of_state(std::vector<std::vector<int>> s){
-  int magnetization;
-  for(int i=1 ; i<L_+1 ; i++){ //the first row will be the Lth row
-    for(int j=1 ; j<L_+1 ; j++){ //the first column will be the Lth column
-      magnetization +=s[i][j];
+// Working
+void Ising::calc_tot_magnetization_of_state(){
+  int magnetisation = 0;
+  for(int i=0 ; i<L_ ; i++){ //the first row will be the Lth row
+    for(int j=0 ; j<L_ ; j++){ //the first column will be the Lth column
+      magnetisation +=s_[i][j];
     }
   }
-  return abs(magnetization);
+  magnetisation_ = magnetisation;
 }
 
+int Ising::calc_tot_magnetization_of_state(std::vector<std::vector<int>> s){
+  int magnetisation = 0;
+  for(int i=0 ; i<L_ ; i++){ //the first row will be the Lth row
+    for(int j=0 ; j<L_ ; j++){ //the first column will be the Lth column
+      magnetisation +=s_[i][j];
+    }
+  }
+  return abs(magnetisation);
+}
 
+// Working. Things make sense
 std::vector<double> Ising::calc_boltzmann_factors(double T){
-  double kB = 1.38064852 * pow(10, -23);
-  double beta = 1. / (kB*T);
+  //double kB = 1.38064852 * pow(10, -23);
+  //double beta = 1. / (kB*T);
+  double beta = 1. / (T);
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
   boltzmann_values.push_back(exp(-beta*(-4))); // 1 +1 spins
@@ -167,4 +199,29 @@ void Ising::analytical_2x2(double T){
   double heat_capacity = (32./(kB*pow(T,2)*Z))*(exp(-beta*8)-exp(beta*8)- (2./Z)*(exp(-beta*16)+exp(beta*16)-2));
   double susceptibility = (2/(kB*T*Z)) * (exp(8*beta) +1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
 
+}
+
+// Adds current parameters to referenced ofstream
+void Ising::write_parameters_to_file(ofstream& ofile) {
+  int width = 16;
+  int prec  = 8;
+  ofile << setw(width) << setprecision(prec) << scientific << sample_;
+  ofile << setw(width) << setprecision(prec) << scientific << totalenergy_;
+  ofile << setw(width) << setprecision(prec) << scientific << magnetisation_;
+  ofile << endl;
+  sample_+=1;
+}
+
+void Ising::print(){
+  cout << "Energy of lattice: " << totalenergy_ << "\n";
+  cout << "Magnetisation of lattice: " << magnetisation_ << "\n";
+    for (int i=0; i<L_; i++){
+        for (int j=0; j<L_; j++){
+          if(s_[i][j] > 0) {
+            cout << "+";
+          }
+            cout << s_[i][j] << " ";
+        }
+        cout << "\n";
+    }
 }
