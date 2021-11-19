@@ -52,7 +52,7 @@ int main(int argc, char const *argv[]) {
   // Run MCMC cycles:
   for (int i = 0; i < n_cycles; i++) {
     ising.write_parameters_to_file(ofile);
-    for (int j = 0; j < n_cycles/100; j++) {
+    for (int j = 0; j < n_cycles; j++) {
       ising.run_metropolis_MCMC();
       // get epsilon for each cycle here
       //cout << "<eps> for " << i << " cycles" << ising.expval_eps(i) << endl;
