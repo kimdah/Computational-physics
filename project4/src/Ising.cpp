@@ -97,7 +97,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
   }
   //Adding the values from each cycle, so it can be used to find exp values.
   epsilon_ += totalenergy_/N_;
-  mag_per_spin_ += magnetisation_/ N_;
+  mag_per_spin_ += 1.0*magnetisation_/ N_;
   accumulatedtotalenergy_ += totalenergy_;
   accumulatedtotalmagnetization_ += magnetisation_;
   tot_cycles_ += 1;
@@ -108,10 +108,10 @@ double Ising::mean(double value, int n_cycles){
   return value / n_cycles;
 }
 
-double Ising::expval_epsilon(){
+double Ising::expval_epsilon(int n_cycles){
   // totalenergy er ikke per cycle, burde den vaere det?
   //return totalenergy / N_;
-  return mean(epsilon_, tot_cycles_);
+  return mean(epsilon_, n_cycles);
 }
 
 double Ising::expval_mag_per_spin(int n_cycles){
@@ -119,11 +119,11 @@ double Ising::expval_mag_per_spin(int n_cycles){
   return mean(abs(mag_per_spin_), n_cycles);
 }
 
-double Ising::heat_capacity(int n_cycles){
+double Ising::heat_capacity_per_spin(int n_cycles){
   return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
-double Ising::susceptibility(int n_cycles){
+double Ising::susceptibility_per_spin(int n_cycles){
   return (1./N_)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
 }
 
@@ -133,7 +133,7 @@ void Ising::calc_energy_of_lattice_state() {
   double energy = 0;
   for (int i=0; i<L_; i++){
     for (int j=0; j<L_; j++){
-      energy +=  s_[i][j] * s_[(i+1)%L_][j]  +  s_[i][j] * s_[i][(j+1)%L_];
+      energy +=  - s_[i][j] * s_[(i+1)%L_][j]  +  s_[i][j] * s_[i][(j+1)%L_];
     }
   }
   totalenergy_ = energy;
@@ -209,10 +209,13 @@ void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
   int prec  = 8;
 
-  ofile << setw(width) << setprecision(prec) << scientific << tot_cycles_;
-  ofile << setw(width) << setprecision(prec) << scientific << expval_epsilon();
-  ofile << setw(width) << setprecision(prec) << scientific << totalenergy_;
-  ofile << setw(width) << setprecision(prec) << scientific << magnetisation_;
+  ofile << setw(width) << tot_cycles_;
+  ofile << setw(width) << totalenergy_;
+  ofile << setw(width) << magnetisation_;
+  ofile << setw(width) << expval_epsilon(tot_cycles_);
+  ofile << setw(width) << expval_mag_per_spin(tot_cycles_);
+  ofile << setw(width) << heat_capacity_per_spin(tot_cycles_);
+  ofile << setw(width) << susceptibility_per_spin(tot_cycles_);
   ofile << endl;
   sample_+=1;
 }

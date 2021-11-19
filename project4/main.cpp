@@ -9,7 +9,8 @@
 #include "./include/Ising.hpp"
 
 using namespace std;
-
+// Performs simulations based on parameter inputs
+double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
 
 int main(int argc, char const *argv[]) {
    if (argc != 6)
@@ -22,7 +23,7 @@ int main(int argc, char const *argv[]) {
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"<< std::endl;
       return 1;
-    }
+    } 
 
   // Read command line arguments
   const int T = atoi(argv[1]);
@@ -31,41 +32,45 @@ int main(int argc, char const *argv[]) {
   const int ordered_spin = atoi(argv[4]); // 0 = unordered, ordered: -1 or 1
   const string output_file_name = argv[5];
   const int seed = 2134;
+  simulator(n_cycles, L, T, seed, ordered_spin, output_file_name);
+ 
+  int test, tester;
+  double svar;
+  test = 2;
+  tester = 3;
+  svar = 1.0*test/tester;
+  cout << svar;
+  return 0;
+}
 
-  // ------ Output-file --------
+double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name) {
+   // ------ Output-file --------
   string filename = "datafiles/" + output_file_name;
   ofstream ofile;
   ofile.open(filename);
   // Some width and precision parameters we will use to format the output
   int width = 16;
   int prec  = 8;
-  ofile << setw(width) << setprecision(prec) << scientific << "Sample#";
-  ofile << setw(width) << setprecision(prec) << scientific << "Expval epsilon";
-  ofile << setw(width) << setprecision(prec) << scientific << "E";
-  ofile << setw(width) << setprecision(prec) << scientific << "M";
+  ofile << setw(width) << "Sample#";
+  ofile << setw(width) << "E";
+  ofile << setw(width) << "M";
+  ofile << setw(width) << "Expval epsilon";
+  ofile << setw(width) << "Expval M";
+  ofile << setw(width) << "C_V";
+  ofile << setw(width) << "Sucept.";
   ofile << endl;
   // -----------------------------
+  // Run the sim
+  Ising ising(lattice_side_length, T, seed, ordered_spin);
 
-  Ising ising(L, T, seed, ordered_spin);
-  //Ising ising(20, 10, 12087, 0);
-  cout << "The beginning\n";
-  ising.print();
   // Run MCMC cycles:
   for (int i = 0; i < n_cycles; i++) {
     ising.write_parameters_to_file(ofile);
     for (int j = 0; j < n_cycles; j++) {
       ising.run_metropolis_MCMC();
-      // get epsilon for each cycle here
-      //cout << "<eps> for " << i << " cycles" << ising.expval_eps(i) << endl;
-
     }
   }
-  cout << "<eps>" << ising.expval_epsilon() << endl;
-  ofile.close();
-  cout << "The end\n";
-  ising.print();
-
-  return 0;
+  return 42.42;
 }
 
 //-------- TRIED TO GET THE ANALYTICAL VALUES AND ESTIMATES FOR 2X2 TO FILE - NOT WORKING
