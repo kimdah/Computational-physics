@@ -147,9 +147,7 @@ double simulator(int iterations, int duration, int particles, std::string output
     std::ofstream ofile;
     ofile.open(filename);
 
-    // Some width and precision parameters we will use to format the output
-    int width = 16;
-    int prec  = 8;
+    
 
     // Run simulation for a single particle with default values for B_0, V_0 and d
     // double B0_in, double V0_in, double d_in
