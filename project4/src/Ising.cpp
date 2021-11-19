@@ -98,7 +98,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
   //Adding the values from each cycle, so it can be used to find exp values.
   epsilon_ += totalenergy_/N_;
   mag_per_spin_ += 1.0*magnetisation_/ N_;
-  accumulatedtotalenergy_ += totalenergy_;
+  accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
   accumulatedtotalmagnetization_ += magnetisation_;
   tot_cycles_ += 1;
   return s_; // not neccessary to return s_?
