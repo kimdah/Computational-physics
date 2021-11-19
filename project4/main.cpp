@@ -11,6 +11,7 @@
 using namespace std;
 // Performs simulations based on parameter inputs
 double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
+void project4();
 
 int main(int argc, char const *argv[]) {
   int T, L, n_cycles, ordered_spin, seed;
@@ -66,6 +67,12 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
     }
   }
   return 42.42;
+}
+
+void project4() {
+  // Do all the things we need for Project 4 here
+  int cycles = 10000;
+  simulator(cycles/100, 20, 10, 1337, 0, "string output_file_name");
 }
 
 //-------- TRIED TO GET THE ANALYTICAL VALUES AND ESTIMATES FOR 2X2 TO FILE - NOT WORKING
