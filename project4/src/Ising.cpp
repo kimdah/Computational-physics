@@ -86,7 +86,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     double r = uniform_real_(generator_);
 
 
-    if (r <= probability_ratio || abs(totalenergy_ + deltaE) < abs(totalenergy_)){ //
+    if (r <= probability_ratio ){ //|| abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       s_[randRow][randCol] *= -1;
@@ -120,6 +120,10 @@ double Ising::expval_mag_per_spin(int n_cycles){
 
 double Ising::heat_capacity(int n_cycles){
   // (1./n_cycles)
+  //cout << accumulatedtotalenergy_/tot_cycles_ << "\n";
+  //cout << totalenergy_ << "\n";
+  //cout << pow(accumulatedtotalenergy_/tot_cycles_, 2) << "\n";
+  //cout << pow(mean(accumulatedtotalenergy_, n_cycles), 2) << "\n";
   return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
@@ -145,7 +149,7 @@ int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
   int energy = 0;
   for (int i=0; i<L_; i++){
     for (int j=0; j<L_; j++){
-      energy +=  s[i][j] * s[(i+1)%L_][j]  +  s[i][j] * s[i][(j+1)%L_];
+      energy += - s[i][j] * s[(i+1)%L_][j]  +  s[i][j] * s[i][(j+1)%L_];
     }
   }
   totalenergy_ = energy;
