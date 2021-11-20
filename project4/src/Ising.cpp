@@ -119,11 +119,13 @@ double Ising::expval_mag_per_spin(int n_cycles){
 }
 
 double Ising::heat_capacity(int n_cycles){
-  return (1./N_)*(1./n_cycles)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+  // (1./n_cycles)
+  return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
 double Ising::susceptibility(int n_cycles){
-  return (1./N_)*(1./n_cycles)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
+  // *(1./n_cycles)
+  return (1./N_)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
 }
 
 
