@@ -24,16 +24,17 @@ int main(int argc, char const *argv[]) {
       std::string executable_name = argv[0];
 
       std::cerr << "Running simulations for Project 4 specified in main.cpp. To run a specific simulation use 5 parameters like so:" << std::endl;
-      std::cerr << executable_name << " <Temperature (integer)>"
+      std::cerr << executable_name << " <temperature (float)>"
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
-      << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"<< std::endl;
+      << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
+      << " <output_file_name> " << std::endl;
       problem4();
       return 0; // quit program
 
     } else if (argc == 6) {
-      T = atoi(argv[1]);
+      T = atof(argv[1]);
       L = atoi(argv[2]);
-      n_cycles = atoi(argv[3])/100;
+      n_cycles = atoi(argv[3]);
       int ordered_spin = atoi(argv[4]); // 0 = unordered, ordered: -1 or 1
       output_file_name = argv[5];
       seed = 2134;
@@ -53,8 +54,8 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
   ofile << setw(width) << "Sample#";
   ofile << setw(width) << "E";
   ofile << setw(width) << "M";
-  ofile << setw(width) << "Expval epsilon";
-  ofile << setw(width) << "Expval M";
+  ofile << setw(width) << "<eps>";
+  ofile << setw(width) << "<m>";
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
   ofile << endl;
