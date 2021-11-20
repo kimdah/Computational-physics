@@ -95,7 +95,7 @@ void analytical_2x2(double T){
   double m2 = (1./Z) * (2*exp(beta*8) + 2);
   //
   double heat_capacity = (32./(pow(T,2)*Z))*(exp(-beta*8)+exp(beta*8) - ((2./Z)*(exp(-beta*16)+exp(beta*16)-2)));
-  double susceptibility = (2/(T*Z)) * (exp(8*beta) +1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
+  double susceptibility = (8./(T*Z)) * (exp(8*beta) + 1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
 
   // Write to file
   ofstream ofile;
