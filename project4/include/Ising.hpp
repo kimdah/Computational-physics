@@ -41,8 +41,8 @@ class Ising {
       double mean(double value, int n_cycles);
       double expval_epsilon(int n_cycles);
       double expval_mag_per_spin(int n_cycles);
-      double heat_capacity_per_spin(int n_cycles);
-      double susceptibility_per_spin(int n_cycles);
+      double heat_capacity(int n_cycles);
+      double susceptibility(int n_cycles);
 
       //void analytical_2x2(double T);
 
