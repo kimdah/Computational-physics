@@ -13,6 +13,7 @@ class Ising {
     public:
         int L_, N_, seed, magnetisation_,sample_, tot_cycles_;
         double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_;
+        double E2, M2;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
         vector<vector<int>> s_;
