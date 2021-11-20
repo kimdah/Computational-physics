@@ -14,6 +14,7 @@ using namespace std;
 // Performs simulations based on parameter inputs
 double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
 void problem4();
+void problem5_6();
 void analytical_2x2(double T);
 void phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
 
@@ -31,6 +32,7 @@ int main(int argc, char const *argv[]) {
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
       << " <output_file_name> " << std::endl;
       problem4();
+      problem5_6();
       phase_transitions_parallel(0, 10, 10, 20, 1337, 0);
       return 0; // quit program
 
@@ -86,6 +88,24 @@ void problem4() {
   analytical_2x2(temp);
 }
 
+void problem5_6() {
+  // or use cml arguements
+  int cycles = 100000;
+  int L = 20;
+  double T_1 = 1.0;
+  double T_2 = 2.4;
+  int seed = 3572;
+
+  // T = 1.0 :
+  simulator(cycles, L, T_1, seed, 1, "ncyc_1e5_L_20_T_1.0_ordered"); // for -1 also?
+  simulator(cycles, L, T_1, seed, 0, "ncyc_1e5_L_20_T_1.0_unordered");
+
+  // T = 2.4
+  simulator(cycles, L, T_2, seed, 1, "ncyc_1e5_L_20_T_2.4_ordered"); // for -1 also?
+  simulator(cycles, L, T_2, seed, 0, "ncyc_1e5_L_20_T_2.4_unordered");
+}
+
+
 void analytical_2x2(double T){
   //double kB = 1.38064852 * pow(10, -23); // Remove?
   double beta = 1./T;
@@ -98,7 +118,7 @@ void analytical_2x2(double T){
   double m2 = (1./Z) * (2*exp(beta*8) + 2);
   //
   double heat_capacity = (32./(pow(T,2)*Z))*(exp(-beta*8)+exp(beta*8) - ((2./Z)*(exp(-beta*16)+exp(beta*16)-2)));
-  double susceptibility = (2/(T*Z)) * (exp(8*beta) +1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
+  double susceptibility = (8./(T*Z)) * (exp(8*beta) + 1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
 
   // Write to file
   ofstream ofile;
@@ -108,7 +128,7 @@ void analytical_2x2(double T){
   std::ostringstream temp;
   temp << std::fixed << std::setprecision(1) << T;
 
-  ofile.open("./datafiles/analytical_2x2_T=" +temp.str() +".txt");// to_string(T)
+  ofile.open("./datafiles/analytical_2x2_T=" + temp.str() +".txt");// to_string(T)
   int width = 18;
   int prec  = 8;
 

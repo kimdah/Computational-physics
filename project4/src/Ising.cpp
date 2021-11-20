@@ -18,9 +18,16 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     mag_per_spin_ = 0;
     epsilon_ = 0;
     tot_cycles_ = 0;
-    //totalenergy_ = 0;
-    cout << "N__: " << N_ << endl;
-    cout << "accumulatedtotalenergy__: " << accumulatedtotalenergy_ << endl;
+
+    // Trying to make sure everything gets overwritten for each instance of the class
+    totalenergy_ = 0;
+    sample_ = 0;
+    accumulatedtotalenergy_ = 0;
+    accumulatedtotalmagnetization_ = 0;
+    magnetisation_ = 0;
+    E2 = 0; M2 = 0;
+    cout << "sample__: " << sample_ << endl;
+    cout << "accumulatedtotalmagnetization_: " << accumulatedtotalmagnetization_ << endl;
     cout << "totalenergy_: " << totalenergy_ << endl;
     cout << "magnetisation_: " << magnetisation_ << endl;
 
