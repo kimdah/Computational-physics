@@ -77,15 +77,15 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
 
 void problem4() {
   // Do all the things we need for Problem 4 here
-  int cycles = 50000;
+  int cycles = 100000;
   double temp = 1.0;
   simulator(cycles, 2, temp, 1337, 0, "task4.txt");
   analytical_2x2(temp);
 }
 
-void analytical_2x2(double T){  // Maybe in Ising.cpp?
+void analytical_2x2(double T){
   //double kB = 1.38064852 * pow(10, -23); // Remove?
-  double beta = 1. /T;
+  double beta = 1./T;
 
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
   double exp_val_epsilon = (4./Z) * (exp(-beta*8) - exp(beta*8));
@@ -95,18 +95,21 @@ void analytical_2x2(double T){  // Maybe in Ising.cpp?
 
   // Write to file
   ofstream ofile;
-  ofile.open("./datafiles/analytical_2x2_T=" +to_string(T) +".txt");
-  int width = 16;
+  //ofile.open("./datafiles/analytical_2x2_T=" +to_string(T) +".txt");
+
+  // To have 2 decimals in output-filename
+  std::ostringstream temp;
+  temp << std::fixed << std::setprecision(1) << T;
+
+  ofile.open("./datafiles/analytical_2x2_T=" +temp.str() +".txt");// to_string(T)
+  int width = 18;
   int prec  = 8;
 
-  ofile << setw(width) << setprecision(prec) << scientific << "T";
-  ofile << setw(width) << setprecision(prec) << scientific << "<eps>";
-  ofile << setw(width) << setprecision(prec) << scientific << "<m>";
-  ofile << setw(width) << setprecision(prec) << scientific << "C_v";
-  ofile << setw(width) << setprecision(prec) << scientific << "Chi";
-  ofile << endl;
+  ofile << setw(2)<< "T" << setw(width) << "<eps>" << setw(width) << "<m>";
+  ofile << setw(width) << "C_v"<< setw(width) << "Chi" << endl;
 
-  ofile << setw(width) << setprecision(prec) << scientific << T;
+  ofile << setprecision(2) << scientific << T;
+  //ofile << setw(width) << setprecision(prec) << scientific << Z;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_epsilon;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_abs_mag;
   ofile << setw(width) << setprecision(prec) << scientific << heat_capacity;
