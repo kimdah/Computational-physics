@@ -13,6 +13,7 @@ class Ising {
     public:
         int L_, N_, seed, magnetisation_,sample_, tot_cycles_;
         double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_;
+        double E2, M2;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
         vector<vector<int>> s_;
@@ -31,10 +32,8 @@ class Ising {
       vector<vector<int>> run_metropolis_MCMC();
 
       void calc_energy_of_lattice_state();
-      int calc_energy_of_lattice_state(vector<vector<int> > s);
 
       void calc_tot_magnetization_of_state();
-      int calc_tot_magnetization_of_state(vector<vector<int>> s);
 
       vector<double> calc_boltzmann_factors(double T);
 

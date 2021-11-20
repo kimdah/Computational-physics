@@ -18,6 +18,12 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     mag_per_spin_ = 0;
     epsilon_ = 0;
     tot_cycles_ = 0;
+    //totalenergy_ = 0;
+    cout << "N__: " << N_ << endl;
+    cout << "accumulatedtotalenergy__: " << accumulatedtotalenergy_ << endl;
+    cout << "totalenergy_: " << totalenergy_ << endl;
+    cout << "magnetisation_: " << magnetisation_ << endl;
+
 
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator_.seed(seed);
@@ -98,10 +104,12 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     }
   }
   //Adding the values from each cycle, so it can be used to find exp values.
-  epsilon_ += totalenergy_/N_;
+  epsilon_ += 1.0*totalenergy_/N_;
   mag_per_spin_ += 1.0*magnetisation_/ N_;
   accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
-  accumulatedtotalmagnetization_ += magnetisation_;
+  accumulatedtotalmagnetization_ += abs(magnetisation_);
+  M2 += pow(magnetisation_, 2);
+  E2 += pow(totalenergy_, 2);
   tot_cycles_ += 1;
   return s_; // not neccessary to return s_?
 }
@@ -124,12 +132,14 @@ double Ising::heat_capacity(int n_cycles){
   //cout << totalenergy_ << "\n";
   //cout << pow(accumulatedtotalenergy_/tot_cycles_, 2) << "\n";
   //cout << pow(mean(accumulatedtotalenergy_, n_cycles), 2) << "\n";
-  return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+  //return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+
+  return (1./N_)*(1./pow(T_,2))*(mean(E2, n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
 double Ising::susceptibility(int n_cycles){
   // *(1./n_cycles)
-  return (1./N_)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(abs(accumulatedtotalmagnetization_), n_cycles), 2));
+  return (1./N_)*(1./T_)*(mean(M2, n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
 }
 
 
@@ -183,15 +193,6 @@ void Ising::calc_tot_magnetization_of_state(){
   magnetisation_ = magnetisation;
 }
 
-int Ising::calc_tot_magnetization_of_state(vector<vector<int>> s){
-  int magnetisation = 0;
-  for(int i=0 ; i<L_ ; i++){ //the first row will be the Lth row
-    for(int j=0 ; j<L_ ; j++){ //the first column will be the Lth column
-      magnetisation += s_[i][j];
-    }
-  }
-  return abs(magnetisation);
-}
 
 // Working. Things make sense
 vector<double> Ising::calc_boltzmann_factors(double T){
