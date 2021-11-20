@@ -79,7 +79,7 @@ void problem4() {
   // Do all the things we need for Problem 4 here
   int cycles = 100000;
   double temp = 1.0;
-  simulator(cycles, 2, temp, 1337, 0, "task4.txt");
+  simulator(cycles, 2, temp, 1337, 0, "task4.txt"); //unordered
   analytical_2x2(temp);
 }
 
@@ -90,7 +90,11 @@ void analytical_2x2(double T){
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
   double exp_val_epsilon = (4./Z) * (exp(-beta*8) - exp(beta*8));
   double exp_val_abs_mag = (2./Z) * (exp(beta*8) + 2);
-  double heat_capacity = (32./(pow(T,2)*Z))*(exp(-beta*8)-exp(beta*8)- (2./Z)*(exp(-beta*16)+exp(beta*16)-2));
+  // test
+  double eps2 = (8./Z) * (exp(-beta*8) + exp(beta*8));
+  double m2 = (1./Z) * (2*exp(beta*8) + 2);
+  //
+  double heat_capacity = (32./(pow(T,2)*Z))*(exp(-beta*8)+exp(beta*8) - ((2./Z)*(exp(-beta*16)+exp(beta*16)-2)));
   double susceptibility = (2/(T*Z)) * (exp(8*beta) +1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
 
   // Write to file
@@ -105,13 +109,17 @@ void analytical_2x2(double T){
   int width = 18;
   int prec  = 8;
 
-  ofile << setw(2)<< "T" << setw(width) << "<eps>" << setw(width) << "<m>";
+  ofile << setw(2)<< "T" << setw(width) <<"Z" << setw(width)
+  << "<eps>" << setw(width) << "<eps2>" << setw(width)
+  << "<m>" << setw(width) << "<m2>";
   ofile << setw(width) << "C_v"<< setw(width) << "Chi" << endl;
 
   ofile << setprecision(2) << scientific << T;
-  //ofile << setw(width) << setprecision(prec) << scientific << Z;
+  ofile << setw(width) << setprecision(prec) << scientific << Z;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_epsilon;
+  ofile << setw(width) << setprecision(prec) << scientific << eps2;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_abs_mag;
+  ofile << setw(width) << setprecision(prec) << scientific << m2;
   ofile << setw(width) << setprecision(prec) << scientific << heat_capacity;
   ofile << setw(width) << setprecision(prec) << scientific << susceptibility;
   ofile << endl;

@@ -18,6 +18,12 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     mag_per_spin_ = 0;
     epsilon_ = 0;
     tot_cycles_ = 0;
+    //totalenergy_ = 0;
+    cout << "N__: " << N_ << endl;
+    cout << "accumulatedtotalenergy__: " << accumulatedtotalenergy_ << endl;
+    cout << "totalenergy_: " << totalenergy_ << endl;
+    cout << "magnetisation_: " << magnetisation_ << endl;
+
 
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator_.seed(seed);
@@ -98,7 +104,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     }
   }
   //Adding the values from each cycle, so it can be used to find exp values.
-  epsilon_ += totalenergy_/N_;
+  epsilon_ += 1.0*totalenergy_/N_;
   mag_per_spin_ += 1.0*magnetisation_/ N_;
   accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
   accumulatedtotalmagnetization_ += magnetisation_;
@@ -139,33 +145,6 @@ void Ising::calc_energy_of_lattice_state() {
   }
   totalenergy_ = energy;
 }
-// Overload of function above
-// Working
-int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
-  int energy = 0;
-  for (int i=0; i<L_; i++){
-    for (int j=0; j<L_; j++){
-      energy +=  s[i][j] * s[(i+1)%L_][j]  +  s[i][j] * s[i][(j+1)%L_];
-    }
-  }
-  totalenergy_ = energy;
-  return energy;
-}
-
-/* // Not working. Gives segmentation fault
-int Ising::calc_tot_energy_of_state(vector<vector<int> > s){
-  // finding the energy of a particular spin configuration s
-  int energy;
-  for(int i=1 ; i<L_+1 ; i++){ //the first row will be the Lth row
-    for(int j=1 ; j<L_+1 ; j++){ //the first column will be the Lth column
-      int i_index = (i + L_)%L_;
-      int j_index = (j + L_)%L_;
-      energy += s[i_index][j_index]*s[i_index-1][j_index] + s[i_index][j_index]*s[i_index][j_index-1];
-    }
-  }
-  return energy;
-}
- */
 
 // Working
 void Ising::calc_tot_magnetization_of_state(){
@@ -178,15 +157,6 @@ void Ising::calc_tot_magnetization_of_state(){
   magnetisation_ = magnetisation;
 }
 
-int Ising::calc_tot_magnetization_of_state(vector<vector<int>> s){
-  int magnetisation = 0;
-  for(int i=0 ; i<L_ ; i++){ //the first row will be the Lth row
-    for(int j=0 ; j<L_ ; j++){ //the first column will be the Lth column
-      magnetisation += s_[i][j];
-    }
-  }
-  return abs(magnetisation);
-}
 
 // Working. Things make sense
 vector<double> Ising::calc_boltzmann_factors(double T){
