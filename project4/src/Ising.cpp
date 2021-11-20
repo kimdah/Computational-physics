@@ -86,7 +86,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     double r = uniform_real_(generator_);
 
 
-    if (r <= probability_ratio ){ //|| abs(totalenergy_ + deltaE) < abs(totalenergy_)
+    if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       s_[randRow][randCol] *= -1;
@@ -138,7 +138,7 @@ void Ising::calc_energy_of_lattice_state() {
   double energy = 0;
   for (int i=0; i<L_; i++){
     for (int j=0; j<L_; j++){
-      energy +=  - s_[i][j] * s_[(i+1)%L_][j]  +  s_[i][j] * s_[i][(j+1)%L_];
+      energy +=  - s_[i][j] * s_[(i+1)%L_][j]  -  s_[i][j] * s_[i][(j+1)%L_];
     }
   }
   totalenergy_ = energy;
