@@ -77,13 +77,14 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     // }else{
     //   index = deltaE/4 + 2;
     // }
-    index = deltaE/4 + 2;
+    index = deltaE/4 + 2; // [4] = 8/4+2, [3] = 4/4+2, [2] = 0/4+2, [1] = -4/4+2, [0] = -8/4+2
     // Acceptance ratio
     double probability_ratio = boltzmann_factors_[index]; // w_i/w_j = exp(-beta*deltaE)
 
     // Use uniform or normal? Wasn't normal suggested in lectures?
     //double r = uniform_real_(generator_);
     double r = uniform_real_(generator_);
+    
 
     if (r <= probability_ratio ){ //|| deltaE < 0
       // Accept spin configuration candidate

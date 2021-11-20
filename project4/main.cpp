@@ -72,7 +72,7 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
 void project4() {
   // Do all the things we need for Project 4 here
   int cycles = 10000;
-  simulator(cycles/100, 40, 10, 1337, 0, "test.txt");
+  simulator(cycles/100, 20, 2.4, 1337, 0, "test.txt");
 }
 
 //-------- TRIED TO GET THE ANALYTICAL VALUES AND ESTIMATES FOR 2X2 TO FILE - NOT WORKING
