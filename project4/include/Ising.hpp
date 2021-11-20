@@ -48,6 +48,7 @@ class Ising {
       //void analytical_2x2(double T);
 
       void write_parameters_to_file(ofstream& ofile);
+      void write_some_parameters_to_file(ofstream& ofile);
 
       void print();
 

@@ -1,15 +1,15 @@
 # use this by doing this in terminal:
 # make
 # make run (or make compile, make clean etc.)
-CPPflags = g++ -std=c++11 -O2
+CPPflags = g++ -std=c++11 -O2  # Mac users add -Xpreprocessor before -fopenmp
 #LIB =  -larmadillo
 all: compile link clean
 
 compile:
-	${CPPflags} -c main.cpp src/Ising.cpp -I include/ # ${LIB}
+	${CPPflags} -c main.cpp src/Ising.cpp -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Ising.o # ${LIB}
+	${CPPflags} -o main.exe main.o Ising.o -fopenmp # ${LIB}
 
 run:
 	./main.exe

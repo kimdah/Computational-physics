@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <iomanip>
+#include <omp.h>
 
 #include "./include/Ising.hpp"
 
@@ -14,6 +15,7 @@ using namespace std;
 double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
 void problem4();
 void analytical_2x2(double T);
+void phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
 
 int main(int argc, char const *argv[]) {
   int T, L, n_cycles, ordered_spin, seed;
@@ -29,6 +31,7 @@ int main(int argc, char const *argv[]) {
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
       << " <output_file_name> " << std::endl;
       problem4();
+      phase_transitions_parallel(0, 10, 10, 20, 1337, 0);
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -122,4 +125,28 @@ void analytical_2x2(double T){
   ofile << setw(width) << setprecision(prec) << scientific << susceptibility;
   ofile << endl;
   ofile.close();
+}
+
+void phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin){
+  double h = (T_end - T_start) / steps;
+  string filename = "datafiles/phase_transitions_parallel.txt";
+  ofstream ofile;
+  ofile.open(filename);
+  int width = 16;
+  ofile << setw(width) << "T";
+  ofile << setw(width) << "<eps>";
+  ofile << setw(width) << "<m>";
+  ofile << setw(width) << "C_V";
+  ofile << setw(width) << "Sucept.";
+  ofile << endl;   
+  #pragma omp parallel for
+  for (int i = 0; i < steps; i++){
+    double T = T_start + i * h;
+    Ising ising(lattice_side_length, T, seed, ordered_spin);
+    for (int j = 0; j < 10000; j++) {
+      ising.run_metropolis_MCMC();
+    }
+    ising.write_some_parameters_to_file(ofile);  
+    }
+    ofile.close();
 }

@@ -227,6 +227,17 @@ void Ising::write_parameters_to_file(ofstream& ofile) {
   sample_+=1;
 }
 
+void Ising::write_some_parameters_to_file(ofstream& ofile) {
+  int width = 16;
+  ofile << setw(width) << T_;
+  ofile << setw(width) << expval_epsilon(tot_cycles_);
+  ofile << setw(width) << expval_mag_per_spin(tot_cycles_);
+  ofile << setw(width) << heat_capacity(tot_cycles_);
+  ofile << setw(width) << susceptibility(tot_cycles_);
+  ofile << endl;
+  sample_+=1;
+}
+
 void Ising::print(){
   cout << "Energy of lattice: " << totalenergy_ << "\n";
   cout << "Magnetisation of lattice: " << magnetisation_ << "\n";
