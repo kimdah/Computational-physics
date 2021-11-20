@@ -1,6 +1,6 @@
 # Studying the burn-in time for L = 20
 import numpy as np
-from plotlib import makeplots
+#from plotlib import makeplots
 import matplotlib.pyplot as plt
 
 
@@ -23,11 +23,36 @@ plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
-plotfiles = ['test.txt','test2.txt']	#Name of file
-x_name = "$\lambda$"					#xlabel
-y_name = "$\eta$"						#ylabel
+data_values =  ['samples','E','M', 'expval_eps', 'expval_m', 'C_V', 'sucept']
+data = np.loadtxt('../datafiles/task4.txt',skiprows=1)
+samples = np.array(data[:,0])
+E = np.array(data[:,1])
+M = np.array(data[:,2])
+expval_eps = np.array(data[:,3])
+expval_m = np.array(data[:,4])
+C_V = np.array(data[:,5])
+sucept = np.array(data[:,6])
 
-#Use 'seperate' to save as different plots and 'same' to plot in same plot
 
-makeplots(plotfiles, x_name, y_name, 'seperate')
-makeplots(plotfiles, x_name, y_name, 'same')
+
+fig, ax = plt.subplots(figsize = (6, 5))
+plt.subplots_adjust(
+top=0.95,
+bottom=0.15,
+left=0.15,
+right=0.98,
+hspace=0.2,
+wspace=0.2
+)
+
+for i in range(3,7):
+
+	plt.plot(np.array(data[:,0]),np.array(data[:,i]), label=data_values[i])
+	#ax.set_title("Training mse")
+	ax.set_ylabel(data_values[i])
+	ax.set_xlabel(data_values[0])
+	plt.grid()
+	plot_name = "Task4_"+data_values[0]+"_"+data_values[i]+"_figure.pdf"
+	plt.legend()
+	plt.savefig('../figures/'+plot_name)
+	plt.clf()
