@@ -109,17 +109,15 @@ void analytical_2x2(double T){
   int width = 18;
   int prec  = 8;
 
-  ofile << setw(2)<< "T" << setw(width) <<"Z" << setw(width)
-  << "<eps>" << setw(width) << "<eps2>" << setw(width)
-  << "<m>" << setw(width) << "<m2>";
-  ofile << setw(width) << "C_v"<< setw(width) << "Chi" << endl;
+  ofile << setw(2)<< "T" << setw(width) << "<eps>"
+  << setw(width) << "<m>" << setw(width) << "C_v"<< setw(width) << "chi" << endl;
 
   ofile << setprecision(2) << scientific << T;
-  ofile << setw(width) << setprecision(prec) << scientific << Z;
+  //ofile << setw(width) << setprecision(prec) << scientific << Z;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_epsilon;
-  ofile << setw(width) << setprecision(prec) << scientific << eps2;
+  //ofile << setw(width) << setprecision(prec) << scientific << eps2;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_abs_mag;
-  ofile << setw(width) << setprecision(prec) << scientific << m2;
+  //ofile << setw(width) << setprecision(prec) << scientific << m2;
   ofile << setw(width) << setprecision(prec) << scientific << heat_capacity;
   ofile << setw(width) << setprecision(prec) << scientific << susceptibility;
   ofile << endl;
