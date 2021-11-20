@@ -25,14 +25,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 data_values =  ['samples','E','M', 'expval_eps', 'expval_m', 'C_V', 'sucept']
 data = np.loadtxt('../datafiles/task4.txt',skiprows=1)
-samples = np.array(data[:,0])
-E = np.array(data[:,1])
-M = np.array(data[:,2])
-expval_eps = np.array(data[:,3])
-expval_m = np.array(data[:,4])
-C_V = np.array(data[:,5])
-sucept = np.array(data[:,6])
-
+analytical_values = np.loadtxt('../datafiles/analytical_2x2_T=1.000000.txt',skiprows=1)
 
 
 fig, ax = plt.subplots(figsize = (6, 5))
@@ -47,7 +40,8 @@ wspace=0.2
 
 for i in range(3,7):
 
-	plt.plot(np.array(data[:,0]),np.array(data[:,i]), label=data_values[i])
+	plt.plot(np.array(data[:,0]),np.array(data[:,i]), label="MCMC")
+	plt.plot(np.array(data[:,0]),np.ones(len(data[:,0]))*analytical_values[i-2], label='Analytical')
 	#ax.set_title("Training mse")
 	ax.set_ylabel(data_values[i])
 	ax.set_xlabel(data_values[0])
