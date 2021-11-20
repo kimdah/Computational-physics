@@ -86,7 +86,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     double r = uniform_real_(generator_);
 
 
-    if (r <= probability_ratio ){ //|| deltaE < 0
+    if (r <= probability_ratio || deltaE < 0 ){ //|| deltaE < 0
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       s_[randRow][randCol] *= -1;
