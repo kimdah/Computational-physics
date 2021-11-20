@@ -45,6 +45,7 @@ for i in range(3,7):
 	#ax.set_title("Training mse")
 	ax.set_ylabel(data_values[i])
 	ax.set_xlabel(data_values[0])
+	plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
 	plt.grid()
 	plot_name = "Task4_"+data_values[0]+"_"+data_values[i]+"_figure.pdf"
 	plt.legend()
