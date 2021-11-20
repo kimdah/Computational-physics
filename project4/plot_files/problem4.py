@@ -25,7 +25,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 data_values =  ['samples','E','M', 'expval_eps', 'expval_m', 'C_V', 'sucept']
 data = np.loadtxt('../datafiles/task4.txt',skiprows=1)
-analytical_values = np.loadtxt('../datafiles/analytical_2x2_T=1.000000.txt',skiprows=1)
+analytical_values = np.loadtxt('../datafiles/analytical_2x2_T=1.0.txt',skiprows=1)
 
 
 fig, ax = plt.subplots(figsize = (6, 5))
