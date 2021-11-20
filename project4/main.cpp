@@ -28,7 +28,8 @@ int main(int argc, char const *argv[]) {
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"<< std::endl;
       problem4();
-      return 0; // end main
+      return 0; // quit program
+
     } else if (argc == 6) {
       T = atoi(argv[1]);
       L = atoi(argv[2]);
@@ -69,6 +70,7 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
       ising.run_metropolis_MCMC();
     }
   }
+  ofile.close();
   return 42.42;
 }
 
