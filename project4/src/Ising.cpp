@@ -129,7 +129,7 @@ double Ising::heat_capacity(int n_cycles){
 
 double Ising::susceptibility(int n_cycles){
   // *(1./n_cycles)
-  return (1./N_)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
+  return (1./N_)*(1./T_)*(mean(pow(accumulatedtotalmagnetization_, 2), n_cycles) - pow(mean(abs(accumulatedtotalmagnetization_), n_cycles), 2));
 }
 
 
@@ -149,7 +149,8 @@ int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
   int energy = 0;
   for (int i=0; i<L_; i++){
     for (int j=0; j<L_; j++){
-      energy += - s[i][j] * s[(i+1)%L_][j]  +  s[i][j] * s[i][(j+1)%L_];
+      energy += - s[i][j] * s[(i+1)%L_][j] ;
+      energy += - s[i][j] * s[i][(j+1)%L_];
     }
   }
   totalenergy_ = energy;
