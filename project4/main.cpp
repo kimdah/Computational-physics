@@ -79,7 +79,7 @@ void problem4() {
   // Do all the things we need for Problem 4 here
   int cycles = 100000;
   double temp = 1.0;
-  simulator(cycles, 2, temp, 1337, 0, "task4.txt");
+  simulator(cycles, 2, temp, 1337, 1, "task4.txt");
   analytical_2x2(temp);
 }
 
