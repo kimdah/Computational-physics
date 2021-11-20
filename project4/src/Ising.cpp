@@ -153,6 +153,34 @@ void Ising::calc_energy_of_lattice_state() {
   }
   totalenergy_ = energy;
 }
+// Overload of function above
+// Working
+int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
+  int energy = 0;
+  for (int i=0; i<L_; i++){
+    for (int j=0; j<L_; j++){
+      energy += - s[i][j] * s[(i+1)%L_][j] ;
+      energy += - s[i][j] * s[i][(j+1)%L_];
+    }
+  }
+  totalenergy_ = energy;
+  return energy;
+}
+
+/* // Not working. Gives segmentation fault
+int Ising::calc_tot_energy_of_state(vector<vector<int> > s){
+  // finding the energy of a particular spin configuration s
+  int energy;
+  for(int i=1 ; i<L_+1 ; i++){ //the first row will be the Lth row
+    for(int j=1 ; j<L_+1 ; j++){ //the first column will be the Lth column
+      int i_index = (i + L_)%L_;
+      int j_index = (j + L_)%L_;
+      energy += s[i_index][j_index]*s[i_index-1][j_index] + s[i_index][j_index]*s[i_index][j_index-1];
+    }
+  }
+  return energy;
+}
+ */
 
 // Working
 void Ising::calc_tot_magnetization_of_state(){
