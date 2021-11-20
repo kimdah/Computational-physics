@@ -84,7 +84,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     // Use uniform or normal? Wasn't normal suggested in lectures?
     //double r = uniform_real_(generator_);
     double r = uniform_real_(generator_);
-    
+
 
     if (r <= probability_ratio ){ //|| deltaE < 0
       // Accept spin configuration candidate
@@ -111,13 +111,10 @@ double Ising::mean(double value, int n_cycles){
 }
 
 double Ising::expval_epsilon(int n_cycles){
-  // totalenergy er ikke per cycle, burde den vaere det?
-  //return totalenergy / N_;
   return mean(epsilon_, n_cycles);
 }
 
 double Ising::expval_mag_per_spin(int n_cycles){
-  //return magnetisation / N_;
   return mean(abs(mag_per_spin_), n_cycles);
 }
 

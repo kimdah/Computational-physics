@@ -93,7 +93,7 @@ void analytical_2x2(double T){  // Maybe in Ising.cpp?
   ofstream ofile;
   ofile.open("./datafiles/analytical_2x2_T=" +to_string(T) +".txt");
   int width = 16;
-  int prec  = 5;
+  int prec  = 8;
 
   ofile << setw(width) << setprecision(prec) << scientific << "T";
   ofile << setw(width) << setprecision(prec) << scientific << "<eps>";
