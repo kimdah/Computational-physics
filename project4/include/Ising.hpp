@@ -32,8 +32,10 @@ class Ising {
       vector<vector<int>> run_metropolis_MCMC();
 
       void calc_energy_of_lattice_state();
+      int calc_energy_of_lattice_state(vector<vector<int> > s);
 
       void calc_tot_magnetization_of_state();
+
 
       vector<double> calc_boltzmann_factors(double T);
 
