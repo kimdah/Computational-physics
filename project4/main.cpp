@@ -61,10 +61,11 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
   // Run the sim
   Ising ising(lattice_side_length, T, seed, ordered_spin);
 
+  int sample_rate = 100;
   // Run MCMC cycles:
-  for (int i = 0; i < n_cycles+1; i++) {
+  for (int i = 0; i < ((n_cycles/sample_rate)+1); i++) {
     ising.write_parameters_to_file(ofile);
-    for (int j = 0; j < n_cycles; j++) {
+    for (int j = 0; j < sample_rate; j++) {
       ising.run_metropolis_MCMC();
     }
   }
@@ -73,9 +74,9 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
 
 void problem4() {
   // Do all the things we need for Problem 4 here
-  int cycles = 10000;
+  int cycles = 20000;
   double temp = 1.0;
-  simulator(cycles/100, 20, temp, 1337, 0, "task4.txt");
+  simulator(cycles, 20, temp, 1337, 0, "task4.txt");
   analytical_2x2(temp);
 }
 
