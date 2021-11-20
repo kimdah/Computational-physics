@@ -78,8 +78,13 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
 void problem4() {
   // Do all the things we need for Problem 4 here
   int cycles = 100000;
+<<<<<<< HEAD
   double temp = 1.0;
   simulator(cycles, 2, temp, 1337, 0, "task4.txt"); //unordered
+=======
+  double temp = 10.0;
+  simulator(cycles, 2, temp, 1337, 0, "task4.txt");
+>>>>>>> 532a37321a21a417a85283327abd50a51d00b026
   analytical_2x2(temp);
 }
 

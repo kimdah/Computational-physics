@@ -92,7 +92,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     double r = uniform_real_(generator_);
 
 
-    if (r <= probability_ratio || abs(totalenergy_ + deltaE) < abs(totalenergy_)){ //
+    if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       s_[randRow][randCol] *= -1;
@@ -126,6 +126,10 @@ double Ising::expval_mag_per_spin(int n_cycles){
 
 double Ising::heat_capacity(int n_cycles){
   // (1./n_cycles)
+  //cout << accumulatedtotalenergy_/tot_cycles_ << "\n";
+  //cout << totalenergy_ << "\n";
+  //cout << pow(accumulatedtotalenergy_/tot_cycles_, 2) << "\n";
+  //cout << pow(mean(accumulatedtotalenergy_, n_cycles), 2) << "\n";
   return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
@@ -140,11 +144,41 @@ void Ising::calc_energy_of_lattice_state() {
   double energy = 0;
   for (int i=0; i<L_; i++){
     for (int j=0; j<L_; j++){
-      energy +=  - s_[i][j] * s_[(i+1)%L_][j]  +  s_[i][j] * s_[i][(j+1)%L_];
+      energy +=  - s_[i][j] * s_[(i+1)%L_][j]  -  s_[i][j] * s_[i][(j+1)%L_];
     }
   }
   totalenergy_ = energy;
 }
+<<<<<<< HEAD
+=======
+// Overload of function above
+// Working
+int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
+  int energy = 0;
+  for (int i=0; i<L_; i++){
+    for (int j=0; j<L_; j++){
+      energy += - s[i][j] * s[(i+1)%L_][j]  +  s[i][j] * s[i][(j+1)%L_];
+    }
+  }
+  totalenergy_ = energy;
+  return energy;
+}
+
+/* // Not working. Gives segmentation fault
+int Ising::calc_tot_energy_of_state(vector<vector<int> > s){
+  // finding the energy of a particular spin configuration s
+  int energy;
+  for(int i=1 ; i<L_+1 ; i++){ //the first row will be the Lth row
+    for(int j=1 ; j<L_+1 ; j++){ //the first column will be the Lth column
+      int i_index = (i + L_)%L_;
+      int j_index = (j + L_)%L_;
+      energy += s[i_index][j_index]*s[i_index-1][j_index] + s[i_index][j_index]*s[i_index][j_index-1];
+    }
+  }
+  return energy;
+}
+ */
+>>>>>>> 532a37321a21a417a85283327abd50a51d00b026
 
 // Working
 void Ising::calc_tot_magnetization_of_state(){
