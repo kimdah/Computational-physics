@@ -42,7 +42,7 @@ int main(int argc, char const *argv[]) {
       << " <output_file_name> " << std::endl;
       problem4();
       problem5_6();
-      problem7_8();
+      //problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {

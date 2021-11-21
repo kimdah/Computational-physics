@@ -23,13 +23,13 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
 # T = 1.0 ordered
-dataT1o = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_1.0_ordered.txt', skiprows=1)
+dataT1o = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_1.0_ordered.txt', skiprows=1)
 cycles_T1o = np.array(dataT1o[:,0])
 eps_T1o = np.array(dataT1o[:,3])
 m_T1o = np.array(dataT1o[:,4])
 
 # T = 1.0 unordered
-dataT1u = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_1.0_unordered.txt', skiprows=1)
+dataT1u = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_1.0_unordered.txt', skiprows=1)
 cycles_T1u = np.array(dataT1u[:,0])
 eps_T1u = np.array(dataT1u[:,3])
 m_T1u = np.array(dataT1u[:,4])
@@ -59,13 +59,13 @@ plt.legend()
 plt.savefig('figures/burnin_m_T1.pdf')
 
 # T = 2.4 ordered
-dataT2o = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_2.4_ordered.txt', skiprows=1)
+dataT2o = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_2.4_ordered.txt', skiprows=1)
 cycles_T2o = np.array(dataT2o[:,0])
 eps_T2o = np.array(dataT2o[:,3])
 m_T2o = np.array(dataT2o[:,4])
 
 # T = 2.4 unordered
-dataT2u = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_2.4_unordered.txt', skiprows=1)
+dataT2u = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_2.4_unordered.txt', skiprows=1)
 cycles_T2u = np.array(dataT2u[:,0])
 eps_T2u = np.array(dataT2u[:,3])
 m_T2u = np.array(dataT2u[:,4])

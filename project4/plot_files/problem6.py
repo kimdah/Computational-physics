@@ -48,20 +48,23 @@ for i in range(0,1): # 2
     else:
         T = 2.4
 
-    data = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_%.1f_unordered.txt' %T, skiprows=1)
-    eps = np.array(data[:,3]) # np.array?
+    data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_unordered.txt' %T, skiprows=1)
+    eps= np.array(data[1:,3]) # np.array?
+    print(eps[0])
+    #eps = eps_temp[]
     print(len(eps))
     # Using Freedman–Diaconis rule to be more scientific in choosing the "right" bin width
     q25, q75 = np.nanpercentile(eps, [0.25, 0.75])
     print(q25, q75)
-    bin_width = 2 * (q75 - q25) * len(eps) ** (-1/3)
+    bin_width = 2 * (abs(q75) - abs(q25)) * len(eps) ** (-1/3)
+    print(bin_width)
     print(max(eps), eps.min())
-    #bins = round((eps.max() - eps.min()) / bin_width)
-    #print("Freedman–Diaconis number of bins:", bins)
-    bins = 30
+    bins = round((eps.max() - eps.min()) / bin_width)
+    print("Freedman–Diaconis number of bins:", bins)
+    #bins = 30
 
     plt.style.use('seaborn-white')
-    plt.hist(eps, density=True, bins=bins, stacked=True) #density=True?
+    #plt.hist(eps, density=True, bins=bins, stacked=True) #density=True?
 
     #plt.hist(x, density=True, bins=30)  # density=False would make counts
     plt.ylabel('Probability')
