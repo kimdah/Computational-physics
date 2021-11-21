@@ -12,7 +12,7 @@ using namespace std;
 class Ising {
     public:
         int L_, N_, seed, magnetisation_,sample_, tot_cycles_;
-        double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_;
+        double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_, burn_in_cycles_;
         double E2, M2;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
@@ -48,6 +48,8 @@ class Ising {
       //void analytical_2x2(double T);
 
       void write_parameters_to_file(ofstream& ofile);
+      void write_some_parameters_to_file(ofstream& ofile);
+      void sample_average_over_sampled_values(ofstream& ofile, int samples);
 
       void print();
 

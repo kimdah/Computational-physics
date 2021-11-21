@@ -18,6 +18,7 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     mag_per_spin_ = 0;
     epsilon_ = 0;
     tot_cycles_ = 0;
+    burn_in_cycles_ = 0;
 
     // Trying to make sure everything gets overwritten for each instance of the class
     totalenergy_ = 0;
@@ -26,10 +27,10 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     accumulatedtotalmagnetization_ = 0;
     magnetisation_ = 0;
     E2 = 0; M2 = 0;
-    cout << "sample__: " << sample_ << endl;
-    cout << "accumulatedtotalmagnetization_: " << accumulatedtotalmagnetization_ << endl;
-    cout << "totalenergy_: " << totalenergy_ << endl;
-    cout << "magnetisation_: " << magnetisation_ << endl;
+    // cout << "sample__: " << sample_ << endl;
+    // cout << "accumulatedtotalmagnetization_: " << accumulatedtotalmagnetization_ << endl;
+    // cout << "totalenergy_: " << totalenergy_ << endl;
+    // cout << "magnetisation_: " << magnetisation_ << endl;
 
 
     //Initalise randomness with Mersenne Twister 19937 random number generator
@@ -72,7 +73,6 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     // flip random spin
     randRow = lattice_uniform_distribution_(generator_);
     randCol = lattice_uniform_distribution_(generator_);
-    //s_[randRow][randCol] *= -1; // Flipping a random spin. Will get flipped back if it fails later
 
     // examining surrounding spins to figure out index in boltzmann_factor vector
     // for computing the probability ratio. Computes the difference in energy after flipping a spin
@@ -82,43 +82,32 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
            + s_[(randRow + 1) % L_][randCol] // Neighbour above
            + s_[(randRow - 1 + L_) % L_][randCol]); // Neighbour below
 
-    // boltzmann factor depends on flipping a +1 to -1, so the value will have
-    // reverse index when a negative spin is flipped to positive.
-
-    // if(s_[randRow][randCol] == 1){ // if spin has been flipped to positive
-    //   index = 5 - deltaE/4 + 2; // reversing index
-    // }else{
-    //   index = deltaE/4 + 2;
-    // }
     index = deltaE/4 + 2; // [4] = 8/4+2, [3] = 4/4+2, [2] = 0/4+2, [1] = -4/4+2, [0] = -8/4+2
     // Acceptance ratio
     double probability_ratio = boltzmann_factors_[index]; // w_i/w_j = exp(-beta*deltaE)
-
-    // Use uniform or normal? Wasn't normal suggested in lectures?
-    //double r = uniform_real_(generator_);
     double r = uniform_real_(generator_);
-
-
+    
     if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       s_[randRow][randCol] *= -1;
       totalenergy_ += deltaE;
       magnetisation_ += 2 * s_[randRow][randCol]; // Equation 13.7 in lectures2015 M_(i+1) = M_i + 2*s_(i+1) (= +/- 2 )
-    } else {
-      //Reject spin-flip
-      //s_[randRow][randCol] *= -1;
-    }
+    } 
   }
   //Adding the values from each cycle, so it can be used to find exp values.
-  epsilon_ += 1.0*totalenergy_/N_;
-  mag_per_spin_ += 1.0*abs(magnetisation_)/ N_;
-  accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
-  accumulatedtotalmagnetization_ += abs(magnetisation_);
-  M2 += pow(magnetisation_, 2);
-  E2 += pow(totalenergy_, 2);
+
+  if (burn_in_cycles_ < tot_cycles_) {
+    epsilon_ += 1.0*totalenergy_/N_;
+    mag_per_spin_ += 1.0*abs(magnetisation_)/ N_;
+    accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
+    accumulatedtotalmagnetization_ += abs(magnetisation_);
+    M2 += pow(magnetisation_, 2);
+    E2 += pow(totalenergy_, 2);
+  }
+
   tot_cycles_ += 1;
-  return s_; // not neccessary to return s_?
+  return s_; // not neccessary to return s_? No not really!
 }
 
 double Ising::mean(double value, int n_cycles){
@@ -221,15 +210,50 @@ vector<double> Ising::calc_boltzmann_factors(double T){
 // Adds current parameters to referenced ofstream
 void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
-  int prec  = 8;
 
   ofile << setw(width) << tot_cycles_;
   ofile << setw(width) << totalenergy_;
   ofile << setw(width) << magnetisation_;
+  ofile << setw(width) << expval_epsilon(tot_cycles_-burn_in_cycles_);
+  ofile << setw(width) << expval_mag_per_spin(tot_cycles_-burn_in_cycles_);
+  ofile << setw(width) << heat_capacity(tot_cycles_-burn_in_cycles_);
+  ofile << setw(width) << susceptibility(tot_cycles_-burn_in_cycles_);
+  ofile << endl;
+  sample_+=1;
+}
+
+void Ising::write_some_parameters_to_file(ofstream& ofile) {
+  int width = 16;
+  ofile << setw(width) << T_;
   ofile << setw(width) << expval_epsilon(tot_cycles_);
   ofile << setw(width) << expval_mag_per_spin(tot_cycles_);
   ofile << setw(width) << heat_capacity(tot_cycles_);
   ofile << setw(width) << susceptibility(tot_cycles_);
+  //ofile << setw(width) << totalenergy_/N_;
+  ofile << endl;
+  sample_+=1;
+}
+
+void Ising::sample_average_over_sampled_values(ofstream& ofile, int samples) {
+  double eps, mag, hc, suc;
+  eps = expval_epsilon(tot_cycles_);
+  mag = expval_mag_per_spin(tot_cycles_);
+  hc = heat_capacity(tot_cycles_);
+  suc = susceptibility(tot_cycles_);
+  for (int i = 0; i<samples-1; i++) {
+    run_metropolis_MCMC();
+    eps += expval_epsilon(tot_cycles_);
+    mag += expval_mag_per_spin(tot_cycles_);
+    hc += heat_capacity(tot_cycles_);
+    suc += susceptibility(tot_cycles_); 
+  }
+  int width = 16;
+  ofile << setw(width) << T_;
+  ofile << setw(width) << eps/samples;
+  ofile << setw(width) << mag/samples;
+  ofile << setw(width) << hc/samples;
+  ofile << setw(width) << suc/samples;
+  //ofile << setw(width) << totalenergy_/N_;
   ofile << endl;
   sample_+=1;
 }
