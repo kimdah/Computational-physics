@@ -100,7 +100,7 @@ void problem4() {
 
 void problem5_6() {
   // or use cml arguements
-  int cycles = 100000;
+  int cycles = 10000;
   int L = 20;
   double T_1 = 1.0;
   double T_2 = 2.4;
