@@ -7,7 +7,7 @@
 #include <cmath>
 #include <iomanip>
 #include <omp.h>
-
+#include <chrono>
 #include "./include/Ising.hpp"
 
 using namespace std;
@@ -15,8 +15,17 @@ using namespace std;
 double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
 void problem4();
 void problem5_6();
+void problem7_8();
 void analytical_2x2(double T);
-void phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
+double phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
+double phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
+
+template <typename T> string to_string_with_precision(const T a_value, const int n = 1) {
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return out.str();
+}
 
 int main(int argc, char const *argv[]) {
   int T, L, n_cycles, ordered_spin, seed;
@@ -33,7 +42,7 @@ int main(int argc, char const *argv[]) {
       << " <output_file_name> " << std::endl;
       problem4();
       problem5_6();
-      phase_transitions_parallel(0, 10, 10, 20, 1337, 0);
+      problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -82,15 +91,16 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
 
 void problem4() {
   // Do all the things we need for Problem 4 here
-  int cycles = 100000;
+  int cycles = 10000;
   double temp = 1.0;
   simulator(cycles, 2, temp, 1337, 0, "task4.txt"); //unordered
+  // Test: simulator(cycles, 40, 2.4, 1337, 0, "task6.txt"); //unordered
   analytical_2x2(temp);
 }
 
 void problem5_6() {
   // or use cml arguements
-  int cycles = 100000;
+  int cycles = 10000;
   int L = 20;
   double T_1 = 1.0;
   double T_2 = 2.4;
@@ -103,6 +113,37 @@ void problem5_6() {
   // T = 2.4
   simulator(cycles, L, T_2, seed, 1, "ncyc_1e5_L_20_T_2.4_ordered"); // for -1 also?
   simulator(cycles, L, T_2, seed, 0, "ncyc_1e5_L_20_T_2.4_unordered");
+}
+
+void problem7_8() {
+  // Problem 7: Speedup
+  double time_parallel = 0;
+  double time_serial = 0;
+  auto start = chrono::high_resolution_clock::now();
+    //Broad sweeps
+  phase_transitions_parallel(1.6, 2.6, 10, 40, 1337, 0);
+  auto end = chrono::high_resolution_clock::now();
+  chrono::duration<double> p = end - start;
+  time_parallel = p.count();
+
+  start = chrono::high_resolution_clock::now();
+    //Broad sweeps
+  phase_transitions_serial(1.6, 2.6, 10, 40, 1337, 0);
+  end = chrono::high_resolution_clock::now();
+  chrono::duration<double> s = end - start;
+  time_serial = s.count();
+  cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
+  cout << "Speedup = " << time_serial/time_parallel << "\n";
+  // Problem 8: Critical T
+  //Broad sweeps of T=2.1 to T=2.4
+  //L=40
+  phase_transitions_parallel(2.1, 2.4, 10, 40, 1337, 0);
+  //L=60
+  phase_transitions_parallel(2.1, 2.4, 10, 60, 1337, 0);
+  //L=80
+  phase_transitions_parallel(2.1, 2.4, 10, 80, 1337, 0);
+  //L=100
+  phase_transitions_parallel(2.1, 2.4, 10, 100, 1337, 0);
 }
 
 
@@ -147,9 +188,13 @@ void analytical_2x2(double T){
   ofile.close();
 }
 
-void phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin){
+double phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin){
   double h = (T_end - T_start) / steps;
-  string filename = "datafiles/phase_transitions_parallel.txt";
+  int burn_in = 10000;
+  int samples = 100;
+  double time = 0;
+  //cout << "starting parallel region \n";
+  string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
   ofstream ofile;
   ofile.open(filename);
   int width = 16;
@@ -158,15 +203,50 @@ void phase_transitions_parallel(double T_start, double T_end, int steps, int lat
   ofile << setw(width) << "<m>";
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
-  ofile << endl;   
+  ofile << endl;
   #pragma omp parallel for
-  for (int i = 0; i < steps; i++){
+  for (int i = 0; i < steps+1; i++){
+    //cout << "Process doing stuff " << i << "\n";
     double T = T_start + i * h;
     Ising ising(lattice_side_length, T, seed, ordered_spin);
-    for (int j = 0; j < 10000; j++) {
+    for (int j = 0; j < burn_in; j++) {
       ising.run_metropolis_MCMC();
     }
-    ising.write_some_parameters_to_file(ofile);  
-    }
-    ofile.close();
+    #pragma omp critical
+    ising.sample_average_over_sampled_values(ofile, samples);
+  }
+  ofile.close();
+  return time;
 }
+
+double phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin) {
+  double h = (T_end - T_start) / steps;
+  int burn_in = 10000;
+  int samples = 100;
+  double time = 0;
+  //cout << "starting parallel region \n";
+  string filename = "datafiles/ignore.txt";
+  ofstream ofile;
+  ofile.open(filename);
+  int width = 16;
+  ofile << setw(width) << "T";
+  ofile << setw(width) << "<eps>";
+  ofile << setw(width) << "<m>";
+  ofile << setw(width) << "C_V";
+  ofile << setw(width) << "Sucept.";
+  ofile << endl;
+  for (int i = 0; i < steps+1; i++){
+    //cout << "Process doing stuff " << i << "\n";
+    double T = T_start + i * h;
+    Ising ising(lattice_side_length, T, seed, ordered_spin);
+    for (int j = 0; j < burn_in; j++) {
+      ising.run_metropolis_MCMC();
+    }
+    ising.sample_average_over_sampled_values(ofile, samples);
+  }
+  ofile.close();
+  return time;
+}
+
+
+
