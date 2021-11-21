@@ -19,6 +19,7 @@ void problem4();
 void problem5_6();
 void problem7_8();
 void analytical_2x2(double T);
+void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, const int avg = 3);
 mat phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
 mat phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
 
@@ -120,8 +121,9 @@ void problem7_8() {
 
   // Problem 7: Speedup
   double sum_average=0;
-  int avg_itterations=10;
-  for (int i=0; i<avg_itterations; i++){
+  int avg_itterations=1;
+  int resolution = 10;
+ /*  for (int i=0; i<avg_itterations; i++){
     
     double time_parallel = 0;
     double time_serial = 0;
@@ -140,23 +142,28 @@ void problem7_8() {
     time_serial = s.count();
     //cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
     //cout << "Speedup = " << time_serial/time_parallel << "\n";
-    sum_average += time_serial+time_parallel;
+    sum_average += time_serial/time_parallel;
     cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_itterations<<endl;
   }
-  cout << "Average speedup over "<<avg_itterations<<" runs, was found to be: "<< sum_average/avg_itterations<<endl;
+  cout << "Average speedup over "<<avg_itterations<<" runs, was found to be: "<< sum_average/avg_itterations<<endl; */
 
-
-
-  // Problem 8: Critical T
+  get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5);
+  get_phase_transition_averages(2.0, 2.6, resolution, 400, 41337, 0, 5);
+  //get_phase_transition_averages(2.1, 2.3, resolution, 40, 41337, 0, 10);
+/*   // Problem 8: Critical T
   //Broad sweeps of T=2.1 to T=2.4
   //L=40
-  phase_transitions_parallel(2.1, 2.4, resolution, 40, 41337, 0);
+  get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5);
+
   //L=60
-  phase_transitions_parallel(2.1, 2.4, resolution, 60, 41337, 0);
+  get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5);
+
   //L=80
-  phase_transitions_parallel(2.1, 2.4, resolution, 80, 41337, 0);
+  get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5);
+
   //L=100
-  phase_transitions_parallel(2.1, 2.4, resolution, 100, 41337, 0);
+  get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5); */
+
 }
 
 
@@ -201,14 +208,34 @@ void analytical_2x2(double T){
   ofile.close();
 }
 
-void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin) {
-  mat averages = mat(steps, 5, fill::zeros);
-  int iters = 3;
-  for (int i = 0; i<iters; i++) {
-    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed,  ordered_spin)
+void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int avg) {
+  mat averages = mat(steps+1, 5, fill::zeros);
+   
+  for (int i = 0; i<avg; i++) {
+    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin);
   }
-  averages = averages/iters;
 
+  averages = averages/avg;
+  string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
+  ofstream ofile;
+  ofile.open(filename);
+  int width = 16;
+  ofile << setw(width) << "T";
+  ofile << setw(width) << "<eps>";
+  ofile << setw(width) << "<m>";
+  ofile << setw(width) << "C_V";
+  ofile << setw(width) << "Sucept.";
+  ofile << endl;
+  
+  for(int row = 0; row<steps+1; row++) {
+    for(int column = 0; column<5; column++) {
+      ofile << setw(width) << averages(row, column);
+    }
+    ofile << endl;
+    
+  }
+  ofile.close();
+  
 }
 
 mat phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin){
@@ -216,70 +243,45 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
   int burn_in = 10000;
   int samples = 100;
   //matrix to store results
-  mat results = mat(steps, 5, fill::zeros);
-  //cout << "starting parallel region \n";
-  string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
-  ofstream ofile;
-  ofile.open(filename);
-  int width = 16;
-  ofile << setw(width) << "T";
-  ofile << setw(width) << "<eps>";
-  ofile << setw(width) << "<m>";
-  ofile << setw(width) << "C_V";
-  ofile << setw(width) << "Sucept.";
-  ofile << endl;
+  mat results = mat(steps+1, 5, fill::zeros);
 
   #pragma omp parallel for
   for (int i = 0; i < steps+1; i++){
     int thread_id = omp_get_thread_num();
-    //cout << "Process doing stuff " << i << "\n";
     double T = T_start + i * h;
     Ising ising(lattice_side_length, T, seed+thread_id, ordered_spin);
+
     for (int j = 0; j < burn_in; j++) {
       ising.run_metropolis_MCMC();
     }
-    #pragma omp critical
-    ising.sample_average_over_sampled_values(ofile, samples);
+
     vec params = ising.sample_average_over_sampled_values(samples);
     results(i,0) = T;
     results(i,1) = params(0);
     results(i,2) = params(1);
     results(i,3) = params(2);
     results(i,4) = params(3);
+    
   }
-  ofile.close();
   return results;
 }
 
 mat phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin) {
- double h = (T_end - T_start) / steps;
+  double h = (T_end - T_start) / steps;
   int burn_in = 10000;
   int samples = 100;
   //matrix to store results
-  mat results = mat(steps, 2, fill::zeros);
-  //cout << "starting parallel region \n";
-  string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
-  ofstream ofile;
-  ofile.open(filename);
-  int width = 16;
-  ofile << setw(width) << "T";
-  ofile << setw(width) << "<eps>";
-  ofile << setw(width) << "<m>";
-  ofile << setw(width) << "C_V";
-  ofile << setw(width) << "Sucept.";
-  ofile << endl;
+  mat results = mat(steps+1, 5, fill::zeros);
 
-  
   for (int i = 0; i < steps+1; i++){
-    int thread_id = omp_get_thread_num();
-    //cout << "Process doing stuff " << i << "\n";
+    
     double T = T_start + i * h;
-    Ising ising(lattice_side_length, T, seed+thread_id, ordered_spin);
+    Ising ising(lattice_side_length, T, seed, ordered_spin);
+
     for (int j = 0; j < burn_in; j++) {
       ising.run_metropolis_MCMC();
     }
-   
-    ising.sample_average_over_sampled_values(ofile, samples);
+
     vec params = ising.sample_average_over_sampled_values(samples);
     results(i,0) = T;
     results(i,1) = params(0);
@@ -287,6 +289,5 @@ mat phase_transitions_serial(double T_start, double T_end, int steps, int lattic
     results(i,3) = params(2);
     results(i,4) = params(3);
   }
-  ofile.close();
   return results;
 }

@@ -129,7 +129,7 @@ double Ising::heat_capacity(int n_cycles){
   //cout << pow(mean(accumulatedtotalenergy_, n_cycles), 2) << "\n";
   //return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 
-  return (1./N_)*(1./pow(T_,2))*(mean(E2, n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+  return (1./N_)*(1./(T_*T_))*(mean(E2, n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
 }
 
 double Ising::susceptibility(int n_cycles){
