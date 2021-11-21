@@ -70,7 +70,7 @@ axes[0,0].plot(temperature_L100, eps_L100, label='L=100',linewidth=0.5)
 axes[0,0].legend()
 
 # Plot magnetisation
-axes[1,0].set(ylabel='$<|m| >$ (1)')
+axes[1,0].set(ylabel='$<|m|>$ (1)')
 axes[1,0].plot(temperature_L40, m_L40, label='L=40',linewidth=0.5)
 axes[1,0].plot(temperature_L60, m_L60, label='L=60',linewidth=0.5)
 axes[1,0].plot(temperature_L80, m_L80, label='L=80',linewidth=0.5)
@@ -79,7 +79,7 @@ axes[1,0].legend()
 axes[1,0].set(xlabel='$T$')
 
 # Plot heat capacity
-axes[0,1].set(ylabel='$<C_v >$ $(k_B^2)$')
+axes[0,1].set(ylabel='$C_v$ $(k_{B}^{2})$')
 axes[0,1].plot(temperature_L40, cv_L40, label='L=40',linewidth=0.5)
 axes[0,1].plot(temperature_L60, cv_L60, label='L=60',linewidth=0.5)
 axes[0,1].plot(temperature_L80, cv_L80, label='L=80',linewidth=0.5)
@@ -87,7 +87,7 @@ axes[0,1].plot(temperature_L100, cv_L100, label='L=100',linewidth=0.5)
 axes[0,1].legend()
 
 # Plot susceptibility
-axes[1,1].set(ylabel='$<\chi >$ $(k_{B}/J)$')
+axes[1,1].set(ylabel='$\chi$ $(k_{B}/J)$')
 axes[1,1].plot(temperature_L40, chi_L40, label='L=40',linewidth=0.5)
 axes[1,1].plot(temperature_L60, chi_L60, label='L=60',linewidth=0.5)
 axes[1,1].plot(temperature_L80, chi_L80, label='L=80',linewidth=0.5)
