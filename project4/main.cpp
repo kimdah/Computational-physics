@@ -59,7 +59,7 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
   ofile << setw(width) << "<eps>";
   ofile << setw(width) << "<m>";
   ofile << setw(width) << "C_V";
-  ofile << setw(width) << "Sucept.";
+  ofile << setw(width) << "Suscept.";
   ofile << endl;
   // -----------------------------
   // Run the sim
@@ -94,12 +94,12 @@ void problem5_6() {
   int seed = 3572;
 
   // T = 1.0 :
-  simulator(cycles, L, T_1, seed, 1, "ncyc_1e5_L_20_T_1.0_ordered"); // for -1 also?
-  simulator(cycles, L, T_1, seed, 0, "ncyc_1e5_L_20_T_1.0_unordered");
+  simulator(cycles, L, T_1, seed, 1, "ncyc_1e5_L_20_T_1.0_ordered.txt"); // for -1 also?
+  simulator(cycles, L, T_1, seed, 0, "ncyc_1e5_L_20_T_1.0_unordered.txt");
 
   // T = 2.4
-  simulator(cycles, L, T_2, seed, 1, "ncyc_1e5_L_20_T_2.4_ordered"); // for -1 also?
-  simulator(cycles, L, T_2, seed, 0, "ncyc_1e5_L_20_T_2.4_unordered");
+  simulator(cycles, L, T_2, seed, 1, "ncyc_1e5_L_20_T_2.4_ordered.txt"); // for -1 also?
+  simulator(cycles, L, T_2, seed, 0, "ncyc_1e5_L_20_T_2.4_unordered.txt");
 }
 
 
