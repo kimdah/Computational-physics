@@ -28,14 +28,17 @@ wspace=0.2
 )
 
 # CHOSE UNORDERED - MAYBE DO BOTH?
-for i in range(0,2): 
+for i in range(0,2):
     if i == 0:
         T = 1.0
+        alpha = 1 # transparency factor
     else:
         T = 2.4
+        alpha = 0.5
 
-    data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_unordered.txt' %T, skiprows=1)
-    eps = np.array(data[1:,3]) # np.array?
+    data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_ordered.txt' %T, skiprows=1)
+    eps = np.array(data[1:,1]) # np.array?
+    print(eps[0])
     # Using Freedman–Diaconis rule to be more scientific in choosing the "right" bin width
     q25, q75 = np.percentile(eps, [0.25, 0.75])
     #print(q25, q75)
@@ -45,8 +48,10 @@ for i in range(0,2):
     # print(min(eps), min(abs(eps)), abs(min(eps)))
     # print(max(abs(eps))- min(abs(eps)))
     #bin_width = 0.01
-    bins = round((max(abs(eps))- min(abs(eps))) / bin_width)
-    print("Freedman–Diaconis number of bins:", bins)
+
+    # bins = round((max(abs(eps))- min(abs(eps))) / bin_width)
+    # print("Freedman–Diaconis number of bins:", bins)
+
     #bins = 30
     bins = round(np.sqrt(len(eps))) # 100
     print(np.sqrt(len(eps)), len(eps))
@@ -54,8 +59,8 @@ for i in range(0,2):
     print("bin_width: ", round((max(abs(eps))- min(abs(eps)))/bins))
 
     #plt.style.use('seaborn-white')
-    plt.hist(eps, density=True, bins=bins, stacked=True)
+    plt.hist(eps, density=True, alpha=alpha, bins=bins, stacked=True)
 
-    plt.ylabel('$p_{\epsilon}(\epsilon)_{est}$')
-    plt.xlabel('$\epsilon$')
-    plt.show()
+plt.ylabel('$p_{\epsilon}(\epsilon)_{est}$')
+plt.xlabel('$\epsilon$')
+plt.show()

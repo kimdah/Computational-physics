@@ -66,7 +66,8 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
   int width = 16;
   int prec  = 8;
   ofile << setw(width) << "Sample#";
-  ofile << setw(width) << "E";
+  //ofile << setw(width) << "E";
+  ofile << setw(width) << "eps";
   ofile << setw(width) << "M";
   ofile << setw(width) << "<eps>";
   ofile << setw(width) << "<m>";

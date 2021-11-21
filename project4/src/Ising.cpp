@@ -68,7 +68,7 @@ void Ising::generate_unordered_lattice() {
 
 vector<vector<int>> Ising::run_metropolis_MCMC(){
   int randRow, randCol, index, deltaE;
-
+  eps_ = 0;
   for (int c = 0; c < N_; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     randRow = lattice_uniform_distribution_(generator_);
@@ -86,18 +86,24 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     // Acceptance ratio
     double probability_ratio = boltzmann_factors_[index]; // w_i/w_j = exp(-beta*deltaE)
     double r = uniform_real_(generator_);
-    
+
+    //eps_cycle[c] = (totalenergy_ + deltaE)/N_;
+
     if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       s_[randRow][randCol] *= -1;
       totalenergy_ += deltaE;
+      eps_ = (totalenergy_) /N_; // last eps of cycle
       magnetisation_ += 2 * s_[randRow][randCol]; // Equation 13.7 in lectures2015 M_(i+1) = M_i + 2*s_(i+1) (= +/- 2 )
-    } 
+    }
   }
   //Adding the values from each cycle, so it can be used to find exp values.
 
+
+
   if (burn_in_cycles_ < tot_cycles_) {
+    //eps_ = (totalenergy_) /N_;
     epsilon_ += 1.0*totalenergy_/N_;
     mag_per_spin_ += 1.0*abs(magnetisation_)/ N_;
     accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
@@ -212,7 +218,8 @@ void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
 
   ofile << setw(width) << tot_cycles_;
-  ofile << setw(width) << totalenergy_;
+  //ofile << setw(width) << totalenergy_;
+  ofile << setw(width) << eps_;
   ofile << setw(width) << magnetisation_;
   ofile << setw(width) << expval_epsilon(tot_cycles_-burn_in_cycles_);
   ofile << setw(width) << expval_mag_per_spin(tot_cycles_-burn_in_cycles_);
@@ -234,6 +241,8 @@ void Ising::write_some_parameters_to_file(ofstream& ofile) {
   sample_+=1;
 }
 
+
+
 void Ising::sample_average_over_sampled_values(ofstream& ofile, int samples) {
   double eps, mag, hc, suc;
   eps = expval_epsilon(tot_cycles_);
@@ -245,7 +254,7 @@ void Ising::sample_average_over_sampled_values(ofstream& ofile, int samples) {
     eps += expval_epsilon(tot_cycles_);
     mag += expval_mag_per_spin(tot_cycles_);
     hc += heat_capacity(tot_cycles_);
-    suc += susceptibility(tot_cycles_); 
+    suc += susceptibility(tot_cycles_);
   }
   int width = 16;
   ofile << setw(width) << T_;
