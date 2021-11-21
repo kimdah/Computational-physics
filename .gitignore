@@ -5,4 +5,4 @@
 *.out
 *.o
 
-#makefile
+makefile
