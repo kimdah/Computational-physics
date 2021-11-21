@@ -91,7 +91,7 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
 
 void problem4() {
   // Do all the things we need for Problem 4 here
-  int cycles = 10000;
+  int cycles = 100000;
   double temp = 1.0;
   simulator(cycles, 2, temp, 1337, 0, "task4.txt"); //unordered
   // Test: simulator(cycles, 40, 2.4, 1337, 0, "task6.txt"); //unordered
