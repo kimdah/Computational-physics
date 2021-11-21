@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <armadillo>
 
 using namespace std;
 
@@ -49,6 +50,7 @@ class Ising {
 
       void write_parameters_to_file(ofstream& ofile);
       void write_some_parameters_to_file(ofstream& ofile);
+      arma::vec sample_average_over_sampled_values(int samples);
       void sample_average_over_sampled_values(ofstream& ofile, int samples);
 
       void print();

@@ -8,17 +8,19 @@
 #include <iomanip>
 #include <omp.h>
 #include <chrono>
+#include <armadillo>
 #include "./include/Ising.hpp"
 
 using namespace std;
+using namespace arma;
 // Performs simulations based on parameter inputs
-double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen);
+double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen, const int sample_rate = 100);
 void problem4();
 void problem5_6();
 void problem7_8();
 void analytical_2x2(double T);
-double phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
-double phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
+mat phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
+mat phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
 
 template <typename T> string to_string_with_precision(const T a_value, const int n = 1) {
     std::ostringstream out;
@@ -42,7 +44,7 @@ int main(int argc, char const *argv[]) {
       << " <output_file_name> " << std::endl;
       problem4();
       problem5_6();
-      //problem7_8();
+      problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -57,7 +59,7 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name) {
+double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name, int sample_rate) {
    // ------ Output-file --------
   string filename = "datafiles/" + output_file_name;
   ofstream ofile;
@@ -78,7 +80,6 @@ double simulator(int n_cycles, int lattice_side_length, double T, int seed, int 
   // Run the sim
   Ising ising(lattice_side_length, T, seed, ordered_spin);
 
-  int sample_rate = 100;
   // Run MCMC cycles:
   for (int i = 0; i < ((n_cycles/sample_rate)+1); i++) {
     ising.write_parameters_to_file(ofile);
@@ -117,34 +118,46 @@ void problem5_6() {
 }
 
 void problem7_8() {
-  // Problem 7: Speedup
-  double time_parallel = 0;
-  double time_serial = 0;
-  auto start = chrono::high_resolution_clock::now();
-    //Broad sweeps
-  phase_transitions_parallel(1.6, 2.6, 10, 40, 1337, 0);
-  auto end = chrono::high_resolution_clock::now();
-  chrono::duration<double> p = end - start;
-  time_parallel = p.count();
 
-  start = chrono::high_resolution_clock::now();
-    //Broad sweeps
-  phase_transitions_serial(1.6, 2.6, 10, 40, 1337, 0);
-  end = chrono::high_resolution_clock::now();
-  chrono::duration<double> s = end - start;
-  time_serial = s.count();
-  cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
-  cout << "Speedup = " << time_serial/time_parallel << "\n";
+  // Problem 7: Speedup
+  double sum_average=0;
+  int avg_itterations=10;
+  for (int i=0; i<avg_itterations; i++){
+
+    double time_parallel = 0;
+    double time_serial = 0;
+    auto start = chrono::high_resolution_clock::now();
+      //Broad sweeps
+    phase_transitions_parallel(1.6, 2.6, 10, 40, 1337+i, 0);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> p = end - start;
+    time_parallel = p.count();
+
+    start = chrono::high_resolution_clock::now();
+      //Broad sweeps
+    phase_transitions_serial(1.6, 2.6, 10, 40, 1337+i, 0);
+    end = chrono::high_resolution_clock::now();
+    chrono::duration<double> s = end - start;
+    time_serial = s.count();
+    //cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
+    //cout << "Speedup = " << time_serial/time_parallel << "\n";
+    sum_average += time_serial+time_parallel;
+    cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_itterations<<endl;
+  }
+  cout << "Average speedup over "<<avg_itterations<<" runs, was found to be: "<< sum_average/avg_itterations<<endl;
+
+
+
   // Problem 8: Critical T
   //Broad sweeps of T=2.1 to T=2.4
   //L=40
-  phase_transitions_parallel(2.1, 2.4, 10, 40, 1337, 0);
+  phase_transitions_parallel(2.1, 2.4, resolution, 40, 41337, 0);
   //L=60
-  phase_transitions_parallel(2.1, 2.4, 10, 60, 1337, 0);
+  phase_transitions_parallel(2.1, 2.4, resolution, 60, 41337, 0);
   //L=80
-  phase_transitions_parallel(2.1, 2.4, 10, 80, 1337, 0);
+  phase_transitions_parallel(2.1, 2.4, resolution, 80, 41337, 0);
   //L=100
-  phase_transitions_parallel(2.1, 2.4, 10, 100, 1337, 0);
+  phase_transitions_parallel(2.1, 2.4, resolution, 100, 41337, 0);
 }
 
 
@@ -189,11 +202,22 @@ void analytical_2x2(double T){
   ofile.close();
 }
 
-double phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin){
+void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin) {
+  mat averages = mat(steps, 5, fill::zeros);
+  int iters = 3;
+  for (int i = 0; i<iters; i++) {
+    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed,  ordered_spin)
+  }
+  averages = averages/iters;
+
+}
+
+mat phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin){
   double h = (T_end - T_start) / steps;
   int burn_in = 10000;
   int samples = 100;
-  double time = 0;
+  //matrix to store results
+  mat results = mat(steps, 5, fill::zeros);
   //cout << "starting parallel region \n";
   string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
   ofstream ofile;
@@ -208,26 +232,34 @@ double phase_transitions_parallel(double T_start, double T_end, int steps, int l
 
   #pragma omp parallel for
   for (int i = 0; i < steps+1; i++){
+    int thread_id = omp_get_thread_num();
     //cout << "Process doing stuff " << i << "\n";
     double T = T_start + i * h;
-    Ising ising(lattice_side_length, T, seed, ordered_spin);
+    Ising ising(lattice_side_length, T, seed+thread_id, ordered_spin);
     for (int j = 0; j < burn_in; j++) {
       ising.run_metropolis_MCMC();
     }
     #pragma omp critical
     ising.sample_average_over_sampled_values(ofile, samples);
+    vec params = ising.sample_average_over_sampled_values(samples);
+    results(i,0) = T;
+    results(i,1) = params(0);
+    results(i,2) = params(1);
+    results(i,3) = params(2);
+    results(i,4) = params(3);
   }
   ofile.close();
-  return time;
+  return results;
 }
 
-double phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin) {
-  double h = (T_end - T_start) / steps;
+mat phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin) {
+ double h = (T_end - T_start) / steps;
   int burn_in = 10000;
   int samples = 100;
-  double time = 0;
+  //matrix to store results
+  mat results = mat(steps, 2, fill::zeros);
   //cout << "starting parallel region \n";
-  string filename = "datafiles/ignore.txt";
+  string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
   ofstream ofile;
   ofile.open(filename);
   int width = 16;
@@ -237,15 +269,25 @@ double phase_transitions_serial(double T_start, double T_end, int steps, int lat
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
   ofile << endl;
+
+
   for (int i = 0; i < steps+1; i++){
+    int thread_id = omp_get_thread_num();
     //cout << "Process doing stuff " << i << "\n";
     double T = T_start + i * h;
-    Ising ising(lattice_side_length, T, seed, ordered_spin);
+    Ising ising(lattice_side_length, T, seed+thread_id, ordered_spin);
     for (int j = 0; j < burn_in; j++) {
       ising.run_metropolis_MCMC();
     }
+
     ising.sample_average_over_sampled_values(ofile, samples);
+    vec params = ising.sample_average_over_sampled_values(samples);
+    results(i,0) = T;
+    results(i,1) = params(0);
+    results(i,2) = params(1);
+    results(i,3) = params(2);
+    results(i,4) = params(3);
   }
   ofile.close();
-  return time;
+  return results;
 }

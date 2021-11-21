@@ -8,6 +8,7 @@
 #include <random>
 #include <string>
 #include <iomanip>
+#include <armadillo>
 
 using namespace std;
 
@@ -99,9 +100,7 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     }
   }
   //Adding the values from each cycle, so it can be used to find exp values.
-
-
-
+  tot_cycles_ += 1;
   if (burn_in_cycles_ < tot_cycles_) {
     //eps_ = (totalenergy_) /N_;
     epsilon_ += 1.0*totalenergy_/N_;
@@ -111,8 +110,6 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     M2 += pow(magnetisation_, 2);
     E2 += pow(totalenergy_, 2);
   }
-
-  tot_cycles_ += 1;
   return s_; // not neccessary to return s_? No not really!
 }
 
@@ -169,21 +166,6 @@ int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
   return energy;
 }
 
-/* // Not working. Gives segmentation fault
-int Ising::calc_tot_energy_of_state(vector<vector<int> > s){
-  // finding the energy of a particular spin configuration s
-  int energy;
-  for(int i=1 ; i<L_+1 ; i++){ //the first row will be the Lth row
-    for(int j=1 ; j<L_+1 ; j++){ //the first column will be the Lth column
-      int i_index = (i + L_)%L_;
-      int j_index = (j + L_)%L_;
-      energy += s[i_index][j_index]*s[i_index-1][j_index] + s[i_index][j_index]*s[i_index][j_index-1];
-    }
-  }
-  return energy;
-}
- */
-
 // Working
 void Ising::calc_tot_magnetization_of_state(){
   int magnetisation = 0;
@@ -194,7 +176,6 @@ void Ising::calc_tot_magnetization_of_state(){
   }
   magnetisation_ = magnetisation;
 }
-
 
 // Working. Things make sense
 vector<double> Ising::calc_boltzmann_factors(double T){
@@ -210,13 +191,9 @@ vector<double> Ising::calc_boltzmann_factors(double T){
   return boltzmann_values;
 }
 
-
-
-
 // Adds current parameters to referenced ofstream
 void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
-
   ofile << setw(width) << tot_cycles_;
   //ofile << setw(width) << totalenergy_;
   ofile << setw(width) << eps_;
@@ -241,7 +218,25 @@ void Ising::write_some_parameters_to_file(ofstream& ofile) {
   sample_+=1;
 }
 
-
+arma::vec Ising::sample_average_over_sampled_values(int samples) {
+  arma::vec results = arma::vec(4).fill(0);
+  results(0) = expval_epsilon(tot_cycles_);
+  results(1) = expval_mag_per_spin(tot_cycles_);
+  results(2) = heat_capacity(tot_cycles_);
+  results(3) = susceptibility(tot_cycles_);
+  for (int i = 0; i<samples-1; i++) {
+    run_metropolis_MCMC();
+    results(0) += expval_epsilon(tot_cycles_);
+    results(1) += expval_mag_per_spin(tot_cycles_);
+    results(2) += heat_capacity(tot_cycles_);
+    results(3) += susceptibility(tot_cycles_);
+  }
+  results(0) = results(0)/samples;
+  results(1) = results(1)/samples;
+  results(2) = results(2)/samples;
+  results(3) = results(3)/samples;
+  return results;
+}
 
 void Ising::sample_average_over_sampled_values(ofstream& ofile, int samples) {
   double eps, mag, hc, suc;
