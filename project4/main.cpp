@@ -116,24 +116,36 @@ void problem5_6() {
 }
 
 void problem7_8() {
-  // Problem 7: Speedup
-  double time_parallel = 0;
-  double time_serial = 0;
-  auto start = chrono::high_resolution_clock::now();
-    //Broad sweeps
-  phase_transitions_parallel(1.6, 2.6, 10, 40, 1337, 0);
-  auto end = chrono::high_resolution_clock::now();
-  chrono::duration<double> p = end - start;
-  time_parallel = p.count();
 
-  start = chrono::high_resolution_clock::now();
-    //Broad sweeps
-  phase_transitions_serial(1.6, 2.6, 10, 40, 1337, 0);
-  end = chrono::high_resolution_clock::now();
-  chrono::duration<double> s = end - start;
-  time_serial = s.count();
-  cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
-  cout << "Speedup = " << time_serial/time_parallel << "\n";
+  // Problem 7: Speedup
+  double sum_average=0;
+  int avg_itterations=10;
+  for (int i=0; i<avg_itterations; i++){
+    
+    double time_parallel = 0;
+    double time_serial = 0;
+    auto start = chrono::high_resolution_clock::now();
+      //Broad sweeps
+    phase_transitions_parallel(1.6, 2.6, 10, 40, 1337+i, 0);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> p = end - start;
+    time_parallel = p.count();
+
+    start = chrono::high_resolution_clock::now();
+      //Broad sweeps
+    phase_transitions_serial(1.6, 2.6, 10, 40, 1337+i, 0);
+    end = chrono::high_resolution_clock::now();
+    chrono::duration<double> s = end - start;
+    time_serial = s.count();
+    //cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
+    //cout << "Speedup = " << time_serial/time_parallel << "\n";
+    sum_average += time_serial+time_parallel;
+    cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_itterations<<endl;
+  }
+  cout << "Average speedup over "<<avg_itterations<<" runs, was found to be: "<< sum_average/avg_itterations<<endl;
+
+
+
   // Problem 8: Critical T
   //Broad sweeps of T=2.1 to T=2.4
   //L=40
