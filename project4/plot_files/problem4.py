@@ -23,8 +23,8 @@ plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
-data_units =  ['Samples','E','M', r'$[<\varepsilon>]$=J', '[<m>] = 1', r'$[C_v] = k_B^2$', r"[$\chi$] = $\frac{1}{k_B}$"]
-data_labels = ['Samples','E','M', 'eps', 'm', 'C_v', "susceptibility "]
+data_units =  ['MC cycles','E','M', r'$[<\varepsilon>]$=J', '[<m>] = 1', r'$[C_v] = k_B^2$', r"[$\chi$] = $\frac{1}{k_B}$"]
+data_labels = ['MC cycles','E','M', 'eps', 'm', 'C_v', "susceptibility "]
 data = np.loadtxt('../datafiles/task4.txt',skiprows=1)
 analytical_values = np.loadtxt('../datafiles/analytical_2x2_T=1.0.txt',skiprows=1)
 
@@ -50,7 +50,7 @@ for i in range(3,7):
 	plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
 	plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
 	plt.grid()
-	plot_name = "Task4_"+data_labels[0]+"_"+data_labels[i]+"_figure.pdf"
+	plot_name = "Task4_"+data_labels[i]+"_figure.pdf"
 	plt.legend()
 	plt.savefig('../figures/'+plot_name)
 	plt.clf()
