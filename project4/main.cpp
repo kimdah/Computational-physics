@@ -100,7 +100,7 @@ void problem4() {
 
 void problem5_6() {
   // or use cml arguements
-  int cycles = 10000;
+  int cycles = 100000;
   int L = 20;
   double T_1 = 1.0;
   double T_2 = 2.4;
@@ -204,7 +204,7 @@ double phase_transitions_parallel(double T_start, double T_end, int steps, int l
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
   ofile << endl;
-  
+
   #pragma omp parallel for
   for (int i = 0; i < steps+1; i++){
     //cout << "Process doing stuff " << i << "\n";

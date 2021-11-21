@@ -94,6 +94,3 @@ plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
 plt.grid()
 plt.legend()
 plt.savefig('figures/burnin_m_T24.pdf')
-
-
-
