@@ -26,48 +26,36 @@ right=0.95,
 hspace=0.2,
 wspace=0.2
 )
-#ax.set_ylabel(data_units[i])
-#ax.set_xlabel(data_units[0])
-#plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
-#plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
-
-# np.random.seed(42)
-# x = np.random.normal(size=1000)
-
 
 # CHOSE UNORDERED - MAYBE DO BOTH?
-# dataT1u = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_1.0_unordered.txt', skiprows=1)
-# dataT2u = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_2.4_unordered.txt', skiprows=1)
-#
-# eps1 = np.array(dataT1u[:,3])
-# eps2 = np.array(dataT2u[:,3])
-
-for i in range(0,1): # 2
+for i in range(0,2): 
     if i == 0:
         T = 1.0
     else:
         T = 2.4
 
     data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_unordered.txt' %T, skiprows=1)
-    eps= np.array(data[1:,3]) # np.array?
-    print(eps[0])
-    #eps = eps_temp[]
-    print(len(eps))
+    eps = np.array(data[1:,3]) # np.array?
     # Using Freedman–Diaconis rule to be more scientific in choosing the "right" bin width
     q25, q75 = np.percentile(eps, [0.25, 0.75])
-    print(q25, q75)
-    bin_width = 2 * (abs(q75) - abs(q25)) * len(eps) ** (-1/3)
-    print(bin_width)
-    print(max(eps), max(abs(eps)), abs(max(eps)))
-    print(min(eps), min(abs(eps)), abs(min(eps)))
+    #print(q25, q75)
+    bin_width = 2 * (q75 - q25) * len(eps) ** (-1/3)
+    # print(bin_width)
+    # print(max(eps), max(abs(eps)), abs(max(eps)))
+    # print(min(eps), min(abs(eps)), abs(min(eps)))
+    # print(max(abs(eps))- min(abs(eps)))
+    #bin_width = 0.01
     bins = round((max(abs(eps))- min(abs(eps))) / bin_width)
     print("Freedman–Diaconis number of bins:", bins)
     #bins = 30
+    bins = round(np.sqrt(len(eps))) # 100
+    print(np.sqrt(len(eps)), len(eps))
+    bins = 32
+    print("bin_width: ", round((max(abs(eps))- min(abs(eps)))/bins))
 
-    plt.style.use('seaborn-white')
-    #plt.hist(eps, density=True, bins=bins, stacked=True) #density=True?
+    #plt.style.use('seaborn-white')
+    plt.hist(eps, density=True, bins=bins, stacked=True)
 
-    #plt.hist(x, density=True, bins=30)  # density=False would make counts
-    plt.ylabel('Probability')
-    plt.xlabel('Data')
+    plt.ylabel('$p_{\epsilon}(\epsilon)_{est}$')
+    plt.xlabel('$\epsilon$')
     plt.show()
