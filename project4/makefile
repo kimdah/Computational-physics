@@ -1,15 +1,15 @@
 # use this by doing this in terminal:
 # make
 # make run (or make compile, make clean etc.)
-CPPflags = g++ -std=c++11 -O2  # Mac users add -Xpreprocessor before -fopenmp
+CPPflags = g++ -std=c++11 #-O2  # Mac users add -Xpreprocessor before -fopenmp
 #LIB =  -larmadillo
 all: compile link clean
 
 compile:
-	${CPPflags} -c main.cpp src/Ising.cpp -fopenmp -I include/ # ${LIB}
+	${CPPflags} -c main.cpp src/Ising.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Ising.o -fopenmp # ${LIB}
+	${CPPflags} -o main.exe main.o Ising.o  -lomp # ${LIB}
 
 run:
 	./main.exe
@@ -18,7 +18,9 @@ clean:
 	rm -f *.o *~
 
 plot:
-	#
+	python3 ./plot_files/problem4.py
+	python3 ./plot_files/problem5.py
+
 
 
 # CPPflags = c++ #-O3 -std=c++11
