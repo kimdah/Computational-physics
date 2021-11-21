@@ -19,15 +19,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
 #fig, axes = plt.subplots(figsize = (1, 2))
-fig, axes = plt.subplots(2,2, sharex=True)
-plt.subplots_adjust(
-top=0.90,
-bottom=0.15,
-left=0.15,
-right=0.95,
-hspace=0.2,
-wspace=0.2
-)
+
+
 
 # T = 1.0 ordered
 dataT1o = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_1.0_ordered.txt', skiprows=1)
@@ -42,17 +35,28 @@ eps_T1u = np.array(dataT1u[:,3])
 m_T1u = np.array(dataT1u[:,4])
 
 # Plot T = 1.0 epsilon
-axes[0,0].set(ylabel='$<\epsilon >$ (J)', title='$T=1.0 ~J/k_B$')
-axes[0,0].plot(cycles_T1o, eps_T1o, label='o',linewidth=0.5)
-axes[0,0].plot(cycles_T1u, eps_T1u, label='u',linewidth=0.5)
-axes[0,0].legend()
+fig, axes = plt.subplots(figsize = (6, 5))
+plt.subplots_adjust(top=0.90,bottom=0.15,left=0.2,right=0.95,hspace=0.2,wspace=0.2)
+axes.set(xlabel='$n_{cycles}$',ylabel='$[<\epsilon >]$ = J', title='$T=1.0 ~J/k_B$')
+plt.plot(cycles_T1o, eps_T1o, label='ordered',linewidth=0.5)
+plt.plot(cycles_T1u, eps_T1u, label='unordered',linewidth=0.5)
+plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+plt.grid()
+plt.legend()
+plt.show()
 
 # Plot T = 1.0 magnetisation
-axes[1,0].set(ylabel='$<|m|>$ (1)')
-axes[1,0].plot(cycles_T1o, eps_T1o, label='o',linewidth=0.5)
-axes[1,0].plot(cycles_T1u, eps_T1u, label='u',linewidth=0.5)
-axes[1,0].legend()
-axes[1,0].set(xlabel='$n_{cycles}$')
+fig, axes = plt.subplots(figsize = (6, 5))
+plt.subplots_adjust(top=0.90,bottom=0.15,left=0.2,right=0.95,hspace=0.2,wspace=0.2)
+axes.set(xlabel='$n_{cycles}$',ylabel='$<|m|>$ (1)')
+plt.plot(cycles_T1o, eps_T1o, label='ordered',linewidth=0.5)
+plt.plot(cycles_T1u, eps_T1u, label='unordered',linewidth=0.5)
+plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+plt.grid()
+plt.legend()
+plt.show()
 
 # T = 2.4 ordered
 dataT2o = np.loadtxt('./datafiles/ncyc_1e5_L_20_T_2.4_ordered.txt', skiprows=1)
@@ -67,17 +71,29 @@ eps_T2u = np.array(dataT2u[:,3])
 m_T2u = np.array(dataT2u[:,4])
 
 #axes[0,1].set(ylabel='$<\epsilon >$') #, title='No interaction')
-axes[0,1].set(title='$T=2.4 ~J/k_B$')
-axes[0,1].plot(cycles_T2o, eps_T2o, label='o',linewidth=0.5)
-axes[0,1].plot(cycles_T2u, eps_T2u, label='u',linewidth=0.5)
-axes[0,1].legend()
+fig, axes = plt.subplots(figsize = (6, 5))
+plt.subplots_adjust(top=0.90,bottom=0.15,left=0.2,right=0.95,hspace=0.2,wspace=0.2)
+axes.set(xlabel='$n_{cycles}$',ylabel='$[<\epsilon >$] = J',title='$T=2.4 ~J/k_B$')
+plt.plot(cycles_T2o, eps_T2o, label='ordered',linewidth=0.5)
+plt.plot(cycles_T2u, eps_T2u, label='unordered',linewidth=0.5)
+plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+plt.grid()
+plt.legend()
+plt.show()
 
 # Plot T = 1.0 magnetisation
 #axes[1,0].set(ylabel='$<m >$') #, title='No interaction')
-axes[1,1].plot(cycles_T1o, m_T2o, label='o',linewidth=0.5)
-axes[1,1].plot(cycles_T1u, m_T2u, label='u',linewidth=0.5)
-axes[1,1].legend()
-axes[1,1].set(xlabel='$n_{cycles}$')
+fig, axes = plt.subplots(figsize = (6, 5))
+plt.subplots_adjust(top=0.90,bottom=0.15,left=0.2,right=0.95,hspace=0.2,wspace=0.2)
+axes.set(xlabel='$n_{cycles}$',ylabel='$[<|m|>]$ =1')
+plt.plot(cycles_T1o, m_T2o, label='ordered',linewidth=0.5)
+plt.plot(cycles_T1u, m_T2u, label='unordered',linewidth=0.5)
+plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+plt.grid()
+plt.legend()
+
 
 plt.show()
-plt.savefig("./figures/burn_in_time.pdf")
+

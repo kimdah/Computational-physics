@@ -204,6 +204,7 @@ double phase_transitions_parallel(double T_start, double T_end, int steps, int l
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
   ofile << endl;
+  
   #pragma omp parallel for
   for (int i = 0; i < steps+1; i++){
     //cout << "Process doing stuff " << i << "\n";
@@ -247,6 +248,3 @@ double phase_transitions_serial(double T_start, double T_end, int steps, int lat
   ofile.close();
   return time;
 }
-
-
-
