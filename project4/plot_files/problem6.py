@@ -54,12 +54,13 @@ for i in range(0,1): # 2
     #eps = eps_temp[]
     print(len(eps))
     # Using Freedman–Diaconis rule to be more scientific in choosing the "right" bin width
-    q25, q75 = np.nanpercentile(eps, [0.25, 0.75])
+    q25, q75 = np.percentile(eps, [0.25, 0.75])
     print(q25, q75)
     bin_width = 2 * (abs(q75) - abs(q25)) * len(eps) ** (-1/3)
     print(bin_width)
-    print(max(eps), eps.min())
-    bins = round((eps.max() - eps.min()) / bin_width)
+    print(max(eps), max(abs(eps)), abs(max(eps)))
+    print(min(eps), min(abs(eps)), abs(min(eps)))
+    bins = round((max(abs(eps))- min(abs(eps))) / bin_width)
     print("Freedman–Diaconis number of bins:", bins)
     #bins = 30
 
