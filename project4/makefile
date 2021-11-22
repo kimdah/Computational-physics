@@ -9,7 +9,7 @@ compile:
 	${CPPflags} -c main.cpp src/Ising.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Ising.o -larmadillo -fopenmp # ${LIB}
+	${CPPflags} -o main.exe main.o Ising.o -larmadillo -lomp # ${LIB}
 
 run:
 	./main.exe
@@ -22,6 +22,7 @@ plot:
 	python3 ./plot_files/problem5.py
 	python3 ./plot_files/problem6.py
 	python3 ./plot_files/problem8.py
+	python3 ./plot_files/problem9.py
 
 
 
