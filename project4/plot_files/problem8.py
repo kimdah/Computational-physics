@@ -22,7 +22,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
 # Phase transtions for L=40
-dataL40 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.25-2.35)_L(40)_steps(10).txt', skiprows=1)
+dataL40 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.00-2.63)_L(40)_steps(20).txt', skiprows=1)
 temperature_L40 = np.array(dataL40[:,0])
 eps_L40 = np.array(dataL40[:,1])
 m_L40 = np.array(dataL40[:,2])
@@ -30,7 +30,7 @@ cv_L40 = np.array(dataL40[:,3])
 chi_L40 = np.array(dataL40[:,4])
 
 # Phase transtions for L=60
-dataL60 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.25-2.35)_L(60)_steps(10).txt', skiprows=1)
+dataL60 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.00-2.63)_L(60)_steps(20).txt', skiprows=1)
 temperature_L60 = np.array(dataL60[:,0])
 eps_L60 = np.array(dataL60[:,1])
 m_L60 = np.array(dataL60[:,2])
@@ -38,7 +38,7 @@ cv_L60 = np.array(dataL60[:,3])
 chi_L60 = np.array(dataL60[:,4])
 
 # Phase transtions for L=80
-dataL80 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.25-2.35)_L(80)_steps(10).txt', skiprows=1)
+dataL80 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.00-2.63)_L(80)_steps(20).txt', skiprows=1)
 temperature_L80 = np.array(dataL80[:,0])
 eps_L80 = np.array(dataL80[:,1])
 m_L80 = np.array(dataL80[:,2])
@@ -46,7 +46,7 @@ cv_L80 = np.array(dataL80[:,3])
 chi_L80 = np.array(dataL80[:,4])
 
 # Phase transtions for L=100
-dataL100 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.1-2.4)_L(100)_steps(10).txt', skiprows=1)
+dataL100 = np.loadtxt('./datafiles/phase_transitions_parallel_T(2.00-2.63)_L(100)_steps(20).txt', skiprows=1)
 temperature_L100 = np.array(dataL100[:,0])
 eps_L100 = np.array(dataL100[:,1])
 m_L100 = np.array(dataL100[:,2])

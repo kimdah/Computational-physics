@@ -46,11 +46,10 @@ int main(int argc, char const *argv[]) {
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
       << " <output_file_name> " << std::endl;
-      //problem4();
-      //problem5(10000);
-      //problem6(1e6, 1);
+      problem4();
+      problem5(10000);
       //problem6(1e6);
-      problem7_8();
+      //problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -121,23 +120,6 @@ void problem5(int cycles) {
   simulator(cycles, L, T_2, seed, 0, "ncyc_1e4_L_20_T_2.4_unordered.txt", 10000);
 }
 
-// void problem6(int cycles, int sample_rate) {
-//
-//   // Need its own simulator to get epsilon per sample
-//   int L = 20;
-//   double T_1 = 1.0;
-//   double T_2 = 2.4;
-//   int seed = 8276;
-//   // CHANGE THE NAME
-//
-//   // T = 1.0 :
-//   //simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt", sample_rate); // for -1 also?
-//   simulator(cycles, L, T_1, seed, 0, "histogram_T_1.0_unordered.txt", sample_rate);
-//
-//   // T = 2.4
-//   //simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt", sample_rate); // for -1 also?
-//   simulator(cycles, L, T_2, seed, 0, "histogram_T_2.4_unordered.txt", sample_rate);
-// }
 
 void epsilon_per_sample(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name, int burn_in) {
    // ------ Output-file --------
