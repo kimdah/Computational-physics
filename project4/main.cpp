@@ -49,8 +49,8 @@ int main(int argc, char const *argv[]) {
       //problem4();
       //problem5(10000);
       //problem6(1e6, 1);
-      problem6(1e6);
-      //problem7_8();
+      //problem6(1e6);
+      problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -204,7 +204,7 @@ void problem7_8() {
   // }
   // cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
   // cout << "Running test sweep L40\n";
-  // get_phase_transition_averages(2.0, 2.6, 10, 40, 41337, 0, 5, 1000);
+  //  get_phase_transition_averages(2.2, 2.8, 20, 10, 41337, 0, 2, 100);
   // // Problem 8: Critical T
   // //Broad sweeps of T=2.1 to T=2.4
   // //L=40
@@ -218,7 +218,7 @@ void problem7_8() {
   // get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
   // cout << "Running broad sweep L100\n";
   // // //L=100
-  get_phase_transition_averages(2.03, 2.63, resolution, 100, 41337, 0, 5, 10000);
+  //get_phase_transition_averages(2.03, 2.63, resolution, 100, 41337, 0, 5, 10000);
   // cout << "Running broad sweep L160\n";
   // //L=200
   // get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
@@ -281,20 +281,21 @@ void analytical_2x2(double T){
 }
 
 void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int avg, int burn_in) {
-  mat averages = mat(steps+1, 5, fill::zeros);
-  
-  for (int i = 0; i<avg; i++) {
-    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
-  }
-  // double h = (T_end - T_start) / (steps*2);
   // mat averages = mat(steps+1, 5, fill::zeros);
-
+  
   // for (int i = 0; i<avg; i++) {
   //   averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
-  //   averages += phase_transitions_parallel( T_start+h,  T_end+h,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
   // }
+  double h = (T_end - T_start) / (steps); //h=2.6-20
+  mat averages1 = mat((steps/2)+1, 5, fill::zeros);
+  mat averages2 = mat((steps/2)+1, 5, fill::zeros);
+  for (int i = 0; i<avg; i++) {
+    averages1 += phase_transitions_parallel( T_start,  T_end,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
+    averages2 += phase_transitions_parallel( T_start+h,  T_end+h,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
+  }
 
-  averages = averages/avg;
+  averages1 = averages1/avg;
+  averages2 = averages2/avg;
   string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
   ofstream ofile;
   ofile.open(filename);
@@ -306,12 +307,15 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
   ofile << setw(width) << "Sucept.";
   ofile << endl;
 
-  for(int row = 0; row < steps+1; row++) {
+  for(int row = 0; row < (steps/2)+1; row++) {
     for(int column = 0; column<5; column++) {
-      ofile << setw(width) << averages(row, column);
+      ofile << setw(width) << averages1(row, column);
     }
     ofile << endl;
-
+    for(int column = 0; column<5; column++) {
+      ofile << setw(width) << averages2(row, column);
+    }
+    ofile << endl;
   }
   ofile.close();
 }
