@@ -5,8 +5,8 @@ The model will be used to explore temperature-dependent behaviour in ferromagnet
 The lattice of spins is defined by the state configuration matrix **s**.
 ...
 
-We estimated the expectancy value of the energy per spin, $<eps> = $, and of the absolute value of the magnetization per spin, <|m|>. This were done by sampling $s$ using the Monte Carlo Markow Chain (MCMC) method and taking the mean of $epsilon$ and $|m|$ over MCMC cycles.
-These were the used to find estimations for the specific heat capacity, $C__v$, and the susceptibility, $\chi$. These were both normalized to per spin.
+We estimated the expectancy value of the energy per spin, **< epsilon >**, and of the absolute value of the magnetization per spin, **<|m|>**. This were done by sampling **s** using the Monte Carlo Markov Chain (MCMC) method and taking the mean of **epsilon** and **|m|** over MCMC cycles.
+These were the used to find estimations for the specific heat capacity, **C__v**, and the susceptibility, **chi**. These were both normalized to per spin.
 
 We parallelized our code using OpenMP to decrease runtime for large state configuration matrices.  
   
@@ -21,7 +21,7 @@ Below, you will find a descriprion of each folder. At the bottom you will find i
 ## figures/
   This folder will contain all the plots that are present in the report. If the folder is empty, make sure you ran the plot command in the terminal. 
   
-## Include/
+## include/
   This folder contains the header files for our program
   
 ## plot_files/
