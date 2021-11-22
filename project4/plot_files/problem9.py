@@ -5,7 +5,7 @@ from scipy import stats
 
 
 
-lattice_sizes = [40,60,80]
+lattice_sizes = [40,60,80,100]
 
 T_c =[]
 L_inverse=[]
@@ -28,9 +28,9 @@ for L_size in lattice_sizes:
 
 
 
-result = stats.linregress(L_inverse,T_c)
+slope, intercept, r, p, intercept_err = stats.linregress(L_inverse,T_c)
 
-T_c.insert(0,result.intercept)
+T_c.insert(0,intercept)
 L_inverse.insert(0,0)
 
 T_c = np.array(T_c)
@@ -57,8 +57,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 plt.subplots(figsize=(6,5))
 plt.subplots_adjust(top=0.95,bottom=0.15,left=0.15,right=0.95,hspace=0.2,wspace=0.2)
 plt.plot(L_inverse[1:],T_c[1:],'ro',label='data points')
-plt.plot(L_inverse[0],T_c[0],'bx',label='Intercept='+str(result.intercept))
-plt.plot(L_inverse, (result.intercept + result.slope*L_inverse), 'g', label='fitted line')
+plt.plot(L_inverse[0],T_c[0],'bx',label='Intercept='+str(round(intercept,3))+'$\pm$'+str(round(intercept_err,3)))
+plt.plot(L_inverse, (intercept + slope*L_inverse), 'g', label='fitted line')
 plt.xlabel("1/L")
 plt.ylabel("[$T_c$]= J/$k_B$")
 plt.legend()
