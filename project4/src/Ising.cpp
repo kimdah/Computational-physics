@@ -85,15 +85,12 @@ void Ising::run_metropolis_MCMC(){
     double probability_ratio = boltzmann_factors_[index]; // w_i/w_j = exp(-beta*deltaE)
     double r = uniform_real_(generator_);
 
-
-
     if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
       // Set new state of system:
       s_[randRow][randCol] *= -1;
       totalenergy_ += deltaE;
-      //eps_ = totalenergy_/N_;
       eps_cycle_.push_back(totalenergy_/N_);
       magnetisation_ += 2 * s_[randRow][randCol]; // Equation 13.7 in lectures2015 M_(i+1) = M_i + 2*s_(i+1) (= +/- 2 )
     }
@@ -113,7 +110,6 @@ void Ising::run_metropolis_MCMC(){
   }
 }
 
-// add another 1000 to get the system going
 void Ising::burn_in_lattice() {
   for (int i = 0; i<burn_in_cycles_; i++) {
     run_metropolis_MCMC();
@@ -133,7 +129,6 @@ double Ising::expval_mag_per_spin(int n_cycles){
 }
 
 double Ising::heat_capacity(int n_cycles){
-   //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
   return (1./N_)*(1./(T_*T_))*((E2_/tot_cycles_) - pow((mean(accumulatedtotalenergy_, tot_cycles_)), 2));
 }
 
@@ -200,7 +195,6 @@ arma::vec Ising::sample_average_over_sampled_values(int samples) {
   results(1) = expval_mag_per_spin(tot_cycles_);
   results(2) = heat_capacity(tot_cycles_);
   results(3) = susceptibility(tot_cycles_);
-
   for (int i = 0; i<samples-1; i++) {
     run_metropolis_MCMC();
     results(0) += expval_epsilon(tot_cycles_);

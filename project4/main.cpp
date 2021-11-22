@@ -18,7 +18,6 @@ void simulator(int n_cycles, int lattice_side_length, double T, int seed, int or
 void problem4();
 void problem5(int cycles);
 void problem6(int cycles);
-//void problem6(int cycles, int sample_rate);
 void epsilon_per_sample(int n_cycles,int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name, int burn_in);
 void problem7_8();
 void analytical_2x2(double T);
@@ -48,8 +47,8 @@ int main(int argc, char const *argv[]) {
       << " <output_file_name> " << std::endl;
       problem4();
       problem5(10000);
-      //problem6(1e6);
-      //problem7_8();
+      problem6(1e6);
+      problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -99,8 +98,7 @@ void problem4() {
   // Do all the things we need for Problem 4 here
   int cycles = 100000;
   double temp = 1.0;
-  simulator(cycles, 2, temp, 1337, 0, "task4.txt", 0); //unordered
-  // Test: simulator(cycles, 40, 2.4, 1337, 0, "task6.txt", 10000); //unordered
+  simulator(cycles, 2, temp, 1337, 0, "task4.txt", 10000); //unordered
   analytical_2x2(temp);
 }
 
@@ -143,7 +141,7 @@ void epsilon_per_sample(int n_cycles, int lattice_side_length, double T, int see
   ofile.close();
 }
 
-// Overload of function above
+
 void problem6(int cycles) {
   // Need its own simulator to get epsilon per sample
   int L = 20;
@@ -152,11 +150,9 @@ void problem6(int cycles) {
   int seed = 8276;
 
   // T = 1.0 :
-  //simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt", sample_rate); // for -1 also?
   epsilon_per_sample(cycles, L, T_1, seed, 0, "histogram_T_1.0_unordered.txt", 10000);
 
   // T = 2.4
-  //simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt", sample_rate); // for -1 also?
   epsilon_per_sample(cycles, L, T_2, seed, 0, "histogram_T_2.4_unordered.txt", 10000);
 }
 
@@ -165,75 +161,42 @@ void problem7_8() {
   double sum_average=0;
   int avg_iterations=1;
   int resolution = 10; //+1 for endpoints
-  // for (int i=0; i<avg_iterations; i++){
-  //   double time_parallel = 0;
-  //   double time_serial = 0;
-  //   auto start = chrono::high_resolution_clock::now();
-  //   phase_transitions_parallel(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
-  //   auto end = chrono::high_resolution_clock::now();
-  //   chrono::duration<double> p = end - start;
-  //   time_parallel = p.count();
+  for (int i=0; i<avg_iterations; i++){
+    double time_parallel = 0;
+    double time_serial = 0;
+    auto start = chrono::high_resolution_clock::now();
+    phase_transitions_parallel(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> p = end - start;
+    time_parallel = p.count();
 
-  //   start = chrono::high_resolution_clock::now();
-  //   phase_transitions_serial(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
-  //   end = chrono::high_resolution_clock::now();
-  //   chrono::duration<double> s = end - start;
-  //   time_serial = s.count();
-  //   //cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
-  //   //cout << "Speedup = " << time_serial/time_parallel << "\n";
-  //   sum_average += time_serial/time_parallel;
-  //   cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_iterations<<endl;
-  // }
-  // cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
-  // cout << "Running test sweep L40\n";
-  get_phase_transition_averages(2.0, 2.6, 20, 40, 41337, 0, 5, 100);
-  // // Problem 8: Critical T
-  // //Broad sweeps of T=2.1 to T=2.4
-  // //L=40
-  // cout << "Running broad sweep L40\n";
-  // get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L60\n";
-  // // //L=60
-  // get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L80\n";
-  // // //L=80
-  // get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
-  //cout << "Running broad sweep L100\n";
-  // // //L=100
-  //get_phase_transition_averages(2.03, 2.63, resolution, 100, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L160\n";
-  // //L=200
-  // get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
-  // // Narrow sweeps
-  // cout << "Running narrow sweep L40\n";
-  // //L=40
-  // get_phase_transition_averages(2.25, 2.35, resolution, 40, 41333, 0, 5, 10000);
-  //  cout << "Running narrow sweep L60\n";
-  // // //L=60
-  //  get_phase_transition_averages(2.25, 2.35, resolution, 60, 44113, 0, 5, 10000);
-  // cout << "Running narrow sweep L80\n";
-  // // //L=80
-  //  get_phase_transition_averages(2.25, 2.35, resolution, 80, 41376, 0, 5, 10000);
-  // cout << "Running narrow sweep L100\n";
-  // // //L=100
-  // get_phase_transition_averages(2.25, 2.35, resolution, 100, 41323, 0, 5, 10000);
-  // cout << "Running narrow sweep L200\n";
-  // //L=100
-  // get_phase_transition_averages(2.20, 2.35, resolution, 200, 41337, 0, 5, 10000);
+    start = chrono::high_resolution_clock::now();
+    phase_transitions_serial(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
+    end = chrono::high_resolution_clock::now();
+    chrono::duration<double> s = end - start;
+    time_serial = s.count();
+ 
+    sum_average += time_serial/time_parallel;
+    cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_iterations<<endl;
+  }
+  cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
+
+  // Problem 8+9: Critical T
+  get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5, 10000);
 
 }
 
 
 void analytical_2x2(double T){
   double beta = 1./T;
-
   double Z = 2*exp(beta*8) + 2*exp(-beta*8) + 12;
   double exp_val_epsilon = (4./Z) * (exp(-beta*8) - exp(beta*8));
   double exp_val_abs_mag = (2./Z) * (exp(beta*8) + 2);
-  // test
   double eps2 = (8./Z) * (exp(-beta*8) + exp(beta*8));
   double m2 = (1./Z) * (2*exp(beta*8) + 2);
-  //
   double heat_capacity = (32./(pow(T,2)*Z))*(exp(-beta*8)+exp(beta*8) - ((2./Z)*(exp(-beta*16)+exp(beta*16)-2)));
   double susceptibility = (8./(T*Z)) * (exp(8*beta) + 1 - ((2./Z)*(exp(16*beta)+ 4*exp(8*beta)+4)));
 
@@ -251,11 +214,8 @@ void analytical_2x2(double T){
   << setw(width) << "<m>" << setw(width) << "C_v"<< setw(width) << "chi" << endl;
 
   ofile << setprecision(2) << scientific << T;
-  //ofile << setw(width) << setprecision(prec) << scientific << Z;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_epsilon;
-  //ofile << setw(width) << setprecision(prec) << scientific << eps2;
   ofile << setw(width) << setprecision(prec) << scientific << exp_val_abs_mag;
-  //ofile << setw(width) << setprecision(prec) << scientific << m2;
   ofile << setw(width) << setprecision(prec) << scientific << heat_capacity;
   ofile << setw(width) << setprecision(prec) << scientific << susceptibility;
   ofile << endl;
@@ -263,11 +223,6 @@ void analytical_2x2(double T){
 }
 
 void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int avg, int burn_in) {
-  // mat averages = mat(steps+1, 5, fill::zeros);
-  
-  // for (int i = 0; i<avg; i++) {
-  //   averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
-  // }
   double h = (T_end - T_start) / (steps); //h=2.6-20
   mat averages1 = mat((steps/2)+1, 5, fill::zeros);
   mat averages2 = mat((steps/2)+1, 5, fill::zeros);
@@ -275,7 +230,7 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
     averages1 += phase_transitions_parallel( T_start,  T_end,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
     averages2 += phase_transitions_parallel( T_start+h,  T_end+h,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
   }
-  //averages = averages/avg;
+
   averages1 = averages1/avg;
   averages2 = averages2/avg;
   string filename = "datafiles/phase_transitions_parallel_T("+to_string_with_precision(T_start)+"-"+to_string_with_precision(T_end)+")_L("+to_string(lattice_side_length)+")_steps("+to_string(steps)+").txt";
@@ -288,12 +243,7 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
   ofile << endl;
-  // for(int row = 0; row < steps+1; row++) {
-  //   for(int column = 0; column<5; column++) {
-  //     ofile << setw(width) << averages(row, column);
-  //   }
-  //   ofile << endl;
-  // }
+
   for(int row = 0; row < (steps/2)+1; row++) {
     for(int column = 0; column<5; column++) {
       ofile << setw(width) << averages1(row, column);
@@ -321,10 +271,8 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
   for (int i = 0; i < steps+1; i++){
     int thread_id = omp_get_thread_num();
     double T = T_start + i * h;
-    //if (T<1.5) {spin = 1;} else {spin = 0;}
     Ising ising(lattice_side_length, T, seed+thread_id, spin, burn_in);
     // Burn in system
-    // ising.burn_in_lattice();
     for (int j = 0; j < burn_in+1000; j++) {
       ising.run_metropolis_MCMC();
     }
@@ -365,7 +313,9 @@ mat phase_transitions_serial(double T_start, double T_end, int steps, int lattic
     if (T<1.5) {spin = 1;} else {spin = 0;}
     Ising ising(lattice_side_length, T, seed, spin, burn_in);
     // Burn in system
-    ising.burn_in_lattice();
+    for (int j = 0; j < burn_in+1000; j++) {
+      ising.run_metropolis_MCMC();
+    }
 
     // Collect samples
     int count = 0;
