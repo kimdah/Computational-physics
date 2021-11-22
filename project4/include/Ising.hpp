@@ -13,8 +13,9 @@ using namespace std;
 class Ising {
     public:
         int L_, N_, seed, magnetisation_,sample_, tot_cycles_;
-        double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_, burn_in_cycles_, burned_;
-        double E2_, M2_;
+        double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_, burn_in_cycles_;
+        double E2_, M2_, burned_;
+        vector<double> eps_cycle_;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
         vector<vector<int>> s_;
@@ -22,9 +23,9 @@ class Ising {
         uniform_int_distribution<int> lattice_uniform_distribution_, up_or_down_spin_;
         uniform_real_distribution<double> uniform_real_;
 
-      // A Class that models a 2D model of a ferromagnetic lattice using the Ising model 
+      // A Class that models a 2D model of a ferromagnetic lattice using the Ising model
       Ising(int lattice_side_length, double T, int seed, int ordered_spin, int burn_in);
-      
+
       //Generates lattices in ordered and random states
       void generate_unordered_lattice();
       void generate_ordered_lattice(int spin);
@@ -61,13 +62,15 @@ class Ising {
 
       // Writes parameters of the system state to file
       void write_parameters_to_file(ofstream& ofile);
-      
+
       // Samples and returns some parameters of the current system state
       arma::vec sample_average_over_sampled_values(int samples);
 
       // Prints the lattice, E and M to terminal
       void print();
 
+      // Write eps per sample to file
+      void write_eps_to_file(ofstream& ofile);
 
 };
 #endif

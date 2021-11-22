@@ -16,7 +16,10 @@ using namespace arma;
 // Performs simulations based on parameter inputs
 void simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen, int burn_in, const int sample_rate = 100);
 void problem4();
-void problem5_6();
+void problem5(int cycles);
+void problem6(int cycles);
+//void problem6(int cycles, int sample_rate);
+void epsilon_per_sample(int n_cycles,int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name, int burn_in);
 void problem7_8();
 void analytical_2x2(double T);
 void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int burn_in, const int avg = 3);
@@ -43,9 +46,11 @@ int main(int argc, char const *argv[]) {
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
       << " <output_file_name> " << std::endl;
-      //problem4();
-      //problem5_6();
-      problem7_8();
+      problem4();
+      problem5(10000);
+      //problem6(1e6, 1);
+      problem6(1e6);
+      //problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -100,13 +105,12 @@ void problem4() {
   analytical_2x2(temp);
 }
 
-void problem5_6() {
-  // or use cml arguements
-  int cycles = 100000;
+void problem5(int cycles) {
   int L = 20;
   double T_1 = 1.0;
   double T_2 = 2.4;
   int seed = 3572;
+  // --- Change 1e4 in textfilename if cycles change
 
   // T = 1.0 :
   simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt", 10000); // for -1 also?
@@ -115,6 +119,63 @@ void problem5_6() {
   // T = 2.4
   simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt", 10000); // for -1 also?
   simulator(cycles, L, T_2, seed, 0, "ncyc_1e4_L_20_T_2.4_unordered.txt", 10000);
+}
+
+// void problem6(int cycles, int sample_rate) {
+//
+//   // Need its own simulator to get epsilon per sample
+//   int L = 20;
+//   double T_1 = 1.0;
+//   double T_2 = 2.4;
+//   int seed = 8276;
+//   // CHANGE THE NAME
+//
+//   // T = 1.0 :
+//   //simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt", sample_rate); // for -1 also?
+//   simulator(cycles, L, T_1, seed, 0, "histogram_T_1.0_unordered.txt", sample_rate);
+//
+//   // T = 2.4
+//   //simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt", sample_rate); // for -1 also?
+//   simulator(cycles, L, T_2, seed, 0, "histogram_T_2.4_unordered.txt", sample_rate);
+// }
+
+void epsilon_per_sample(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string output_file_name, int burn_in) {
+   // ------ Output-file --------
+  string filename = "datafiles/" + output_file_name;
+  ofstream ofile;
+  ofile.open(filename);
+  // Some width and precision parameters we will use to format the output
+  int width = 16;
+  int prec  = 8;
+  ofile << setw(width) << "eps" << endl;
+  // -----------------------------
+  // Run the sim
+  Ising ising(lattice_side_length, T, seed, ordered_spin, burn_in);
+  ising.burn_in_lattice();
+
+  // Run MCMC cycles:
+  for (int i = 0; i < n_cycles; i++) {
+    ising.write_eps_to_file(ofile);
+    ising.run_metropolis_MCMC();
+  }
+  ofile.close();
+}
+
+// Overload of function above
+void problem6(int cycles) {
+  // Need its own simulator to get epsilon per sample
+  int L = 20;
+  double T_1 = 1.0;
+  double T_2 = 2.4;
+  int seed = 8276;
+
+  // T = 1.0 :
+  //simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt", sample_rate); // for -1 also?
+  epsilon_per_sample(cycles, L, T_1, seed, 0, "histogram_T_1.0_unordered.txt", 10000);
+
+  // T = 2.4
+  //simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt", sample_rate); // for -1 also?
+  epsilon_per_sample(cycles, L, T_2, seed, 0, "histogram_T_2.4_unordered.txt", 10000);
 }
 
 void problem7_8() {
@@ -161,7 +222,7 @@ void problem7_8() {
   // cout << "Running broad sweep L160\n";
   // //L=200
   // get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
-  // // Narrow sweeps 
+  // // Narrow sweeps
   // cout << "Running narrow sweep L40\n";
   // //L=40
   // get_phase_transition_averages(2.25, 2.35, resolution, 40, 41333, 0, 5, 10000);
@@ -196,13 +257,11 @@ void analytical_2x2(double T){
 
   // Write to file
   ofstream ofile;
-  //ofile.open("./datafiles/analytical_2x2_T=" +to_string(T) +".txt");
-
   // To have 2 decimals in output-filename
   std::ostringstream temp;
   temp << std::fixed << std::setprecision(1) << T;
 
-  ofile.open("./datafiles/analytical_2x2_T=" + temp.str() +".txt");// to_string(T)
+  ofile.open("./datafiles/analytical_2x2_T=" + temp.str() +".txt");
   int width = 18;
   int prec  = 8;
 
@@ -229,7 +288,7 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
   // }
   double h = (T_end - T_start) / (steps*2);
   mat averages = mat(steps+1, 5, fill::zeros);
-  
+
   for (int i = 0; i<avg; i++) {
     averages += phase_transitions_parallel( T_start,  T_end,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
     averages += phase_transitions_parallel( T_start+h,  T_end+h,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
@@ -246,13 +305,13 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
   ofile << setw(width) << "C_V";
   ofile << setw(width) << "Sucept.";
   ofile << endl;
-  
+
   for(int row = 0; row < steps+1; row++) {
     for(int column = 0; column<5; column++) {
       ofile << setw(width) << averages(row, column);
     }
     ofile << endl;
-    
+
   }
   ofile.close();
 }
@@ -263,7 +322,7 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
   int sample_rate = 100;
   int samples = 3; // Number of samples to collect per sampling
   int spin = ordered_spin;
-  
+
   //matrix to store results
   mat results = mat(steps+1, 5, fill::zeros);
 
@@ -278,7 +337,7 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
     for (int j = 0; j < burn_in+1000; j++) {
       ising.run_metropolis_MCMC();
     }
-    
+
     // Collect samples
     int count = 0;
     vec params = arma::vec(4).fill(0);
@@ -295,7 +354,7 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
     results(i,2) = params(1);
     results(i,3) = params(2);
     results(i,4) = params(3);
-    
+
   }
   return results;
 }
@@ -316,7 +375,7 @@ mat phase_transitions_serial(double T_start, double T_end, int steps, int lattic
     Ising ising(lattice_side_length, T, seed, spin, burn_in);
     // Burn in system
     ising.burn_in_lattice();
-    
+
     // Collect samples
     int count = 0;
     vec params = arma::vec(4).fill(0);
