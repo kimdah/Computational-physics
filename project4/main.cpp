@@ -99,7 +99,7 @@ void problem4() {
   // Do all the things we need for Problem 4 here
   int cycles = 100000;
   double temp = 1.0;
-  simulator(cycles, 2, temp, 1337, 0, "task4.txt", 10000); //unordered
+  simulator(cycles, 2, temp, 1337, 0, "task4.txt", 0); //unordered
   // Test: simulator(cycles, 40, 2.4, 1337, 0, "task6.txt", 10000); //unordered
   analytical_2x2(temp);
 }
