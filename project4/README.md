@@ -31,7 +31,7 @@ Below, you will find a descriprion of each folder. At the bottom you will find i
   This folder contains the Ising.cpp source file. Note that the main.cpp source file will be linked with the Ising.cpp source file. 
 
 # Code structure
-  Our code is mainly split into two parts: 'main.cpp' and 'Ising.cpp'. We mainly use 'main.cpp' to run a simulation for each task using the 'simulate()' function in 'main.cpp'. 'simulate()' will then use the functions located in 'Ising.cpp'. If you wish to run simulation with some spesific parameters, you can so so using the last command given in the instuctions below.
+  Our code is mainly split into two parts: 'main.cpp' and 'Ising.cpp'. We mainly use 'main.cpp' to run a simulation for each task using the 'simulate()' function in 'main.cpp'. 'simulate()' will then use the functions located in 'Ising.cpp'. If you wish to run simulation with some spesific parameters, you can do so using the last command given in the instuctions below.
   
 # Compiling, running and plotting
   
