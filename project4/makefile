@@ -9,7 +9,7 @@ compile:
 	${CPPflags} -c main.cpp src/Ising.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Ising.o -larmadillo -lomp # ${LIB}
+	${CPPflags} -o main.exe main.o Ising.o -larmadillo -fopenmp # ${LIB}
 
 run:
 	./main.exe
