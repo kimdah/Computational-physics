@@ -58,4 +58,7 @@ for i in range(0,2):
 
     plt.ylabel('$p_{\epsilon}(\epsilon)_{est}$')
     plt.xlabel('$\epsilon$')
-    plt.show()
+    plt.grid()
+    plt.savefig('figures/probability_distribution_T='+str(T)+'.pdf')
+    plt.clf()
+    plt.cla()

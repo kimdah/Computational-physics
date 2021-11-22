@@ -20,6 +20,8 @@ clean:
 plot:
 	python3 ./plot_files/problem4.py
 	python3 ./plot_files/problem5.py
+	python3 ./plot_files/problem6.py
+	python3 ./plot_files/problem8.py
 
 
 
