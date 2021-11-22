@@ -14,7 +14,7 @@ We parallelized our code using OpenMP to decrease runtime for large state config
 For full Project description, visit https://anderkve.github.io/FYS3150/book/projects/project4.html
 
 # Folder Structure
-Below, you will find a descriprion of each folder. At the bottom you will find instuctions on how wo compile the progra, run it and plot the datafiles that are produced.
+Below, you will find a descriprion of each folder. At the bottom you will find instuctions on how to compile the program, run it and plot the datafiles that are produced.
 ## datafiles/
   This folder contains all the different datafiles(.txt files) that are produced when running the simulation. If the folder is empty, make sure you have compiled and run the program.
 
