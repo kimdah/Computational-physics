@@ -32,11 +32,13 @@ for i in range(0,2):
     if i == 0:
         T = 1.0
         alpha = 1 # transparency factor
+        bins = 5
     else:
         T = 2.4
         alpha = 0.5
+        bins = 50
 
-    data = np.loadtxt('./datafiles/histogram_T_%.1f_unordered.txt' %T, skiprows=1)
+    data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_unordered.txt' %T, skiprows=1)
     eps = np.array(data[1:,1]) # np.array?
     print(len(eps))
     eps = eps[eps != 0] # omit zeros
@@ -57,13 +59,13 @@ for i in range(0,2):
     # print("Freedman–Diaconis number of bins:", bins)
 
     #bins = 30
-    bins = round(np.sqrt(len(eps))) # 100
+    #bins = round(np.sqrt(len(eps))) # 100
     print(np.sqrt(len(eps)), len(eps))
     #bins = 32
     print("bin_width: ", round((max(abs(eps))- min(abs(eps)))/bins))
 
     #plt.style.use('seaborn-white')
-    plt.hist(eps, density=True, alpha=alpha, bins=bins, stacked=True)
+    plt.hist(eps, density=True, alpha=alpha, bins=bins, stacked=True, log=True)
 
 plt.ylabel('$p_{\epsilon}(\epsilon)_{est}$')
 plt.xlabel('$\epsilon$')
