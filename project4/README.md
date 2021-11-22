@@ -36,7 +36,7 @@ Below, you will find a descriprion of each folder. At the bottom you will find i
 # Compiling, running and plotting
   
   Instuctions on compiling running and plotting can be found below. If you are on a different operating system than macOS, you might have to edit line 12 in the makefile to say '-fopenmp' instead of 'lomp'. The prorgam takes a while to run, we recommend you grab a coffe while waiting.
-----------------
+
 To build the code:  
 $ make
 
@@ -48,4 +48,4 @@ $ make plot
 
 To test the code using chosen parameters:  
 $ ./main.exe <temperature (float)> <lattice side size (integer)> <MCMC cycles (integer)> <unordered lattice: use 0, ordered lattice: use -1 or 1> <output_file_name>
-------------
+
