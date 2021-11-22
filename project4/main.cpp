@@ -121,7 +121,7 @@ void problem7_8() {
   // Problem 7: Speedup
   double sum_average=0;
   int avg_iterations=1;
-  int resolution = 10; //+1 for endpoints
+  int resolution = 15; //+1 for endpoints
   for (int i=0; i<avg_iterations; i++){
     double time_parallel = 0;
     double time_serial = 0;
@@ -160,18 +160,18 @@ void problem7_8() {
   get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
   // Narrow sweeps 
   //L=40
-  get_phase_transition_averages(2.25, 2.35, resolution, 40, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.20, 2.35, resolution, 40, 41337, 0, 5, 10000);
 
   //L=60
-  get_phase_transition_averages(2.25, 2.35, resolution, 60, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.20, 2.35, resolution, 60, 41337, 0, 5, 10000);
 
   //L=80
-  get_phase_transition_averages(2.25, 2.35, resolution, 80, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.20, 2.35, resolution, 80, 41337, 0, 5, 10000);
 
   //L=100
-  get_phase_transition_averages(2.25, 2.35, resolution, 100, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.20, 2.35, resolution, 100, 41337, 0, 5, 10000);
   //L=100
-  get_phase_transition_averages(2.25, 2.35, resolution, 200, 41337, 0, 5, 10000);
+  get_phase_transition_averages(2.20, 2.35, resolution, 200, 41337, 0, 5, 10000);
 
 }
 
