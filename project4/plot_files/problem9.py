@@ -12,7 +12,7 @@ L_inverse=[]
 
 for L_size in lattice_sizes:
 
-	name_template = "phase_transitions_parallel_T2.00-2.63_L"+str(L_size)+"_steps20.txt"
+	name_template = "phase_transitions_parallel_T(2.00-2.63)_L("+str(L_size)+")_steps(20).txt"
 
 	data = np.loadtxt('./datafiles/'+name_template, skiprows=1)
 	T = np.array(data[:,0])
