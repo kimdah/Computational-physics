@@ -1,7 +1,7 @@
 #Mac files
 *.DS_Store
 #.DS_Store
-*.txt
+
 *.out
 *.o
 

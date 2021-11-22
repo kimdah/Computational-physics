@@ -204,7 +204,7 @@ void problem7_8() {
   // }
   // cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
   // cout << "Running test sweep L40\n";
-  get_phase_transition_averages(2.0, 2.6, 20, 40, 41337, 0, 2, 100);
+  get_phase_transition_averages(2.0, 2.6, 20, 40, 41337, 0, 5, 100);
   // // Problem 8: Critical T
   // //Broad sweeps of T=2.1 to T=2.4
   // //L=40
@@ -216,9 +216,9 @@ void problem7_8() {
   // cout << "Running broad sweep L80\n";
   // // //L=80
   // get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
-   cout << "Running broad sweep L100\n";
+  //cout << "Running broad sweep L100\n";
   // // //L=100
-  get_phase_transition_averages(2.03, 2.63, resolution, 100, 41337, 0, 5, 10000);
+  //get_phase_transition_averages(2.03, 2.63, resolution, 100, 41337, 0, 5, 10000);
   // cout << "Running broad sweep L160\n";
   // //L=200
   // get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
