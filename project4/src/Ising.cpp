@@ -109,7 +109,7 @@ void Ising::run_metropolis_MCMC(){
 
 // add another 100 to get the system going
 void Ising::burn_in_lattice() {
-  for (int i = 0; i<burn_in_cycles_+100; i++) {
+  for (int i = 0; i<burn_in_cycles_+1000; i++) {
     run_metropolis_MCMC();
   }
 }
