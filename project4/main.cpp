@@ -150,15 +150,15 @@ void problem7_8() {
   cout << "Running broad sweep L40\n";
   get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
   cout << "Running broad sweep L60\n";
-  //L=60
+  // //L=60
   get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
   cout << "Running broad sweep L80\n";
-  //L=80
+  // //L=80
   get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
   cout << "Running broad sweep L100\n";
   // //L=100
-  // get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L200\n";
+  get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5, 10000);
+  // cout << "Running broad sweep L160\n";
   // //L=200
   // get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
   // // Narrow sweeps 
@@ -222,10 +222,17 @@ void analytical_2x2(double T){
 }
 
 void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int avg, int burn_in) {
+  // mat averages = mat(steps+1, 5, fill::zeros);
+  
+  // for (int i = 0; i<avg; i++) {
+  //   averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
+  // }
+  double h = (T_end - T_start) / (steps*2);
   mat averages = mat(steps+1, 5, fill::zeros);
   
   for (int i = 0; i<avg; i++) {
-    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
+    averages += phase_transitions_parallel( T_start,  T_end,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
+    averages += phase_transitions_parallel( T_start+h,  T_end+h,  steps/2,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
   }
 
   averages = averages/avg;
