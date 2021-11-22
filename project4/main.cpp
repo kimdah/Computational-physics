@@ -23,7 +23,7 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
 mat phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int burn_in);
 mat phase_transitions_serial(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int burn_in);
 
-template <typename T> string to_string_with_precision(const T a_value, const int n = 1) {
+template <typename T> string to_string_with_precision(const T a_value, const int n = 2) {
     std::ostringstream out;
     out.precision(n);
     out << std::fixed << a_value;
@@ -121,7 +121,7 @@ void problem7_8() {
   // Problem 7: Speedup
   double sum_average=0;
   int avg_iterations=1;
-  int resolution = 15; //+1 for endpoints
+  int resolution = 10; //+1 for endpoints
   // for (int i=0; i<avg_iterations; i++){
   //   double time_parallel = 0;
   //   double time_serial = 0;
@@ -147,15 +147,15 @@ void problem7_8() {
   // // Problem 8: Critical T
   // //Broad sweeps of T=2.1 to T=2.4
   // //L=40
-  // cout << "Running broad sweep L40\n";
-  // get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L60\n";
-  // //L=60
-  // get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L80\n";
-  // //L=80
-  // get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
-  // cout << "Running broad sweep L100\n";
+  cout << "Running broad sweep L40\n";
+  get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
+  cout << "Running broad sweep L60\n";
+  //L=60
+  get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
+  cout << "Running broad sweep L80\n";
+  //L=80
+  get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
+  cout << "Running broad sweep L100\n";
   // //L=100
   // get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5, 10000);
   // cout << "Running broad sweep L200\n";
@@ -164,16 +164,16 @@ void problem7_8() {
   // // Narrow sweeps 
   // cout << "Running narrow sweep L40\n";
   // //L=40
-  // get_phase_transition_averages(2.20, 2.35, resolution, 40, 41337, 0, 5, 10000);
-   cout << "Running narrow sweep L60\n";
-  // //L=60
-   get_phase_transition_averages(2.20, 2.35, 15, 60, 41337, 0, 5, 10000);
-  cout << "Running narrow sweep L80\n";
-  // //L=80
-   get_phase_transition_averages(2.20, 2.35, 15, 80, 41337, 0, 5, 10000);
-  cout << "Running narrow sweep L100\n";
-  // //L=100
-  get_phase_transition_averages(2.20, 2.35, 15, 100, 41337, 0, 5, 10000);
+  // get_phase_transition_averages(2.25, 2.35, resolution, 40, 41333, 0, 5, 10000);
+  //  cout << "Running narrow sweep L60\n";
+  // // //L=60
+  //  get_phase_transition_averages(2.25, 2.35, resolution, 60, 44113, 0, 5, 10000);
+  // cout << "Running narrow sweep L80\n";
+  // // //L=80
+  //  get_phase_transition_averages(2.25, 2.35, resolution, 80, 41376, 0, 5, 10000);
+  // cout << "Running narrow sweep L100\n";
+  // // //L=100
+  // get_phase_transition_averages(2.25, 2.35, resolution, 100, 41323, 0, 5, 10000);
   // cout << "Running narrow sweep L200\n";
   // //L=100
   // get_phase_transition_averages(2.20, 2.35, resolution, 200, 41337, 0, 5, 10000);
@@ -264,10 +264,13 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
   for (int i = 0; i < steps+1; i++){
     int thread_id = omp_get_thread_num();
     double T = T_start + i * h;
-    if (T<1.5) {spin = 1;} else {spin = 0;}
+    //if (T<1.5) {spin = 1;} else {spin = 0;}
     Ising ising(lattice_side_length, T, seed+thread_id, spin, burn_in);
     // Burn in system
-    ising.burn_in_lattice();
+    // ising.burn_in_lattice();
+    for (int j = 0; j < burn_in+1000; j++) {
+      ising.run_metropolis_MCMC();
+    }
     
     // Collect samples
     int count = 0;
@@ -295,7 +298,7 @@ mat phase_transitions_serial(double T_start, double T_end, int steps, int lattic
   int n_cycles = 100000;
   int burn_int = burn_in;
   int sample_rate = 100;
-  int samples = 3; // Number of samples to collect per sampling
+  int samples = 10; // Number of samples to collect per sampling
   int spin = ordered_spin;
   //matrix to store results
   mat results = mat(steps+1, 5, fill::zeros);

@@ -100,19 +100,20 @@ void Ising::run_metropolis_MCMC(){
     tot_cycles_ += 1;
     epsilon_ += 1.0*totalenergy_/N_;
     mag_per_spin_ += 1.0*abs(magnetisation_)/ N_;
-    accumulatedtotalenergy_ += abs(totalenergy_); //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
+    accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
     accumulatedtotalmagnetization_ += abs(magnetisation_);
     M2_ += pow(magnetisation_, 2);
     E2_ += pow(totalenergy_, 2);
   }
 }
 
-// add another 100 to get the system going
+// add another 1000 to get the system going
 void Ising::burn_in_lattice() {
   for (int i = 0; i<burn_in_cycles_+1000; i++) {
     run_metropolis_MCMC();
   }
 }
+
 double Ising::mean(double value, int n_cycles){
   return value / n_cycles;
 }
