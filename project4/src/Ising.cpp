@@ -19,7 +19,7 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin, int 
     mag_per_spin_ = 0;
     epsilon_ = 0;
     tot_cycles_ = 0;
-    burn_in_cycles_ = 10000;
+    burn_in_cycles_ = burn_in;
     burned_ = 0;
     totalenergy_ = 0;
     sample_ = 0;
@@ -106,8 +106,10 @@ void Ising::run_metropolis_MCMC(){
     E2_ += pow(totalenergy_, 2);
   }
 }
+
+// add another 100 to get the system going
 void Ising::burn_in_lattice() {
-  for (int i = 0; i<burn_in_cycles_; i++) {
+  for (int i = 0; i<burn_in_cycles_+100; i++) {
     run_metropolis_MCMC();
   }
 }
@@ -178,10 +180,12 @@ void Ising::write_parameters_to_file(ofstream& ofile) {
 
 arma::vec Ising::sample_average_over_sampled_values(int samples) {
   arma::vec results = arma::vec(4).fill(0);
+  
   results(0) = expval_epsilon(tot_cycles_);
   results(1) = expval_mag_per_spin(tot_cycles_);
   results(2) = heat_capacity(tot_cycles_);
   results(3) = susceptibility(tot_cycles_);
+  
   for (int i = 0; i<samples-1; i++) {
     run_metropolis_MCMC();
     results(0) += expval_epsilon(tot_cycles_);

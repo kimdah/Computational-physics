@@ -143,6 +143,7 @@ void problem7_8() {
   }
   cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
 
+
   // Problem 8: Critical T
   //Broad sweeps of T=2.1 to T=2.4
   //L=40
@@ -218,7 +219,7 @@ void analytical_2x2(double T){
 
 void get_phase_transition_averages(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin, int avg, int burn_in) {
   mat averages = mat(steps+1, 5, fill::zeros);
-  cout << "."; 
+  
   for (int i = 0; i<avg; i++) {
     averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed+i,  ordered_spin, burn_in);
   }
@@ -251,6 +252,7 @@ mat phase_transitions_parallel(double T_start, double T_end, int steps, int latt
   int sample_rate = 100;
   int samples = 3; // Number of samples to collect per sampling
   int spin = ordered_spin;
+  
   //matrix to store results
   mat results = mat(steps+1, 5, fill::zeros);
 
