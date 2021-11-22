@@ -33,7 +33,7 @@ Below, you will find a descriprion of each folder. At the bottom you will find i
 #Code structure
   Our code is mainly split into two parts: 'main.cpp' and 'Ising.cpp'. We mainly use 'main.cpp' to run a simulation for each task using the 'simulate()' function in 'main.cpp'. 'simulate()' will then use the functions located in 'Ising.cpp'. If you wish to run simulation with some spesific parameters, you can so so using the last command given in the instuctions below.
   
-# Compiling, running and plotting
+#Compiling, running and plotting
   
   Instuctions on compiling running and plotting can be found below. If you are on a different operating system than macOS, you might have to edit line 12 in the makefile to say '-fopenmp' instead of 'lomp'. The prorgam takes a while to run, we recommend you grab a coffe while waiting.
 -------------------
