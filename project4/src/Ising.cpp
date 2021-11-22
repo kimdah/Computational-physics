@@ -12,27 +12,21 @@
 
 using namespace std;
 
-Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
+Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin, int burn_in) {
     L_ = lattice_side_length;
     N_ = L_*L_;
     T_ = T;
     mag_per_spin_ = 0;
     epsilon_ = 0;
     tot_cycles_ = 0;
-    burn_in_cycles_ = 0;
-
-    // Trying to make sure everything gets overwritten for each instance of the class
+    burn_in_cycles_ = 10000;
+    burned_ = 0;
     totalenergy_ = 0;
     sample_ = 0;
     accumulatedtotalenergy_ = 0;
     accumulatedtotalmagnetization_ = 0;
     magnetisation_ = 0;
-    E2 = 0; M2 = 0;
-    // cout << "sample__: " << sample_ << endl;
-    // cout << "accumulatedtotalmagnetization_: " << accumulatedtotalmagnetization_ << endl;
-    // cout << "totalenergy_: " << totalenergy_ << endl;
-    // cout << "magnetisation_: " << magnetisation_ << endl;
-
+    E2_ = 0; M2_ = 0;
 
     //Initalise randomness with Mersenne Twister 19937 random number generator
     generator_.seed(seed);
@@ -48,7 +42,8 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     } else {
       generate_unordered_lattice();
     }
-    calc_tot_magnetization_of_state();
+
+    calc_tot_magnetisation_of_state();
     calc_energy_of_lattice_state();
 }
 
@@ -67,7 +62,7 @@ void Ising::generate_unordered_lattice() {
     s_ = lattice;
 }
 
-vector<vector<int>> Ising::run_metropolis_MCMC(){
+void Ising::run_metropolis_MCMC(){
   int randRow, randCol, index, deltaE;
 
   for (int c = 0; c < N_; c++){ // one MC cycle; attempt N spin flips
@@ -91,24 +86,31 @@ vector<vector<int>> Ising::run_metropolis_MCMC(){
     if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
       // Always accept for energy reducing flips
+      // Set new state of system:
       s_[randRow][randCol] *= -1;
       totalenergy_ += deltaE;
       magnetisation_ += 2 * s_[randRow][randCol]; // Equation 13.7 in lectures2015 M_(i+1) = M_i + 2*s_(i+1) (= +/- 2 )
     } 
   }
-  //Adding the values from each cycle, so it can be used to find exp values.
-  tot_cycles_ += 1;
-  if (burn_in_cycles_ < tot_cycles_) {
+
+  // Adding the values from each cycle once sytem has reached equilibrium, 
+  // so it can be used to find exp values.
+  burned_ += 1;
+  if (burn_in_cycles_ < burned_) {
+    tot_cycles_ += 1;
     epsilon_ += 1.0*totalenergy_/N_;
     mag_per_spin_ += 1.0*abs(magnetisation_)/ N_;
-    accumulatedtotalenergy_ += totalenergy_; //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
+    accumulatedtotalenergy_ += abs(totalenergy_); //accumulatedtotalenergy_ er sum(E_i) over alle cycles i
     accumulatedtotalmagnetization_ += abs(magnetisation_);
-    M2 += pow(magnetisation_, 2);
-    E2 += pow(totalenergy_, 2);
+    M2_ += pow(magnetisation_, 2);
+    E2_ += pow(totalenergy_, 2);
   }
-  return s_; // not neccessary to return s_? No not really!
 }
-
+void Ising::burn_in_lattice() {
+  for (int i = 0; i<burn_in_cycles_; i++) {
+    run_metropolis_MCMC();
+  }
+}
 double Ising::mean(double value, int n_cycles){
   return value / n_cycles;
 }
@@ -122,48 +124,25 @@ double Ising::expval_mag_per_spin(int n_cycles){
 }
 
 double Ising::heat_capacity(int n_cycles){
-  // (1./n_cycles)
-  //cout << accumulatedtotalenergy_/tot_cycles_ << "\n";
-  //cout << totalenergy_ << "\n";
-  //cout << pow(accumulatedtotalenergy_/tot_cycles_, 2) << "\n";
-  //cout << pow(mean(accumulatedtotalenergy_, n_cycles), 2) << "\n";
-  //return (1./N_)*(1./pow(T_,2))*(mean(pow(accumulatedtotalenergy_, 2), n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
-
-  return (1./N_)*(1./(T_*T_))*(mean(E2, n_cycles) - pow(mean(accumulatedtotalenergy_, n_cycles), 2)); //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+   //C_v = 1/N_ 1/kbT^2 (<E^2>-<E>^2)
+  return (1./N_)*(1./(T_*T_))*((E2_/tot_cycles_) - pow((mean(accumulatedtotalenergy_, tot_cycles_)), 2)); 
 }
 
 double Ising::susceptibility(int n_cycles){
-  // *(1./n_cycles)
-  return (1./N_)*(1./T_)*(mean(M2, n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
+  return (1./N_)*(1./T_)*(mean(M2_, n_cycles) - pow(mean(accumulatedtotalmagnetization_, n_cycles), 2));
 }
 
-
-// Working
 void Ising::calc_energy_of_lattice_state() {
   double energy = 0;
   for (int i=0; i<L_; i++){
     for (int j=0; j<L_; j++){
-      energy +=  - s_[i][j] * s_[(i+1)%L_][j]  -  s_[i][j] * s_[i][(j+1)%L_];
+      energy +=  - s_[i][j] * (s_[(i+1)%L_][j] + s_[i][(j+1)%L_]);
     }
   }
   totalenergy_ = energy;
-}
-// Overload of function above
-// Working
-int Ising::calc_energy_of_lattice_state(vector<vector<int> > s) {
-  int energy = 0;
-  for (int i=0; i<L_; i++){
-    for (int j=0; j<L_; j++){
-      energy += - s[i][j] * s[(i+1)%L_][j] ;
-      energy += - s[i][j] * s[i][(j+1)%L_];
-    }
-  }
-  totalenergy_ = energy;
-  return energy;
 }
 
-// Working
-void Ising::calc_tot_magnetization_of_state(){
+void Ising::calc_tot_magnetisation_of_state(){
   int magnetisation = 0;
   for(int i=0 ; i<L_ ; i++){ //the first row will be the Lth row
     for(int j=0 ; j<L_ ; j++){ //the first column will be the Lth column
@@ -173,10 +152,7 @@ void Ising::calc_tot_magnetization_of_state(){
   magnetisation_ = magnetisation;
 }
 
-// Working. Things make sense
 vector<double> Ising::calc_boltzmann_factors(double T){
-  //double kB = 1.38064852 * pow(10, -23);
-  //double beta = 1. / (kB*T);
   double beta = 1. / (T);
   vector<double> boltzmann_values;
   boltzmann_values.push_back(exp(-beta*(-8))); // 0 +1 spins
@@ -187,7 +163,6 @@ vector<double> Ising::calc_boltzmann_factors(double T){
   return boltzmann_values;
 }
 
-// Adds current parameters to referenced ofstream
 void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
   ofile << setw(width) << tot_cycles_;
@@ -197,18 +172,6 @@ void Ising::write_parameters_to_file(ofstream& ofile) {
   ofile << setw(width) << expval_mag_per_spin(tot_cycles_-burn_in_cycles_);
   ofile << setw(width) << heat_capacity(tot_cycles_-burn_in_cycles_);
   ofile << setw(width) << susceptibility(tot_cycles_-burn_in_cycles_);
-  ofile << endl;
-  sample_+=1;
-}
-
-void Ising::write_some_parameters_to_file(ofstream& ofile) {
-  int width = 16;
-  ofile << setw(width) << T_;
-  ofile << setw(width) << expval_epsilon(tot_cycles_);
-  ofile << setw(width) << expval_mag_per_spin(tot_cycles_);
-  ofile << setw(width) << heat_capacity(tot_cycles_);
-  ofile << setw(width) << susceptibility(tot_cycles_);
-  //ofile << setw(width) << totalenergy_/N_;
   ofile << endl;
   sample_+=1;
 }
@@ -226,35 +189,7 @@ arma::vec Ising::sample_average_over_sampled_values(int samples) {
     results(2) += heat_capacity(tot_cycles_);
     results(3) += susceptibility(tot_cycles_); 
   }
-  results(0) = results(0)/samples;
-  results(1) = results(1)/samples;
-  results(2) = results(2)/samples;
-  results(3) = results(3)/samples;
   return results;
-}
-
-void Ising::sample_average_over_sampled_values(ofstream& ofile, int samples) {
-  double eps, mag, hc, suc;
-  eps = expval_epsilon(tot_cycles_);
-  mag = expval_mag_per_spin(tot_cycles_);
-  hc = heat_capacity(tot_cycles_);
-  suc = susceptibility(tot_cycles_);
-  for (int i = 0; i<samples-1; i++) {
-    run_metropolis_MCMC();
-    eps += expval_epsilon(tot_cycles_);
-    mag += expval_mag_per_spin(tot_cycles_);
-    hc += heat_capacity(tot_cycles_);
-    suc += susceptibility(tot_cycles_); 
-  }
-  int width = 16;
-  ofile << setw(width) << T_;
-  ofile << setw(width) << eps/samples;
-  ofile << setw(width) << mag/samples;
-  ofile << setw(width) << hc/samples;
-  ofile << setw(width) << suc/samples;
-  //ofile << setw(width) << totalenergy_/N_;
-  ofile << endl;
-  sample_+=1;
 }
 
 void Ising::print(){
