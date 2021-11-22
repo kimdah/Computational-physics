@@ -43,8 +43,8 @@ int main(int argc, char const *argv[]) {
       << " <lattice side size (integer)>" << " <MCMC cycles (integer)>"
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
       << " <output_file_name> " << std::endl;
-      problem4();
-      problem5_6();
+      //problem4();
+      //problem5_6();
       problem7_8();
       return 0; // quit program
 
@@ -122,57 +122,61 @@ void problem7_8() {
   double sum_average=0;
   int avg_iterations=1;
   int resolution = 15; //+1 for endpoints
-  for (int i=0; i<avg_iterations; i++){
-    double time_parallel = 0;
-    double time_serial = 0;
-    auto start = chrono::high_resolution_clock::now();
-    phase_transitions_parallel(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> p = end - start;
-    time_parallel = p.count();
+  // for (int i=0; i<avg_iterations; i++){
+  //   double time_parallel = 0;
+  //   double time_serial = 0;
+  //   auto start = chrono::high_resolution_clock::now();
+  //   phase_transitions_parallel(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
+  //   auto end = chrono::high_resolution_clock::now();
+  //   chrono::duration<double> p = end - start;
+  //   time_parallel = p.count();
 
-    start = chrono::high_resolution_clock::now();
-    phase_transitions_serial(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
-    end = chrono::high_resolution_clock::now();
-    chrono::duration<double> s = end - start;
-    time_serial = s.count();
-    //cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
-    //cout << "Speedup = " << time_serial/time_parallel << "\n";
-    sum_average += time_serial/time_parallel;
-    cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_iterations<<endl;
-  }
-  cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
-
-
-  // Problem 8: Critical T
-  //Broad sweeps of T=2.1 to T=2.4
-  //L=40
-  get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
-
-  //L=60
-  get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
-
-  //L=80
-  get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
-
-  //L=100
-  get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5, 10000);
-  //L=200
-  get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
-  // Narrow sweeps 
-  //L=40
-  get_phase_transition_averages(2.20, 2.35, resolution, 40, 41337, 0, 5, 10000);
-
-  //L=60
-  get_phase_transition_averages(2.20, 2.35, resolution, 60, 41337, 0, 5, 10000);
-
-  //L=80
-  get_phase_transition_averages(2.20, 2.35, resolution, 80, 41337, 0, 5, 10000);
-
-  //L=100
-  get_phase_transition_averages(2.20, 2.35, resolution, 100, 41337, 0, 5, 10000);
-  //L=100
-  get_phase_transition_averages(2.20, 2.35, resolution, 200, 41337, 0, 5, 10000);
+  //   start = chrono::high_resolution_clock::now();
+  //   phase_transitions_serial(1.0, 4.0, 10, 40, 1337+i, 0, 1000);
+  //   end = chrono::high_resolution_clock::now();
+  //   chrono::duration<double> s = end - start;
+  //   time_serial = s.count();
+  //   //cout << "Parallel time: " << time_parallel << " Serial time: " << time_serial << "\n";
+  //   //cout << "Speedup = " << time_serial/time_parallel << "\n";
+  //   sum_average += time_serial/time_parallel;
+  //   cout << "Mesuring average speedup, at step:" << i+1 <<"/"<<avg_iterations<<endl;
+  // }
+  // cout << "Average speedup over "<<avg_iterations<<" runs, was found to be: "<< sum_average/avg_iterations<<endl;
+  // cout << "Running test sweep L40\n";
+  // get_phase_transition_averages(2.0, 2.6, 10, 40, 41337, 0, 5, 1000);
+  // // Problem 8: Critical T
+  // //Broad sweeps of T=2.1 to T=2.4
+  // //L=40
+  // cout << "Running broad sweep L40\n";
+  // get_phase_transition_averages(2.0, 2.6, resolution, 40, 41337, 0, 5, 10000);
+  // cout << "Running broad sweep L60\n";
+  // //L=60
+  // get_phase_transition_averages(2.0, 2.6, resolution, 60, 41337, 0, 5, 10000);
+  // cout << "Running broad sweep L80\n";
+  // //L=80
+  // get_phase_transition_averages(2.0, 2.6, resolution, 80, 41337, 0, 5, 10000);
+  // cout << "Running broad sweep L100\n";
+  // //L=100
+  // get_phase_transition_averages(2.0, 2.6, resolution, 100, 41337, 0, 5, 10000);
+  // cout << "Running broad sweep L200\n";
+  // //L=200
+  // get_phase_transition_averages(2.0, 2.6, resolution, 200, 41337, 0, 5, 10000);
+  // // Narrow sweeps 
+  // cout << "Running narrow sweep L40\n";
+  // //L=40
+  // get_phase_transition_averages(2.20, 2.35, resolution, 40, 41337, 0, 5, 10000);
+   cout << "Running narrow sweep L60\n";
+  // //L=60
+   get_phase_transition_averages(2.20, 2.35, 15, 60, 41337, 0, 5, 10000);
+  cout << "Running narrow sweep L80\n";
+  // //L=80
+   get_phase_transition_averages(2.20, 2.35, 15, 80, 41337, 0, 5, 10000);
+  cout << "Running narrow sweep L100\n";
+  // //L=100
+  get_phase_transition_averages(2.20, 2.35, 15, 100, 41337, 0, 5, 10000);
+  // cout << "Running narrow sweep L200\n";
+  // //L=100
+  // get_phase_transition_averages(2.20, 2.35, resolution, 200, 41337, 0, 5, 10000);
 
 }
 
@@ -236,7 +240,7 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
   ofile << setw(width) << "Sucept.";
   ofile << endl;
   
-  for(int row = 0; row<steps+1; row++) {
+  for(int row = 0; row < steps+1; row++) {
     for(int column = 0; column<5; column++) {
       ofile << setw(width) << averages(row, column);
     }
