@@ -95,7 +95,6 @@ void Ising::run_metropolis_MCMC(){
       totalenergy_ += deltaE;
       //eps_ = totalenergy_/N_;
       eps_cycle_.push_back(totalenergy_/N_);
-      eps_ = (totalenergy_) /N_; // last eps of cycle
       magnetisation_ += 2 * s_[randRow][randCol]; // Equation 13.7 in lectures2015 M_(i+1) = M_i + 2*s_(i+1) (= +/- 2 )
     }
   }
@@ -176,8 +175,7 @@ vector<double> Ising::calc_boltzmann_factors(double T){
 void Ising::write_parameters_to_file(ofstream& ofile) {
   int width = 16;
   ofile << setw(width) << tot_cycles_;
-  //ofile << setw(width) << totalenergy_;
-  ofile << setw(width) << eps_;
+  ofile << setw(width) << totalenergy_;
   ofile << setw(width) << magnetisation_;
   ofile << setw(width) << expval_epsilon(tot_cycles_-burn_in_cycles_);
   ofile << setw(width) << expval_mag_per_spin(tot_cycles_-burn_in_cycles_);
