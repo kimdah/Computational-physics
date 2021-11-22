@@ -14,7 +14,8 @@ class Ising {
     public:
         int L_, N_, seed, magnetisation_,sample_, tot_cycles_;
         double T_, totalenergy_, accumulatedtotalenergy_, accumulatedtotalmagnetization_,  epsilon_, mag_per_spin_, burn_in_cycles_;
-        double E2, M2, eps_;
+        double E2_, M2_, burned_;
+        vector<double> eps_cycle_;
         mt19937 generator_;
         vector<double> boltzmann_factors_;
         vector<vector<int>> s_;
@@ -68,6 +69,8 @@ class Ising {
       // Prints the lattice, E and M to terminal
       void print();
 
+      // Write eps per sample to file
+      void write_eps_to_file(ofstream& ofile);
 
 };
 #endif

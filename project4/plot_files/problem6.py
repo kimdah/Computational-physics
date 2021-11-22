@@ -3,9 +3,10 @@ import numpy as np
 #from plotlib import makeplots
 import matplotlib.pyplot as plt
 #%matplotlib inline
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 #Adjusting text size
-SMALL_SIZE = 14
+SMALL_SIZE = 13
 MEDIUM_SIZE = 17
 BIGGER_SIZE = 17
 
@@ -17,56 +18,50 @@ plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
-fig, ax = plt.subplots(figsize = (6, 5))
+fig, ax = plt.subplots(figsize = (7, 6))
 plt.subplots_adjust(
 top=0.95,
 bottom=0.15,
-left=0.2,
+left=0.15,
 right=0.95,
 hspace=0.2,
 wspace=0.2
 )
 
-# CHOSE UNORDERED - MAYBE DO BOTH?
 for i in range(0,2):
     if i == 0:
         T = 1.0
         alpha = 1 # transparency factor
-        bins = 5
+        bins = 10
     else:
         T = 2.4
         alpha = 0.5
         bins = 50
 
-    data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_unordered.txt' %T, skiprows=1)
-    eps = np.array(data[1:,1]) # np.array?
-    print(len(eps))
-    eps = eps[eps != 0] # omit zeros
-    print(eps[0])
-    print("len eps: ", len(eps[eps != 0]))
+    # comment out to experiment with hist look
+    data = np.loadtxt('./datafiles/histogram_T_%.1f_unordered.txt' %T, skiprows=1)
+    eps = np.array(data[:])
 
-    # Using Freedman–Diaconis rule to be more scientific in choosing the "right" bin width
-    q25, q75 = np.percentile(eps, [0.25, 0.75])
-    #print(q25, q75)
-    bin_width = 2 * (q75 - q25) * len(eps) ** (-1/3)
-    # print(bin_width)
-    # print(max(eps), max(abs(eps)), abs(max(eps)))
-    # print(min(eps), min(abs(eps)), abs(min(eps)))
-    # print(max(abs(eps))- min(abs(eps)))
-    #bin_width = 0.01
+    print("\n---------- T = %.1f ----------" %T)
+    print("n_samples_total = ", len(eps))
 
-    # bins = round((max(abs(eps))- min(abs(eps))) / bin_width)
-    # print("Freedman–Diaconis number of bins:", bins)
+    eps_mean = np.mean(eps)
+    print("eps_mean = ", eps_mean)
+    eps_variance = np.sum((eps - eps_mean)**2) / (len(eps)-1)
+    print("Var(eps) = ", eps_variance)
+    print("------------------------------\n")
 
-    #bins = 30
-    #bins = round(np.sqrt(len(eps))) # 100
-    print(np.sqrt(len(eps)), len(eps))
-    #bins = 32
-    print("bin_width: ", round((max(abs(eps))- min(abs(eps)))/bins))
+    ax.hist(eps, label="T=%.1f"%T , density=True, log=True, alpha=alpha, stacked=True, bins=bins)
+    ax.plot([eps_mean, eps_mean], [0.0, ax.get_ylim()[1]], linestyle="dashed", linewidth=1.5, label="sample mean")
 
-    #plt.style.use('seaborn-white')
-    plt.hist(eps, density=True, alpha=alpha, bins=bins, stacked=True, log=True)
+# Setting ticks on x-axis
+ax.xaxis.set_major_locator(MultipleLocator(0.20))
+ax.xaxis.set_major_formatter('{x:.2f}')
+ax.xaxis.set_minor_locator(MultipleLocator(0.01))
 
 plt.ylabel('$p_{\epsilon}(\epsilon)_{est}$')
 plt.xlabel('$\epsilon$')
+plt.grid()
+plt.legend(loc="upper right")
+plt.savefig("./figures/histogram.pdf")
 plt.show()

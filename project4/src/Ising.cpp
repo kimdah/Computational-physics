@@ -64,7 +64,8 @@ void Ising::generate_unordered_lattice() {
 
 void Ising::run_metropolis_MCMC(){
   int randRow, randCol, index, deltaE;
-  eps_ = 0;
+  //eps_ = 0;
+  eps_cycle_.clear(); // reset each cycle
   //eps_ = (totalenergy_) /N_;
   for (int c = 0; c < N_; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
@@ -84,7 +85,7 @@ void Ising::run_metropolis_MCMC(){
     double probability_ratio = boltzmann_factors_[index]; // w_i/w_j = exp(-beta*deltaE)
     double r = uniform_real_(generator_);
 
-    //eps_cycle[c] = (totalenergy_ + deltaE)/N_;
+
 
     if (r <= probability_ratio){ //abs(totalenergy_ + deltaE) < abs(totalenergy_)
       // Accept spin configuration candidate
@@ -92,6 +93,8 @@ void Ising::run_metropolis_MCMC(){
       // Set new state of system:
       s_[randRow][randCol] *= -1;
       totalenergy_ += deltaE;
+      //eps_ = totalenergy_/N_;
+      eps_cycle_.push_back(totalenergy_/N_);
       eps_ = (totalenergy_) /N_; // last eps of cycle
       magnetisation_ += 2 * s_[randRow][randCol]; // Equation 13.7 in lectures2015 M_(i+1) = M_i + 2*s_(i+1) (= +/- 2 )
     }
@@ -180,6 +183,14 @@ void Ising::write_parameters_to_file(ofstream& ofile) {
   ofile << setw(width) << heat_capacity(tot_cycles_-burn_in_cycles_);
   ofile << setw(width) << susceptibility(tot_cycles_-burn_in_cycles_);
   ofile << endl;
+  sample_+=1;
+}
+
+void Ising::write_eps_to_file(ofstream& ofile) {
+  int width = 16;
+  for (int i = 0; i < eps_cycle_.size(); i++){
+    ofile << setw(width) << eps_cycle_[i] << endl;
+  }
   sample_+=1;
 }
 
