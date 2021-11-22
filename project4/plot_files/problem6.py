@@ -36,9 +36,13 @@ for i in range(0,2):
         T = 2.4
         alpha = 0.5
 
-    data = np.loadtxt('./datafiles/ncyc_1e4_L_20_T_%.1f_ordered.txt' %T, skiprows=1)
+    data = np.loadtxt('./datafiles/histogram_T_%.1f_unordered.txt' %T, skiprows=1)
     eps = np.array(data[1:,1]) # np.array?
+    print(len(eps))
+    eps = eps[eps != 0] # omit zeros
     print(eps[0])
+    print("len eps: ", len(eps[eps != 0]))
+
     # Using Freedman–Diaconis rule to be more scientific in choosing the "right" bin width
     q25, q75 = np.percentile(eps, [0.25, 0.75])
     #print(q25, q75)
@@ -55,7 +59,7 @@ for i in range(0,2):
     #bins = 30
     bins = round(np.sqrt(len(eps))) # 100
     print(np.sqrt(len(eps)), len(eps))
-    bins = 32
+    #bins = 32
     print("bin_width: ", round((max(abs(eps))- min(abs(eps)))/bins))
 
     #plt.style.use('seaborn-white')

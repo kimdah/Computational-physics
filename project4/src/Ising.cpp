@@ -28,6 +28,8 @@ Ising::Ising(int lattice_side_length, double T, int seed, int ordered_spin) {
     accumulatedtotalmagnetization_ = 0;
     magnetisation_ = 0;
     E2 = 0; M2 = 0;
+    // Testing!
+    // eps_ = 0; // funker ikke for da blir det overveldende mange -2 ere
     // cout << "sample__: " << sample_ << endl;
     // cout << "accumulatedtotalmagnetization_: " << accumulatedtotalmagnetization_ << endl;
     // cout << "totalenergy_: " << totalenergy_ << endl;
@@ -70,6 +72,7 @@ void Ising::generate_unordered_lattice() {
 vector<vector<int>> Ising::run_metropolis_MCMC(){
   int randRow, randCol, index, deltaE;
   eps_ = 0;
+  //eps_ = (totalenergy_) /N_;
   for (int c = 0; c < N_; c++){ // one MC cycle; attempt N spin flips
     // flip random spin
     randRow = lattice_uniform_distribution_(generator_);
@@ -126,7 +129,6 @@ double Ising::expval_mag_per_spin(int n_cycles){
 }
 
 double Ising::heat_capacity(int n_cycles){
-  // (1./n_cycles)
   //cout << accumulatedtotalenergy_/tot_cycles_ << "\n";
   //cout << totalenergy_ << "\n";
   //cout << pow(accumulatedtotalenergy_/tot_cycles_, 2) << "\n";

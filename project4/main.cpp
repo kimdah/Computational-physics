@@ -16,7 +16,8 @@ using namespace arma;
 // Performs simulations based on parameter inputs
 double simulator(int n_cycles, int lattice_side_length, double T, int seed, int ordered_spin, string filen, const int sample_rate = 100);
 void problem4();
-void problem5_6();
+void problem5(int cycles);
+void problem6(int cycles, int sample_rate);
 void problem7_8();
 void analytical_2x2(double T);
 mat phase_transitions_parallel(double T_start, double T_end, int steps, int lattice_side_length, int seed, int ordered_spin);
@@ -43,8 +44,9 @@ int main(int argc, char const *argv[]) {
       << " <unordered lattice: use 0, ordered lattice: use -1 or 1>"
       << " <output_file_name> " << std::endl;
       problem4();
-      problem5_6();
-      problem7_8();
+      problem5(10000);
+      problem6(10000, 1);
+      //problem7_8();
       return 0; // quit program
 
     } else if (argc == 6) {
@@ -100,13 +102,12 @@ void problem4() {
   analytical_2x2(temp);
 }
 
-void problem5_6() {
-  // or use cml arguements
-  int cycles = 10000;
+void problem5(int cycles) {
   int L = 20;
   double T_1 = 1.0;
   double T_2 = 2.4;
   int seed = 3572;
+  // --- Change 1e4 in textfilename if cycles change
 
   // T = 1.0 :
   simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt"); // for -1 also?
@@ -115,6 +116,22 @@ void problem5_6() {
   // T = 2.4
   simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt"); // for -1 also?
   simulator(cycles, L, T_2, seed, 0, "ncyc_1e4_L_20_T_2.4_unordered.txt");
+}
+
+void problem6(int cycles, int sample_rate) {
+  int L = 20;
+  double T_1 = 1.0;
+  double T_2 = 2.4;
+  int seed = 8276;
+  // CHANGE THE NAME
+
+  // T = 1.0 :
+  //simulator(cycles, L, T_1, seed, 1, "ncyc_1e4_L_20_T_1.0_ordered.txt", sample_rate); // for -1 also?
+  simulator(cycles, L, T_1, seed, 0, "histogram_T_1.0_unordered.txt", sample_rate);
+
+  // T = 2.4
+  //simulator(cycles, L, T_2, seed, 1, "ncyc_1e4_L_20_T_2.4_ordered.txt", sample_rate); // for -1 also?
+  simulator(cycles, L, T_2, seed, 0, "histogram_T_2.4_unordered.txt", sample_rate);
 }
 
 void problem7_8() {
@@ -148,16 +165,16 @@ void problem7_8() {
 
 
 
-  // Problem 8: Critical T
-  //Broad sweeps of T=2.1 to T=2.4
-  //L=40
-  phase_transitions_parallel(2.1, 2.4, resolution, 40, 41337, 0);
-  //L=60
-  phase_transitions_parallel(2.1, 2.4, resolution, 60, 41337, 0);
-  //L=80
-  phase_transitions_parallel(2.1, 2.4, resolution, 80, 41337, 0);
-  //L=100
-  phase_transitions_parallel(2.1, 2.4, resolution, 100, 41337, 0);
+  // // Problem 8: Critical T
+  // //Broad sweeps of T=2.1 to T=2.4
+  // //L=40
+  // phase_transitions_parallel(2.1, 2.4, resolution, 40, 41337, 0);
+  // //L=60
+  // phase_transitions_parallel(2.1, 2.4, resolution, 60, 41337, 0);
+  // //L=80
+  // phase_transitions_parallel(2.1, 2.4, resolution, 80, 41337, 0);
+  // //L=100
+  // phase_transitions_parallel(2.1, 2.4, resolution, 100, 41337, 0);
 }
 
 
@@ -206,7 +223,7 @@ void get_phase_transition_averages(double T_start, double T_end, int steps, int 
   mat averages = mat(steps, 5, fill::zeros);
   int iters = 3;
   for (int i = 0; i<iters; i++) {
-    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed,  ordered_spin)
+    averages += phase_transitions_parallel( T_start,  T_end,  steps,  lattice_side_length,  seed,  ordered_spin);
   }
   averages = averages/iters;
 
