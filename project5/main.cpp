@@ -13,7 +13,8 @@ using namespace std;
 using namespace arma;
 // Performs simulations based on parameter inputs
 int change_index(int i, int j, int M);
-void make_matrix(double r, cx_vec a, cx_vec b); //cx_double?
+void make_matrix(int n, float r,vector<float> a);
+rowvec time_step(rowvec u);
 
 
 
@@ -42,3 +43,8 @@ int main(int argc, char const *argv[]) {
 
 //changes index for the u vector(column), i and j can have values from 0 to M-2
 int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
+
+rowvec time_step(rowvec u){
+	rowvec b = affmul(B,u); //Calculates Bu = b (maybe cross() instead?)
+	return spsolve(A,b);	//spsolve assumes spars matix, maybe solve() instead.
+}
