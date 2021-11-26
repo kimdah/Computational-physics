@@ -18,8 +18,25 @@ void make_matrix(int n, float r,vector<float> a);
 
 
 int main(int argc, char const *argv[]) {
+  int M=5;
+  double deltat;
+  double h;
+  sp_cx_mat A= sp_cx_mat((m-2)^2, (m-2)^2).fill:zeros;
+  sp_cx_mat B= sp_cx_mat((m-2)^2, (m-2)^2).fill:zeros;
+  sp_cx_mat V= sp_cx_mat((m-2)^2, (m-2)^2).fill:zeros;
+  cx_vec a = cx_vec((m-2)^2-1);
+  cx_vec b = cx_vec((m-2)^2-1);
+
+  for(int k=0 ; k < (m-2)^2 ; k++){
+    a(k) = (1 + 4*r, deltat/2 * V(k,k);
+    b(k) = (1 - 4*r, -deltat/2 * V(k,k);
+    A(k,k) = a(k);
+    B(k,k) = b(k);
+  }
 
 //cout << change_index(3,3,5)<<endl;
+
+
 
 }
 
