@@ -13,7 +13,7 @@ using namespace std;
 using namespace arma;
 // Performs simulations based on parameter inputs
 int change_index(int i, int j, int M);
-void make_matrix(int n, double r, cx_vec<cx_double> a);
+void make_matrix(double r, cx_vec a, cx_vec b); //cx_double?
 
 
 
