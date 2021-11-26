@@ -3,11 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <assert.h>
-#include <vector>
 #include <cmath>
 #include <iomanip>
-#include <omp.h>
 #include <chrono>
 #include <armadillo>
 
