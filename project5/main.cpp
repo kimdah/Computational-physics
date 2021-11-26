@@ -58,7 +58,7 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
   cx_vec b = cx_vec(mat_size);
 
   for(int k = 0 ; k < mat_size ; k++){
-    double real = (deltat/2) * V(k,k).real();
+    double real = (deltat/2) * V(k,k).real(); // trying these instead; these work, but gives unnecessary work
     cx_double img = (deltat/2) * V(k,k).imag();
     cout << "i*V: " << 1i*V(k,k) << endl; // doesnt work for some reason!
 
