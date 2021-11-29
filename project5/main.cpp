@@ -54,7 +54,7 @@ int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 // commented out to make things compile:
 //Task3
  cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
- 	int M= A.size();
+ 	int M = B.size();
  	//cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?)
  	cx_vec b = cx_vec(pow(M-2,2));
  	//matrix multiplication Bu=b
