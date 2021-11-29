@@ -80,10 +80,9 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
     double img = (deltat/2) * V(k,k).imag();
     a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
     b(k) = cx_double(1 - 4*r + img, -real);
-    const complex<double> i(0.0,1.0);
-    complex<double> cval = V(k,k);
+   
     // We want these to work(behold til gruppetime paa torsdag):
-    cout << "i*V: " << cval * i << endl; // doesnt work for some reason!
+    cout << "i*V: " << cx_double(V(k,k)) * 1.0i << endl; 
     //a(k) = (1 + 4*r + 1i*(deltat/2*V(k,k));
     //b(k) = (1 - 4*r - 1i*(deltat/2*V(k,k));
   }
