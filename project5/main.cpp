@@ -49,18 +49,19 @@ int main(int argc, char const *argv[]) {
 
 }
 
-//changes index for the u vector(column), i and j can have values from 0 to M-2
+//changes index for the u vector(column), i and j can have values from 1 to M-2 
 int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
 // commented out to make things compile:
 //Task3
  cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
- 	int M = B.size();
- 	//cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?)
- 	cx_vec b = cx_vec(pow(M-2,2));
- 	//matrix multiplication Bu=b
- 	for(int i =0;i< pow(M-2,2); i++){
- 		for(int j =0;j< pow(M-2,2); j++){
+ 	int m_size = B.size();
+ 	//cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?) (did not work)
+ 	cx_vec b = cx_vec(m_size);
+
+ 	//matrix multiplication Bu=b(instead of affmul()
+ 	for(int i =0;i< m_size; i++){
+ 		for(int j =0;j< m_size; j++){
  			b(i) += (u(i).real()*B(i,j).real()-B(i,j).imag()*u(i).imag())+1i*(u(i).real()*B(i,j).imag()+u(i).imag()*B(i,j).real());
  		}
  	}
