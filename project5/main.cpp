@@ -27,7 +27,7 @@ sp_cx_mat make_matrix(double r, cx_vec d);
 
 int main(int argc, char const *argv[]) {
   // // Testing make_matrix methods (task 2.2)
-  //cx_vec aa(9, fill::ones); // fill::randu
+  cx_vec aa(9, fill::ones); // fill::randu
   // cx_vec t(2*2, fill::value(3));
   // make_matrix(2, t);
 
@@ -60,6 +60,7 @@ int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
 // Makes specialized A and B matrices (2.3)
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
+  // assuming r is real
   int mat_size = pow(M-2,2);
   cx_vec a = cx_vec(mat_size);
   cx_vec b = cx_vec(mat_size);
@@ -70,8 +71,8 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
     //cout << "V(k,k)" << V(k,k)<<endl;
     //cout << "real: " << real << "     imag: " << img << endl;
     //cout << "i*V: " << i*V(k,k) << endl; // doesnt work for some reason!
-    a(k) = cx_double((1 + 4*r - (deltat/2)*img), ((deltat/2)*real)); // sjekk matten
-    b(k) = cx_double((1 - 4*r + (deltat/2)*img), -((deltat/2)*real));
+    a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
+    b(k) = cx_double(1 - 4*r + img, -real);
 
     // We want these to work:
     //a(k) = (1 + 4*r + 1i*(deltat/2*V(k,k));
