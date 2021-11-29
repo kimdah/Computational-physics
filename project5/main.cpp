@@ -83,8 +83,8 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
    
     // We want these to work(behold til gruppetime paa torsdag):
     cout << "i*V: " << cx_double(V(k,k)) * 1.0i << endl; 
-    //a(k) = (1 + 4*r + 1i*(deltat/2*V(k,k));
-    //b(k) = (1 - 4*r - 1i*(deltat/2*V(k,k));
+    a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(k,k))));
+    b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(k,k))));
   }
 
   A = make_matrix(-r, a); // made these global variables - maybe make a class instead?
