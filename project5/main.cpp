@@ -22,7 +22,7 @@ int change_index(int i, int j, int M);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
-sp_cx_mat A;
+sp_cx_mat A; // glboal variables
 sp_cx_mat B;
 
 
@@ -43,8 +43,7 @@ int main(int argc, char const *argv[]) {
   V.diag() = cx_vec(9, fill::randu);
   V.diag(-3) = cx_vec(9-3, fill::randu); // subdiagonal 3
   V.diag(2) = cx_vec(9-2, fill::randu); // superdiagonal 2
-  cout << "V:\n"<< V<< endl;
-
+  //cout << "V:\n"<< V<< endl;
   make_matrices(5, 0.1, 0.1, V, 2);
 
 }
@@ -52,8 +51,7 @@ int main(int argc, char const *argv[]) {
 //changes index for the u vector(column), i and j can have values from 1 to M-2 
 int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
-// commented out to make things compile:
-//Task3
+// Task3
  cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
  	int m_size = B.size();
  	//cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?) (did not work)
@@ -69,31 +67,27 @@ int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
  	}
 
 
-// Makes specialized A and B matrices (2.3)
+// Makes specialized A and B matrices (Task 2.3)
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
-  // assuming r is real
+  // assuming r is a real number
   int mat_size = pow(M-2,2);
   cx_vec a = cx_vec(mat_size);
   cx_vec b = cx_vec(mat_size);
 
   for(int k = 0 ; k < mat_size ; k++){
-    double real = (deltat/2) * V(k,k).real(); // trying these instead; these work, but gives unnecessary work
+    double real = (deltat/2) * V(k,k).real(); // these work, but gives unnecessary work
     double img = (deltat/2) * V(k,k).imag();
-    //cout << "V(k,k)" << V(k,k)<<endl;
-    //cout << "real: " << real << "     imag: " << img << endl;
-    //cout << "i*V: " << i*V(k,k) << endl; // doesnt work for some reason!
     a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
     b(k) = cx_double(1 - 4*r + img, -real);
 
-    // We want these to work:
+    // We want these to work(behold til gruppetime paa torsdag):
+    //cout << "i*V: " << i*V(k,k) << endl; // doesnt work for some reason!
     //a(k) = (1 + 4*r + 1i*(deltat/2*V(k,k));
     //b(k) = (1 - 4*r - 1i*(deltat/2*V(k,k));
   }
 
-  A = make_matrix(-r, a);
+  A = make_matrix(-r, a); // made these global variables - maybe make a class instead?
   B = make_matrix(r,b);
-  //cout << "A:\n" << A << "\nB:\n" << B << endl;
-  // perhaps make it return the matrices somehow?
 
 }
 
@@ -104,9 +98,9 @@ sp_cx_mat make_matrix(double r, cx_vec d){
   sp_cx_mat M = sp_cx_mat(S, S);
 
   // Making diag
-  for (int i = 0; i < S; i+=s){ // last index i = S-s
+  for (int i = 0; i < S; i+=s){ // last index = S-s
     sp_cx_mat D(s,s);
-    D.diag() = d.subvec(i,i+s-1);//cx_vec(s,fill::value(d(i))); // diagonal
+    D.diag() = d.subvec(i,i+s-1);// diagonal
     D.diag(-1) = cx_vec(s-1).fill(r); // subdiagonal
     D.diag(1) = cx_vec(s-1).fill(r); // superdiagonal
     //submat(first_row, first_col, last_row, last_col)
@@ -114,7 +108,7 @@ sp_cx_mat make_matrix(double r, cx_vec d){
   }
 
   // Making non-diag, non-corners
-  for (int i = s; i < S; i+=s){ // last index i = S-s
+  for (int i = s; i < S; i+=s){ // last index= S-s
     sp_cx_mat ND(s,s);
     ND.diag() = cx_vec(s).fill(r); // fill diagonal with r value
     //submat(first_row, first_col, last_row, last_col)
