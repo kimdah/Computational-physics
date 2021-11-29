@@ -1,13 +1,14 @@
 
 CPPflags = g++ -std=c++11
 LIB = -I /usr/local/opt/armadillo/include -DARMA_USE_LAPACK -DARMA_USE_BLAS -DARMA_DONT_USE_WRAPPER -llapack -lblas
+
 all: compile link clean
 
 compile:
 	${CPPflags} -c main.cpp PenningTrap.cpp Particle.cpp
 
 link:
-	${CPPflags} -o main.out main.o PenningTrap.o Particle.o ${LIB}
+	${CPPflags} -o main.out main.o ${LIB}
 
 run:
 	./main.out
