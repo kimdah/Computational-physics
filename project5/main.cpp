@@ -44,6 +44,7 @@ int main(int argc, char const *argv[]) {
   V.diag(-3) = cx_vec(9-3, fill::randu); // subdiagonal 3
   V.diag(2) = cx_vec(9-2, fill::randu); // superdiagonal 2
   //cout << "V:\n"<< V<< endl;
+  
   make_matrices(5, 0.1, 0.1, V, 2);
 
 }
@@ -79,9 +80,10 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
     double img = (deltat/2) * V(k,k).imag();
     a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
     b(k) = cx_double(1 - 4*r + img, -real);
-
+    const complex<double> i(0.0,1.0);
+    complex<double> cval = V(k,k);
     // We want these to work(behold til gruppetime paa torsdag):
-    //cout << "i*V: " << i*V(k,k) << endl; // doesnt work for some reason!
+    cout << "i*V: " << cval * i << endl; // doesnt work for some reason!
     //a(k) = (1 + 4*r + 1i*(deltat/2*V(k,k));
     //b(k) = (1 - 4*r - 1i*(deltat/2*V(k,k));
   }
