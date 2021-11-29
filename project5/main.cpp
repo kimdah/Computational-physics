@@ -21,7 +21,7 @@ using namespace arma;
 int change_index(int i, int j, int M);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
-//rowvec time_step(rowvec u);
+cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
 
 
 
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[]) {
   V.diag(2) = cx_vec(9-2, fill::randu); // superdiagonal 2
   cout << "V:\n"<< V<< endl;
 
-  //make_matrices(5, 0.1, 0.1, V, 2);
+  make_matrices(5, 0.1, 0.1, V, 2);
 
 }
 
@@ -52,10 +52,10 @@ int main(int argc, char const *argv[]) {
 int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
 // commented out to make things compile:
-// rowvec time_step(rowvec u){
-// 	rowvec b = affmul(B,u); //Calculates Bu = b (maybe cross() instead?)
-// 	return spsolve(A,b);	//spsolve assumes sparse matix, maybe solve() instead.
-// }
+ cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
+ 	cx_vec b = affmul(B,u); //Calculates Bu = b (maybe cross() instead?)
+ 	return spsolve(A,b);	//spsolve assumes sparse matix, maybe solve() instead.
+ }
 
 
 // Makes specialized A and B matrices (2.3)
@@ -96,8 +96,8 @@ sp_cx_mat make_matrix(double r, cx_vec d){
   for (int i = 0; i < S; i+=s){ // last index i = S-s
     sp_cx_mat D(s,s);
     D.diag() = d.subvec(i,i+s-1);//cx_vec(s,fill::value(d(i))); // diagonal
-    D.diag(-1) = cx_vec(s-1, fill::value(r)); // subdiagonal
-    D.diag(1) = cx_vec(s-1, fill::value(r)); // superdiagonal
+    D.diag(-1) = cx_vec(s-1).fill(r); // subdiagonal
+    D.diag(1) = cx_vec(s-1).fill(r); // superdiagonal
     //submat(first_row, first_col, last_row, last_col)
     M.submat(i,i,i+s-1,i+s-1) = D; //ex: (0,0,2,2), (3,3,5,5)
   }
@@ -105,7 +105,7 @@ sp_cx_mat make_matrix(double r, cx_vec d){
   // Making non-diag, non-corners
   for (int i = s; i < S; i+=s){ // last index i = S-s
     sp_cx_mat ND(s,s);
-    ND.diag() = cx_vec(s, fill::value(r)); // fill diagonal with r value
+    ND.diag() = cx_vec(s).fill(r); // fill diagonal with r value
     //submat(first_row, first_col, last_row, last_col)
     M.submat(i-s,i,i-1,i+s-1) = ND; //ex: i=s=3: (0,3,2,5) i=2s=6: (3,6,5,8)
     M.submat(i, i-s, i+s-1, i-1) = ND; //ex: i=s=3: (3,0,5,2) i=2s=6: (6,3,8,5)
