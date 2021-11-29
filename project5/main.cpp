@@ -52,10 +52,19 @@ int main(int argc, char const *argv[]) {
 int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
 // commented out to make things compile:
+//Task3
  cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
- 	cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?)
- 	return spsolve(A,b.t());	//spsolve assumes sparse matix, maybe solve() instead.
- }
+ 	int M= A.size();
+ 	//cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?)
+ 	cx_vec b = cx_vec(pow(M-2,2));
+ 	//matrix multiplication Bu=b
+ 	for(int i =0;i< pow(M-2,2); i++){
+ 		for(int j =0;j< pow(M-2,2); j++){
+ 			b(i) += (u(i).real()*B(i,j).real()-B(i,j).imag()*u(i).imag())+1i*(u(i).real()*B(i,j).imag()+u(i).imag()*B(i,j).real());
+ 		}
+ 	}
+ 	return spsolve(A,b.t());	//spsolve assumes sparse matix. Solves the matrix eq. Ax=b, maybe solve() instead.
+ 	}
 
 
 // Makes specialized A and B matrices (2.3)
