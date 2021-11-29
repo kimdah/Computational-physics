@@ -22,7 +22,7 @@ int change_index(int i, int j, int M);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
-sp_cx_mat A; // glboal variables
+sp_cx_mat A; // global variables
 sp_cx_mat B;
 
 
