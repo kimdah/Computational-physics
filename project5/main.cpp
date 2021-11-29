@@ -22,7 +22,8 @@ int change_index(int i, int j, int M);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
-
+sp_cx_mat A;
+sp_cx_mat B;
 
 
 int main(int argc, char const *argv[]) {
@@ -88,8 +89,8 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
     //b(k) = (1 - 4*r - 1i*(deltat/2*V(k,k));
   }
 
-  sp_cx_mat A = make_matrix(-r, a);
-  sp_cx_mat B = make_matrix(r,b);
+  A = make_matrix(-r, a);
+  B = make_matrix(r,b);
   //cout << "A:\n" << A << "\nB:\n" << B << endl;
   // perhaps make it return the matrices somehow?
 
