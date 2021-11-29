@@ -27,7 +27,7 @@ sp_cx_mat make_matrix(double r, cx_vec d);
 
 int main(int argc, char const *argv[]) {
   // // Testing make_matrix methods (task 2.2)
-  cx_vec aa(9, fill::ones); // fill::randu
+  //cx_vec aa(9, fill::ones); // fill::randu
   // cx_vec t(2*2, fill::value(3));
   // make_matrix(2, t);
 
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[]) {
   V.diag(2) = cx_vec(9-2, fill::randu); // superdiagonal 2
   cout << "V:\n"<< V<< endl;
 
-  make_matrices(5, 0.1, 0.1, V, 2);
+  //make_matrices(5, 0.1, 0.1, V, 2);
 
 }
 
@@ -105,13 +105,12 @@ sp_cx_mat make_matrix(double r, cx_vec d){
   // Making non-diag, non-corners
   for (int i = s; i < S; i+=s){ // last index i = S-s
     sp_cx_mat ND(s,s);
-    ND.diag() = cx_vec(s, fill::value(8)); // fill diagonal with r value
+    ND.diag() = cx_vec(s, fill::value(r)); // fill diagonal with r value
     //submat(first_row, first_col, last_row, last_col)
     M.submat(i-s,i,i-1,i+s-1) = ND; //ex: i=s=3: (0,3,2,5) i=2s=6: (3,6,5,8)
     M.submat(i, i-s, i+s-1, i-1) = ND; //ex: i=s=3: (3,0,5,2) i=2s=6: (6,3,8,5)
   }
 
   // Corners are 0 matrix, which they are already initialized as through sp_ (sparse)
-  cout << M;
   return M;
 }
