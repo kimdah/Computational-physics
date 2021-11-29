@@ -53,8 +53,8 @@ int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
 // commented out to make things compile:
  cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
- 	cx_vec b = affmul(B,u); //Calculates Bu = b (maybe cross() instead?)
- 	return spsolve(A,b);	//spsolve assumes sparse matix, maybe solve() instead.
+ 	cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?)
+ 	return spsolve(A,b.t());	//spsolve assumes sparse matix, maybe solve() instead.
  }
 
 
