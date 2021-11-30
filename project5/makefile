@@ -10,7 +10,7 @@ compile:
 	${CPPflags} -c main.cpp # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Ising.o ${LIB}
+	${CPPflags} -o main.exe main.o ${LIB}
 
 run:
 	./main.exe
