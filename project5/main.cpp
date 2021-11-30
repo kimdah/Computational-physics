@@ -73,12 +73,36 @@ sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_
 
   cout << M <<endl;
   //Filling in boundary conditions
-  for(int i=0; i < M+1; i+=(M-1)){
+  for(int i=0; i < M+1; i+=(M-1)){ //Should change loop conditions to make more clear
     for(int j=0; j< M; j++){
         U(i,j) = bc;
         U(j,i) = bc;
     }
   }
+
+  /*
+  Currently not working. Need to normalize U according to problem 4
+
+
+  //finding normalisation constant
+  cx_double normalization_cosntant = (0,0);
+  for(int i=0;i<M; i++){
+    for(int j=0;j<M; j++){
+      normalization_cosntant += pow(abs(U(i,j)),2); //=p(x,y;t)?
+    }
+  }
+
+  cout << normalization_cosntant << endl;
+  //normalising
+  for(int i=0;i<M; i++){
+    for(int j=0;j<M; j++){
+      U(i,j) = U(i,j)/normalization_cosntant;
+    }
+  }
+  */
+
+
+
   return U;
 }
 
