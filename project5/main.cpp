@@ -83,7 +83,7 @@ sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_
     }
   }
 
-  cx_double bc= (0,1); //boundary condition(Need to find correct) only works with imaginary != 0
+  cx_double bc= (0,0); //boundary condition(Need to find correct) only works with imaginary != 0
 
   //cout << M <<endl;
   //Filling in boundary conditions
