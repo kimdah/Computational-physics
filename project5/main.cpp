@@ -19,7 +19,7 @@ using namespace arma;
 
 // Performs simulations based on parameter inputs
 int get_k_index(int i, int j, int M);
-cx_vec constuct_u_vec(sp_cx_mat U);
+cx_vec constuct_u_vec(sp_cx_mat U, bool normalise);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
@@ -59,10 +59,13 @@ int main(int argc, char const *argv[]) {
     cout << endl;
   }
 
-  cout << constuct_u_vec(U) <<endl;
-  //cout << U << endl;
+  //constuct_u_vec(U,true) gives the normalized u
+  cout << constuct_u_vec(U,false)<<endl;
+  cout << constuct_u_vec(U,true) <<endl;
 
+  cx_vec u = constuct_u_vec(U,true);
 
+  cout << time_step(A,B,u)<< endl;
 
 }
 
@@ -111,9 +114,6 @@ sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_
     }
   }
   */
-
-
-
   return U;
 }
 
@@ -126,7 +126,7 @@ int get_k_index(int i, int j, int M){
   }
 
 //cosntructs the u vector based on U matrix
-cx_vec constuct_u_vec(sp_cx_mat U){
+cx_vec constuct_u_vec(sp_cx_mat U, bool normalise){
   int M = sqrt(U.size()); //size() gives M², assumes U to be quadratic
   cx_vec u = cx_vec(pow(M-2,2));
 
@@ -135,12 +135,17 @@ cx_vec constuct_u_vec(sp_cx_mat U){
       u(get_k_index(i,j,M)) = U(i,j);
     }
   }
+  if(normalise){ //Normalizes u, but not sure if correct
+    sp_cx_mat normalisation_factor;
+    normalisation_factor = u.t()*u; //this is a 1x1 matrix
+    u = u/normalisation_factor(0,0);
+  }
   return u;
 }
 
 // Task3
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
-  int m_size = B.size();
+  int m_size = sqrt(B.size());  //assuming quadratic matrix
   // Try to get this to work for part 1
   //cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?) (did not work). 
   cx_vec b = cx_vec(m_size);
@@ -148,12 +153,12 @@ cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
   // Try to optimise this
   //matrix multiplication Bu=b(instead of affmul()
   for(int i =0;i< m_size; i++){
-    for(int j =0;j< m_size; j++){
+    for(int j =0;j< m_size; j++){    
       b(i) += (u(i).real()*B(i,j).real()-B(i,j).imag()*u(i).imag())+1i*(u(i).real()*B(i,j).imag()+u(i).imag()*B(i,j).real());
     }
   }
   // PArt 2
-  return spsolve(A,b.t());	//spsolve assumes sparse matix. Solves the matrix eq. Ax=b, maybe solve() instead.
+  return spsolve(A,b);	//spsolve assumes sparse matix. (removed .t())
  }
 
 
