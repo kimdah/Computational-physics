@@ -19,6 +19,7 @@ using namespace arma;
 
 // Performs simulations based on parameter inputs
 int get_k_index(int i, int j, int M);
+cx_vec constuct_u_vec(sp_cx_mat U);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
@@ -50,12 +51,15 @@ int main(int argc, char const *argv[]) {
   make_matrices(5, 0.1, 0.1, V, 2);
   sp_cx_mat U = make_wavepacket(5, 0.1, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1);
   
+  //Prints U vector orderly
   for (int i = 0; i<5; i++) {
     for (int j = 0; j<5; j++) {
       cout << setw(25) << U(i,j);
     }
     cout << endl;
   }
+
+  cout << constuct_u_vec(U) <<endl;
   //cout << U << endl;
 
 
@@ -114,12 +118,25 @@ sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_
 }
 
 // Problem 2-1
-// Translates matrix (i,j) index to column (k) index which have values from 1 to M-2 
+// Translates matrix (i,j) index to column (k) index which have values from 1 to M-1 
 int get_k_index(int i, int j, int M){
 //return ((i % (M - 1)) - 1) + (M - 2) * (j - 1);
   return ((j - 1) * (M - 2)) + (i - 1);
   
   }
+
+//cosntructs the u vector based on U matrix
+cx_vec constuct_u_vec(sp_cx_mat U){
+  int M = sqrt(U.size()); //size() gives M², assumes U to be quadratic
+  cx_vec u = cx_vec(pow(M-2,2));
+
+  for(int i =1;i< M-1; i++){
+    for(int j =1;j< M-1; j++){
+      u(get_k_index(i,j,M)) = U(i,j);
+    }
+  }
+  return u;
+}
 
 // Task3
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
