@@ -22,7 +22,8 @@ int change_index(int i, int j, int M);
 void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r);
 sp_cx_mat make_matrix(double r, cx_vec d);
 cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
-sp_cx_mat A; // global variables
+sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y);
+sp_cx_mat A; // glboal variables
 sp_cx_mat B;
 
 
@@ -44,11 +45,68 @@ int main(int argc, char const *argv[]) {
   V.diag(-3) = cx_vec(9-3, fill::randu); // subdiagonal 3
   V.diag(2) = cx_vec(9-2, fill::randu); // superdiagonal 2
   //cout << "V:\n"<< V<< endl;
+
+  //makes matrces A and B
   make_matrices(5, 0.1, 0.1, V, 2);
+  sp_cx_mat U = make_wavepacket(5, 0.1, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1);
+  cout<< U <<endl;
+
+
 
 }
 
-//changes index for the u vector(column), i and j can have values from 1 to M-2 
+//crates matix U at time t=0
+sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
+
+  sp_cx_mat U = sp_cx_mat(M, M); //Creates the matrix U
+
+  //calculates non-boundary condtions
+  for(int i =1; i< M-1; i++){
+    for(int j =1;j< M-1; j++){
+      double x = i*h;
+      double y = j*h;
+      U(i,j)= exp(-(pow(x-x_c,2)/(2*pow(sigma_x,2)))-(pow(y-y_c,2)/(2*pow(sigma_y,2))) + 1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c));
+    }
+  }
+
+  cx_double bc= (0,1); //boundary condition(Need to find correcct) only works with imaginary != 0
+
+  cout << M <<endl;
+  //Filling in boundary conditions
+  for(int i=0; i < M+1; i+=(M-1)){ //Should change loop conditions to make more clear
+    for(int j=0; j< M; j++){
+        U(i,j) = bc;
+        U(j,i) = bc;
+    }
+  }
+
+  /*
+  Currently not working. Need to normalize U according to problem 4
+
+
+  //finding normalisation constant
+  cx_double normalization_cosntant = (0,0);
+  for(int i=0;i<M; i++){
+    for(int j=0;j<M; j++){
+      normalization_cosntant += pow(abs(U(i,j)),2); //=p(x,y;t)?
+    }
+  }
+
+  cout << normalization_cosntant << endl;
+  //normalising
+  for(int i=0;i<M; i++){
+    for(int j=0;j<M; j++){
+      U(i,j) = U(i,j)/normalization_cosntant;
+    }
+  }
+  */
+
+
+
+  return U;
+}
+
+//changes index for the u vector(column), i and j can have values from 1 to M-2
 int change_index(int i, int j, int M){return ((i%(M-1))-1)+ (M-2)*(j-1);}
 
 // Task3
@@ -81,9 +139,9 @@ void make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
     b(k) = cx_double(1 - 4*r + img, -real);
 
     // We want these to work(behold til gruppetime paa torsdag):
-    //cout << "i*V: " << i*V(k,k) << endl; // doesnt work for some reason!
-    //a(k) = (1 + 4*r + 1i*(deltat/2*V(k,k));
-    //b(k) = (1 - 4*r - 1i*(deltat/2*V(k,k));
+    cout << "i*V: " << cx_double(V(k,k)) * 1.0i << endl;
+    a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(k,k))));
+    b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(k,k))));
   }
 
   A = make_matrix(-r, a); // made these global variables - maybe make a class instead?
