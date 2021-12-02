@@ -16,7 +16,8 @@ using namespace std::complex_literals; // to use imaginary number i | DEMANDS c
 using namespace std;
 using namespace arma;
 
-Crank::Crank(int M, double h, double deltat, double r, double v0) {
+Crank::Crank(double h, double deltat, double r, double v0) {
+  int M = 1/h+1; //To avvoid using M as a paramater
   M_ = M;
 
   V_ = make_potential_box(v0); // initialise V
@@ -64,7 +65,6 @@ mat Crank::make_potential_double_slit(double v0){
   }
   //Builds the wall
   for(int i =0; i<wall_thickenss_index;i++){
-    cout << wall_postion_index + i<<endl;
     V.col(wall_postion_index + i) = wall_config;
     V.col(wall_postion_index - i) = wall_config;
 
@@ -233,8 +233,9 @@ sp_cx_mat Crank::make_matrix(double r, cx_vec d){
 }
 
 void Crank::print() {
-    for (int i = 0; i<5; i++) {
-        for (int j = 0; j<5; j++) {
+    cout << U_.size()<<endl;
+    for (int i = 0; i<M_; i++) {
+        for (int j = 0; j<M_; j++) {
         cout << setw(25) << U_(i,j);
         }
         cout << endl;

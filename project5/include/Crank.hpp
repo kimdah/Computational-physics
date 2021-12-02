@@ -24,7 +24,7 @@ class Crank {
     cx_vec u_;
     int M_; // size of total matrix
 
-    Crank(int M, double h, double deltat, double r, double v0);
+    Crank(double h, double deltat, double r, double v0);
     // Performs simulations based on parameter inputs
 
     int get_k_index(int i, int j, int M);
