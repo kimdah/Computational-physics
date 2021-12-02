@@ -16,12 +16,17 @@ using namespace std::complex_literals; // to use imaginary number i | DEMANDS c
 using namespace std;
 using namespace arma;
 
-Crank::Crank(double h, double deltat, double r, double v0) {
+Crank::Crank(double h, double deltat) {
   int M = 1/h+1; //To avvoid using M as a paramater
   M_ = M;
 
+  complex<double> r= 1i*deltat/(2*pow(h,2)); //definition of r
+  double v0 = numeric_limits<double>::max(); //Large potential
+
   V_ = make_potential_box(v0); // initialise V
   make_potential_double_slit(v0);
+  make_potential_single_slit(v0);
+  make_potential_triple_slit(v0);
 
   //makes matrices A and B
   make_matrices(M_, h, deltat, V_, r); // random variables!! change
@@ -55,11 +60,11 @@ mat Crank::make_potential_double_slit(double v0){
   int wall_thickenss_index = floor(0.02/h)/2; //0.02
   int wall_postion_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
-  int slit_epture_index = floor(0.05/h);      //0.05
+  int slit_epeture_index = floor(0.05/h);      //0.05
 
   //Sets up how the wallshould look
   vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i<slit_epture_index; i++){
+  for(int i=0; i<slit_epeture_index; i++){
     wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
     wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
   }
@@ -77,16 +82,14 @@ mat Crank::make_potential_single_slit(double v0){
   double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickenss_index = floor(0.02/h)/2; //0.02
+  int wall_thickenss_index = floor(0.2/h)/2; //0.02
   int wall_postion_index = floor(0.5/h);      //0.5
-  int slit_seperation_index = floor(0.05/h)/2;//0.05
-  int slit_epture_index = floor(0.05/h);      //0.05
+  int slit_apeture_index = floor(0.05/h);      //0.05
 
   //Sets up how the wallshould look
   vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i<slit_epture_index; i++){
-    wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
-    wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+  for(int i=0; i<slit_apeture_index; i++){
+    wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0; //floor(slit_apeture_index/2) -->centering the slit
   }
   //Builds the wall
   for(int i =0; i<wall_thickenss_index;i++){
@@ -96,22 +99,24 @@ mat Crank::make_potential_single_slit(double v0){
   }
   return V;
 }
+
 mat Crank::make_potential_triple_slit(double v0){
   mat V = make_potential_box(v0); //Creates the box potetnial
 
-  double h = 1.0/(M_-1);
+    double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickenss_index = floor(0.02/h)/2; //0.02
+  int wall_thickenss_index = floor(0.2/h)/2; //0.02
   int wall_postion_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
-  int slit_epture_index = floor(0.05/h);      //0.05
+  int slit_apeture_index = floor(0.05/h);      //0.05
 
   //Sets up how the wallshould look
   vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i<slit_epture_index; i++){
-    wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
-    wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+  for(int i=0; i<slit_apeture_index; i++){
+    wall_config(floor(0.5/h)+slit_seperation_index+slit_apeture_index/2+i) = 0; //lower slit
+    wall_config(floor(0.5/h)-slit_seperation_index+slit_apeture_index/2-i) = 0;//upper slit
+    wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0;              //middle slit
   }
   //Builds the wall
   for(int i =0; i<wall_thickenss_index;i++){
@@ -221,7 +226,7 @@ cx_vec Crank::time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
 
 
 // Makes specialized A and B matrices (Task 2.3)
-void Crank::make_matrices(int M, double h, double deltat, mat V, double r){
+void Crank::make_matrices(int M, double h, double deltat, mat V, complex<double> r){
   // assuming r is a real number
   int mat_size = pow(M-2,2);
   cx_vec a = cx_vec(mat_size);
@@ -244,8 +249,8 @@ void Crank::make_matrices(int M, double h, double deltat, mat V, double r){
   for (int i = 1; i < M-1; i++){ // Excluding boundaries in V (infinity) - is that ok?
     for (int j = 1; j < M-1; j++){
       int k = get_k_index(i,j,M);
-      a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(i,j))));
-      b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(i,j))));
+      a(k) = (1.0 + 4.0*r + 1.0i*(deltat/2*cx_double(V(i,j))));
+      b(k) = (1.0 - 4.0*r - 1.0i*(deltat/2*cx_double(V(i,j))));
     }
   }
 
@@ -254,7 +259,7 @@ void Crank::make_matrices(int M, double h, double deltat, mat V, double r){
 }
 
 // Makes a matrix on the general form of A and B
-sp_cx_mat Crank::make_matrix(double r, cx_vec d){
+sp_cx_mat Crank::make_matrix(complex<double> r, cx_vec d){
   int S = d.size(); // (M-2)^2
   int s = sqrt(S); // (M-2)
   sp_cx_mat M = sp_cx_mat(S, S);

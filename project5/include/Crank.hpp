@@ -24,7 +24,7 @@ class Crank {
     cx_vec u_;
     int M_; // size of total matrix
 
-    Crank(double h, double deltat, double r, double v0);
+    Crank(double h, double deltat);
     // Performs simulations based on parameter inputs
 
     int get_k_index(int i, int j, int M);
@@ -33,8 +33,8 @@ class Crank {
     mat make_potential_single_slit(double v0);
     mat make_potential_double_slit(double v0);
     mat make_potential_triple_slit(double v0);
-    void make_matrices(int M, double h, double deltat, mat V, double r);
-    sp_cx_mat make_matrix(double r, cx_vec d);
+    void make_matrices(int M, double h, double deltat, mat V, complex<double> r);
+    sp_cx_mat make_matrix(complex<double> r, cx_vec d);
     cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);
     sp_cx_mat make_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y);
     void print();

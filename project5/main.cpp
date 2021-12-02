@@ -18,9 +18,9 @@ using namespace arma;
 
 
 int main(int argc, char const *argv[]) {
-  // Crank(int M, double h, double deltat, double r, double v0)
-  double v0 = numeric_limits<double>::max(); //Large potential
-  Crank crankyboii(0.1, 0.1, 2, v0); // randomly chosen!
+  // Crank(double h, double deltat)
+  
+  Crank crankyboii(0.03, 0.1); // randomly chosen!
 
   crankyboii.print();
 }
