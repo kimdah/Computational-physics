@@ -29,7 +29,8 @@ class Crank {
 
     int get_k_index(int i, int j, int M);
     cx_vec construct_u_vec(sp_cx_mat U, bool normalise);
-    mat make_potential(double v0);
+    mat make_potential_box(double v0);
+    mat make_potential_double_slit(double v0);
     void make_matrices(int M, double h, double deltat, mat V, double r);
     sp_cx_mat make_matrix(double r, cx_vec d);
     cx_vec time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u);

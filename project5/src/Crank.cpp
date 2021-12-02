@@ -19,7 +19,8 @@ using namespace arma;
 Crank::Crank(int M, double h, double deltat, double r, double v0) {
   M_ = M;
 
-  V_ = make_potential(v0); // initialise V
+  V_ = make_potential_box(v0); // initialise V
+  make_potential_double_slit(v0);
 
   //makes matrices A and B
   make_matrices(M_, h, deltat, V_, r); // random variables!! change
@@ -31,16 +32,43 @@ Crank::Crank(int M, double h, double deltat, double r, double v0) {
 
 }
 
-// Initialise potential V (time-independent) - make complex if necessary
-mat Crank::make_potential(double v0){
+// Initialise potential V for the box (time-independent) - make complex if necessary
+mat Crank::make_potential_box(double v0){
   mat V = mat(M_,M_); //
-  double infty = numeric_limits<double>::max(); // BETTER IDEA?
-  V.col(0) = vec(M_, fill::value(infty));
-  V.col(M_-1) = vec(M_).fill(infty);
-  V.row(0) = rowvec(M_).fill(infty);
-  V.row(M_-1) = rowvec(M_).fill(infty);
+  V.col(0) = vec(M_).fill(v0);
+  V.col(M_-1) = vec(M_).fill(v0);
+  V.row(0) = rowvec(M_).fill(v0);
+  V.row(M_-1) = rowvec(M_).fill(v0);
   //submat(first_row, first_col, last_row, last_col)
-  V.submat(1, 1, M_-2, M_-2) = mat(M_-2,M_-2).fill(v0); // filling inner matrix
+  V.submat(1, 1, M_-2, M_-2) = mat(M_-2,M_-2).fill(0); // filling inner matrix
+  return V;
+}
+
+// Creates the potential for the double slit and box
+mat Crank::make_potential_double_slit(double v0){
+  mat V = make_potential_box(v0); //Creates the box potetnial
+
+  double h = 1.0/(M_-1);
+
+  //Finds the righ indeces according to the dimesions specified
+  int wall_thickenss_index = floor(0.02/h)/2; //0.02
+  int wall_postion_index = floor(0.5/h);      //0.5
+  int slit_seperation_index = floor(0.05/h)/2;//0.05
+  int slit_epture_index = floor(0.05/h);      //0.05
+
+  //Sets up how the wallshould look
+  vec wall_config = vec(M_).fill(v0);
+  for(int i=0; i<slit_epture_index; i++){
+    wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
+    wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+  }
+  //Builds the wall
+  for(int i =0; i<wall_thickenss_index;i++){
+    cout << wall_postion_index + i<<endl;
+    V.col(wall_postion_index + i) = wall_config;
+    V.col(wall_postion_index - i) = wall_config;
+
+  }
   return V;
 }
 
