@@ -7,10 +7,10 @@ LIB =  -larmadillo
 all: compile link clean
 
 compile:
-	${CPPflags} -c main.cpp # ${LIB}
+	${CPPflags} -c main.cpp src/Crank.cpp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o ${LIB}
+	${CPPflags} -o main.exe main.o Crank.o ${LIB}
 
 run:
 	./main.exe
