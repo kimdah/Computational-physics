@@ -71,6 +71,56 @@ mat Crank::make_potential_double_slit(double v0){
   }
   return V;
 }
+mat Crank::make_potential_single_slit(double v0){
+  mat V = make_potential_box(v0); //Creates the box potetnial
+
+  double h = 1.0/(M_-1);
+
+  //Finds the righ indeces according to the dimesions specified
+  int wall_thickenss_index = floor(0.02/h)/2; //0.02
+  int wall_postion_index = floor(0.5/h);      //0.5
+  int slit_seperation_index = floor(0.05/h)/2;//0.05
+  int slit_epture_index = floor(0.05/h);      //0.05
+
+  //Sets up how the wallshould look
+  vec wall_config = vec(M_).fill(v0);
+  for(int i=0; i<slit_epture_index; i++){
+    wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
+    wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+  }
+  //Builds the wall
+  for(int i =0; i<wall_thickenss_index;i++){
+    V.col(wall_postion_index + i) = wall_config;
+    V.col(wall_postion_index - i) = wall_config;
+
+  }
+  return V;
+}
+mat Crank::make_potential_triple_slit(double v0){
+  mat V = make_potential_box(v0); //Creates the box potetnial
+
+  double h = 1.0/(M_-1);
+
+  //Finds the righ indeces according to the dimesions specified
+  int wall_thickenss_index = floor(0.02/h)/2; //0.02
+  int wall_postion_index = floor(0.5/h);      //0.5
+  int slit_seperation_index = floor(0.05/h)/2;//0.05
+  int slit_epture_index = floor(0.05/h);      //0.05
+
+  //Sets up how the wallshould look
+  vec wall_config = vec(M_).fill(v0);
+  for(int i=0; i<slit_epture_index; i++){
+    wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
+    wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+  }
+  //Builds the wall
+  for(int i =0; i<wall_thickenss_index;i++){
+    V.col(wall_postion_index + i) = wall_config;
+    V.col(wall_postion_index - i) = wall_config;
+
+  }
+  return V;
+}
 
 
 sp_cx_mat Crank::make_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
