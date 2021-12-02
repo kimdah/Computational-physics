@@ -18,8 +18,8 @@ using namespace arma;
 
 
 int main(int argc, char const *argv[]) {
-  Crank crankyboii;
-
+  // Crank(int M, double h, double deltat, double r, double v0)
+  Crank crankyboii(5, 0.1, 0.1, 2, 0); // randomly chosen!
 
   crankyboii.print();
 }

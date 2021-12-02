@@ -16,24 +16,34 @@ using namespace std::complex_literals; // to use imaginary number i | DEMANDS c
 using namespace std;
 using namespace arma;
 
-Crank::Crank() {
-  
-  // Testing make_matrices
-  V = sp_cx_mat(9,9);
-  // making it a bit random, but still sparse
-  V.diag() = cx_vec(9, fill::randu);
-  V.diag(-3) = cx_vec(9-3, fill::randu); // subdiagonal 3
-  V.diag(2) = cx_vec(9-2, fill::randu); // superdiagonal 2
-  //cout << "V:\n"<< V<< endl;
-  
-  //makes matrces A and B
-  make_matrices(5, 0.1, 0.1, V, 2);
-  U_ = make_wavepacket(5, 0.1, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1);
+Crank::Crank(int M, double h, double deltat, double r, double v0) {
+  M_ = M;
 
-  u_ = constuct_u_vec(U_,true);
-  time_step(A,B,u_);
+  V_ = make_potential(v0); // initialise V
+
+  //makes matrices A and B
+  make_matrices(M_, h, deltat, V_, r); // random variables!! change
+
+  // Commented out to test errors:
+  U_ = make_wavepacket(M_, h, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1);
+  u_ = construct_u_vec(U_,true);
+  time_step(A_,B_,u_);
 
 }
+
+// Initialise potential V (time-independent) - make complex if necessary
+mat Crank::make_potential(double v0){
+  mat V = mat(M_,M_); //
+  double infty = numeric_limits<double>::max(); // BETTER IDEA?
+  V.col(0) = vec(M_, fill::value(infty));
+  V.col(M_-1) = vec(M_).fill(infty);
+  V.row(0) = rowvec(M_).fill(infty);
+  V.row(M_-1) = rowvec(M_).fill(infty);
+  //submat(first_row, first_col, last_row, last_col)
+  V.submat(1, 1, M_-2, M_-2) = mat(M_-2,M_-2).fill(v0); // filling inner matrix
+  return V;
+}
+
 
 sp_cx_mat Crank::make_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
 
@@ -48,11 +58,11 @@ sp_cx_mat Crank::make_wavepacket(int M, double h, double x_c, double y_c, double
     }
   }
 
-  cx_double bc= (0,0); //boundary condition(Need to find correct) only works with imaginary != 0
+  cx_double bc= cx_double(0,0); //boundary condition(Need to find correct) only works with imaginary != 0
 
   //cout << M <<endl;
   //Filling in boundary conditions
-  for(int i=0; i < M+1; i+=(M-1)){ //Should change loop conditions to make more clear
+  for(int i=0; i < M+1; i+=(M-1)){ // Should change loop conditions to make more clear
     for(int j=0; j< M; j++){
         U(i,j) = bc;
         U(j,i) = bc;
@@ -83,15 +93,15 @@ sp_cx_mat Crank::make_wavepacket(int M, double h, double x_c, double y_c, double
 }
 
 // Problem 2-1
-// Translates matrix (i,j) index to column (k) index which have values from 1 to M-1 
+// Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
 int Crank::get_k_index(int i, int j, int M){
 //return ((i % (M - 1)) - 1) + (M - 2) * (j - 1);
   return ((j - 1) * (M - 2)) + (i - 1);
-  
+
 }
 
-//cosntructs the u vector based on U matrix
-cx_vec Crank::constuct_u_vec(sp_cx_mat U, bool normalise){
+// constructs the u vector based on U matrix
+cx_vec Crank::construct_u_vec(sp_cx_mat U, bool normalise){
   int M = sqrt(U.size()); //size() gives M², assumes U to be quadratic
   cx_vec u = cx_vec(pow(M-2,2));
 
@@ -115,45 +125,54 @@ cx_vec Crank::time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
 
   // int m_size = sqrt(B.size());  //assuming quadratic matrix
   // // Try to get this to work for part 1
-  // //cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?) (did not work). 
+  // //cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?) (did not work).
   // cx_vec b = cx_vec(m_size);
 
   // // Try to optimise this
   // //matrix multiplication Bu=b(instead of affmul()
   // for(int i =0;i< m_size; i++){
-  //   for(int j =0;j< m_size; j++){    
+  //   for(int j =0;j< m_size; j++){
   //     b(i) += (u(i).real()*B(i,j).real()-B(i,j).imag()*u(i).imag())+1i*(u(i).real()*B(i,j).imag()+u(i).imag()*B(i,j).real());
   //   }
   // }
 
   // PArt 2
-  
+
   //return spsolve(A,b);	//spsolve assumes sparse matix. (removed .t())
  }
 
 
 // Makes specialized A and B matrices (Task 2.3)
-void Crank::make_matrices(int M, double h, double deltat, sp_cx_mat V, double r){
+void Crank::make_matrices(int M, double h, double deltat, mat V, double r){
   // assuming r is a real number
   int mat_size = pow(M-2,2);
   cx_vec a = cx_vec(mat_size);
   cx_vec b = cx_vec(mat_size);
 
-  for(int k = 0 ; k < mat_size ; k++){
-    double real = (deltat/2) * V(k,k).real(); // these work, but gives unnecessary work
-    double img = (deltat/2) * V(k,k).imag();
-    // a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
-    // b(k) = cx_double(1 - 4*r + img, -real);
-   
-    // We want these to work(behold til gruppetime paa torsdag):
-    //cout << "i*V: " << cx_double(V(k,k)) * 1.0i << endl; 
-    a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(k,k))));
-    b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(k,k))));
+  // Wrong indexing for V of size M
+  // for(int k = 0 ; k < mat_size ; k++){
+  //   //double real = (deltat/2) * V(k,k).real(); // these work, but gives unnecessary work
+  //   //double img = (deltat/2) * V(k,k).imag();
+  //   // a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
+  //   // b(k) = cx_double(1 - 4*r + img, -real);
+  //
+  //   // We want these to work(behold til gruppetime paa torsdag):
+  //   //cout << "i*V: " << cx_double(V(k,k)) * 1.0i << endl;
+  //   a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(k,k))));
+  //   b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(k,k))));
+  // }
+
+  // Alternative:
+  for (int i = 1; i < M-1; i++){ // Excluding boundaries in V (infinity) - is that ok?
+    for (int j = 1; j < M-1; j++){
+      int k = get_k_index(i,j,M);
+      a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(i,j))));
+      b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(i,j))));
+    }
   }
 
-  A = make_matrix(-r, a); // made these global variables - maybe make a class instead?
-  B = make_matrix(r,  b);
-
+  A_ = make_matrix(-r, a); // made these global variables - maybe make a class instead?
+  B_ = make_matrix(r,  b);
 }
 
 // Makes a matrix on the general form of A and B
@@ -193,5 +212,3 @@ void Crank::print() {
         cout << endl;
     }
 }
-
-
