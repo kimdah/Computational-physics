@@ -20,7 +20,11 @@ using namespace arma;
 int main(int argc, char const *argv[]) {
   // Crank(double h, double deltat)
   
-  Crank crankyboii(0.03, 0.1); // randomly chosen!
+  Crank crankyboii(0.005, 2.5e-4); // randomly chosen!
 
-  crankyboii.print();
+  //crankyboii.to_file("A");
+  //crankyboii.to_file("B");
+  crankyboii.to_file("U");
+
+  return 0;
 }

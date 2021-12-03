@@ -20,7 +20,7 @@ Crank::Crank(double h, double deltat) {
   int M = 1/h+1; //To avvoid using M as a paramater
   M_ = M;
 
-  complex<double> r= 1i*deltat/(2*pow(h,2)); //definition of r
+  r_ = 1i*deltat/(2*pow(h,2)); //definition of r
   double v0 = numeric_limits<double>::max(); //Large potential
 
   V_ = make_potential_box(v0); // initialise V
@@ -29,15 +29,24 @@ Crank::Crank(double h, double deltat) {
   make_potential_triple_slit(v0);
 
   //makes matrices A and B
-  make_matrices(M_, h, deltat, V_, r); // random variables!! change
+  make_matrices(M_, h, deltat, V_, r_); // random variables!! change
 
   // Commented out to test errors:
-  U_ = make_wavepacket(M_, h, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1);
+  U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
   u_ = construct_u_vec(U_,true);
   time_step(A_,B_,u_);
 
 }
 
+// Problem 2-1
+// Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
+int Crank::get_k_index(int i, int j, int M){
+//return ((i % (M - 1)) - 1) + (M - 2) * (j - 1);
+  return ((j - 1) * (M - 2)) + (i - 1);
+
+}
+
+// Problem x
 // Initialise potential V for the box (time-independent) - make complex if necessary
 mat Crank::make_potential_box(double v0){
   mat V = mat(M_,M_); //
@@ -128,29 +137,84 @@ mat Crank::make_potential_triple_slit(double v0){
 }
 
 
-sp_cx_mat Crank::make_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
+sp_cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
 
-  sp_cx_mat U = sp_cx_mat(M, M); //Creates the matrix U
+  sp_cx_mat U = sp_cx_mat(M, M); //Creates the matrix U. Is sparse the best choice here?
+ 
+  // Find index-dimensions of wavepacket
+  int x_start = round((M_-1)*x_c - ((sigma_x/h)/2)); // sigma_x is here 0.05. h is 0.005. Thus 10 h in sigma_x
+  int x_end = x_start + (sigma_x/h);
+  int y_start = round((M_-1)*y_c - ((sigma_y/h)/2));
+  int y_end = y_start + (sigma_y/h);
 
+  // If wavepacket starts overlapping or outside a boundary, try to relocate it inside the boundary
+  if (x_start < 1) {
+    cout << "Wavepacket to far to the left, attempting to move to the right." << endl;
+    int move_right = -x_start + 1; 
+    x_start = x_start + move_right;
+    x_end = x_end + move_right;
+  }
+  if (y_start < 0) {
+    cout << "Wavepacket to far to the up, attempting to move down." << endl;
+    int move_down = -y_start + 1; 
+    y_start = y_start + move_down;
+    y_end = y_end+ move_down;
+  }
+  if (x_end > M_-2) {
+    cout << "Wavepacket to far to the right, attempting to move to the left." << endl;
+    int move_left = x_end - M_ +2; 
+    x_end = x_end - move_left;
+    x_start = x_start - move_left; 
+  }
+
+  if (y_end > M_-2) {
+    cout << "Wavepacket to far to the down, attempting to move up." << endl;
+    int move_up = y_end - M_ - 2;
+    y_end = y_end - move_up;
+    y_start = y_start - move_up; 
+    
+  }
+  // cout << endl;
+  // cout << "x_start:" << x_start << " x_end: " << x_end << endl;
+  // cout << "y_start:" << y_start << " y_end: " << y_end << endl;
+
+  //Then check that it is still within boundary, if else then it's too big
+  if (x_start < 1) {cout << "Too far left " << endl;}
+  if (y_start < 1) {cout << "Too far up " << endl;}
+  if (x_end > M-2) {cout << "Too far right " << endl;}
+  if (y_end > M-2) {cout << "Too far down " << endl;}
+  if (x_start < 1 || y_start < 1 || x_end > M-2 || y_end > M-2) {cout << "That's what she said" << endl;}
+  
   //calculates non-boundary condtions
-  for(int i =1; i< M-1; i++){
-    for(int j =1;j< M-1; j++){
+  for(int i = x_start; i< x_end; i++){
+    for(int j = y_start; j< y_end; j++){
       double x = i*h;
       double y = j*h;
-      U(i,j)= exp(-(pow(x-x_c,2)/(2*pow(sigma_x,2)))-(pow(y-y_c,2)/(2*pow(sigma_y,2))) + 1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c));
+      U(i,j) =  exp( -(((pow(x-x_c,2)/(2*pow(sigma_x,2))) - (pow(y-y_c,2)/(2*pow(sigma_y,2)))) + (1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c))));
+       
     }
   }
 
-  cx_double bc= cx_double(0,0); //boundary condition(Need to find correct) only works with imaginary != 0
+  // TODO: normalise the wavepacket. How to normalise a complex number?
+  // //U=norm(U,1);
+  // for(int i = x_start; i< x_end; i++){
+  //   for(int j = y_start; j< y_end; j++){
+  //     U(i,j)=norm(U(i,j),1);
+  //     //complex <double> nic = U(i,j);
+  //     //U(i,j)= abs(conj(nic)*nic); 
+  //   }
+  // }
+
+  //cx_double bc= cx_double(0,0); //boundary condition(Need to find correct) only works with imaginary != 0
 
   //cout << M <<endl;
   //Filling in boundary conditions
-  for(int i=0; i < M+1; i+=(M-1)){ // Should change loop conditions to make more clear
-    for(int j=0; j< M; j++){
-        U(i,j) = bc;
-        U(j,i) = bc;
-    }
-  }
+  // for(int i=0; i < M+1; i+=(M-1)){ // Should change loop conditions to make more clear
+  //   for(int j=0; j< M; j++){
+  //       U(i,j) = bc;
+  //       U(j,i) = bc;
+  //   }
+  // }
 
   /*
   Currently not working. Need to normalize U according to problem 4
@@ -175,13 +239,7 @@ sp_cx_mat Crank::make_wavepacket(int M, double h, double x_c, double y_c, double
   return U;
 }
 
-// Problem 2-1
-// Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
-int Crank::get_k_index(int i, int j, int M){
-//return ((i % (M - 1)) - 1) + (M - 2) * (j - 1);
-  return ((j - 1) * (M - 2)) + (i - 1);
 
-}
 
 // constructs the u vector based on U matrix
 cx_vec Crank::construct_u_vec(sp_cx_mat U, bool normalise){
@@ -205,47 +263,15 @@ cx_vec Crank::construct_u_vec(sp_cx_mat U, bool normalise){
 cx_vec Crank::time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
   cx_vec a = B * u;
   return spsolve(A,a);
-
-  // int m_size = sqrt(B.size());  //assuming quadratic matrix
-  // // Try to get this to work for part 1
-  // //cx_vec b = affmul(B,u.t()); //Calculates Bu = b (maybe cross() instead?) (did not work).
-  // cx_vec b = cx_vec(m_size);
-
-  // // Try to optimise this
-  // //matrix multiplication Bu=b(instead of affmul()
-  // for(int i =0;i< m_size; i++){
-  //   for(int j =0;j< m_size; j++){
-  //     b(i) += (u(i).real()*B(i,j).real()-B(i,j).imag()*u(i).imag())+1i*(u(i).real()*B(i,j).imag()+u(i).imag()*B(i,j).real());
-  //   }
-  // }
-
-  // PArt 2
-
-  //return spsolve(A,b);	//spsolve assumes sparse matix. (removed .t())
  }
 
 
 // Makes specialized A and B matrices (Task 2.3)
 void Crank::make_matrices(int M, double h, double deltat, mat V, complex<double> r){
-  // assuming r is a real number
   int mat_size = pow(M-2,2);
   cx_vec a = cx_vec(mat_size);
   cx_vec b = cx_vec(mat_size);
 
-  // Wrong indexing for V of size M
-  // for(int k = 0 ; k < mat_size ; k++){
-  //   //double real = (deltat/2) * V(k,k).real(); // these work, but gives unnecessary work
-  //   //double img = (deltat/2) * V(k,k).imag();
-  //   // a(k) = cx_double(1 + 4*r - img, real); // assuming r is real
-  //   // b(k) = cx_double(1 - 4*r + img, -real);
-  //
-  //   // We want these to work(behold til gruppetime paa torsdag):
-  //   //cout << "i*V: " << cx_double(V(k,k)) * 1.0i << endl;
-  //   a(k) = (1 + 4*r + 1.0i*(deltat/2*cx_double(V(k,k))));
-  //   b(k) = (1 - 4*r - 1.0i*(deltat/2*cx_double(V(k,k))));
-  // }
-
-  // Alternative:
   for (int i = 1; i < M-1; i++){ // Excluding boundaries in V (infinity) - is that ok?
     for (int j = 1; j < M-1; j++){
       int k = get_k_index(i,j,M);
@@ -253,7 +279,6 @@ void Crank::make_matrices(int M, double h, double deltat, mat V, complex<double>
       b(k) = (1.0 - 4.0*r - 1.0i*(deltat/2*cx_double(V(i,j))));
     }
   }
-
   A_ = make_matrix(-r, a); // made these global variables - maybe make a class instead?
   B_ = make_matrix(r,  b);
 }
@@ -288,11 +313,53 @@ sp_cx_mat Crank::make_matrix(complex<double> r, cx_vec d){
 }
 
 void Crank::print() {
-    cout << U_.size()<<endl;
-    for (int i = 0; i<M_; i++) {
-        for (int j = 0; j<M_; j++) {
-        cout << setw(25) << U_(i,j);
-        }
-        cout << endl;
+  cout << U_.size()<<endl;
+  for (int i = 0; i<M_; i++) {
+    for (int j = 0; j<M_; j++) {
+      cout << setw(25) << U_(i,j);
     }
+  cout << endl;
+  }
+}
+
+
+// Just a function to see what a sparse matrix looks like
+int Crank::to_file(string s) {
+  sp_cx_mat A;
+  string filename;
+  int largeness;
+  int width = 24;
+  int prec = 3;
+  if (s == "A") {
+    A = A_;
+    largeness = A.size();
+    filename = "datafiles/sparse_matrix_A_size_" + to_string(largeness) + ".txt";
+  } else if (s == "B") {
+    A = B_;
+    largeness = A.size();
+    filename = "datafiles/sparse_matrix_B_size_" + to_string(largeness) + ".txt";
+  } else if (s == "U") {
+    A = U_;
+    largeness = A.size();
+    filename = "datafiles/sparse_matrix_U_size_" + to_string(largeness) + ".txt";    
+  } else {
+    cout << "Unknown matrix\n";
+    return 1;
+  }
+  largeness = sqrt(largeness);
+   
+  ofstream ofile;
+  ofile.open(filename);
+  for (int i = 0; i<largeness; i++) {
+    ofile << setw(width) << setprecision(prec) << i;
+  }
+  ofile << endl;
+  for (int i = 0; i<largeness; i++) {
+    for (int j = 0; j<largeness; j++) {
+      ofile << setw(width) << setprecision(prec) << scientific << A(i,j);
+    }
+    ofile << endl;
+  }
+  ofile.close();
+  return 0;
 }
