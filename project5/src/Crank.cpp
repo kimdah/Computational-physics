@@ -34,7 +34,7 @@ Crank::Crank(double h, double deltat) {
   // Commented out to test errors:
   U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
   u_ = construct_u_vec(U_,true);
-  time_step(A_,B_,u_);
+  //time_step(A_,B_,u_);
 
 }
 
@@ -66,8 +66,8 @@ mat Crank::make_potential_double_slit(double v0){
   double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickenss_index = floor(0.02/h)/2; //0.02
-  int wall_postion_index = floor(0.5/h);      //0.5
+  int wall_thickness_index = floor(0.02/h)/2; //0.02
+  int wall_position_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
   int slit_epeture_index = floor(0.05/h);      //0.05
 
@@ -78,32 +78,32 @@ mat Crank::make_potential_double_slit(double v0){
     wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
   }
   //Builds the wall
-  for(int i =0; i<wall_thickenss_index;i++){
-    V.col(wall_postion_index + i) = wall_config;
-    V.col(wall_postion_index - i) = wall_config;
+  for(int i =0; i < wall_thickness_index; i++){
+    V.col(wall_position_index + i) = wall_config;
+    V.col(wall_position_index - i) = wall_config;
 
   }
   return V;
 }
 mat Crank::make_potential_single_slit(double v0){
-  mat V = make_potential_box(v0); //Creates the box potetnial
+  mat V = make_potential_box(v0); //Creates the box potential
 
   double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickenss_index = floor(0.2/h)/2; //0.02
-  int wall_postion_index = floor(0.5/h);      //0.5
+  int wall_thickness_index = floor(0.2/h)/2; //0.02
+  int wall_position_index = floor(0.5/h);      //0.5
   int slit_apeture_index = floor(0.05/h);      //0.05
 
   //Sets up how the wallshould look
   vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i<slit_apeture_index; i++){
+  for(int i=0; i < slit_apeture_index; i++){
     wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0; //floor(slit_apeture_index/2) -->centering the slit
   }
   //Builds the wall
-  for(int i =0; i<wall_thickenss_index;i++){
-    V.col(wall_postion_index + i) = wall_config;
-    V.col(wall_postion_index - i) = wall_config;
+  for(int i =0; i < wall_thickness_index; i++){
+    V.col(wall_position_index + i) = wall_config;
+    V.col(wall_position_index - i) = wall_config;
 
   }
   return V;
@@ -112,11 +112,11 @@ mat Crank::make_potential_single_slit(double v0){
 mat Crank::make_potential_triple_slit(double v0){
   mat V = make_potential_box(v0); //Creates the box potetnial
 
-    double h = 1.0/(M_-1);
+  double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickenss_index = floor(0.2/h)/2; //0.02
-  int wall_postion_index = floor(0.5/h);      //0.5
+  int wall_thickness_index = floor(0.2/h)/2; //0.02
+  int wall_position_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
   int slit_apeture_index = floor(0.05/h);      //0.05
 
@@ -128,9 +128,9 @@ mat Crank::make_potential_triple_slit(double v0){
     wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0;              //middle slit
   }
   //Builds the wall
-  for(int i =0; i<wall_thickenss_index;i++){
-    V.col(wall_postion_index + i) = wall_config;
-    V.col(wall_postion_index - i) = wall_config;
+  for(int i =0; i<wall_thickness_index;i++){
+    V.col(wall_position_index + i) = wall_config;
+    V.col(wall_position_index - i) = wall_config;
 
   }
   return V;
@@ -140,7 +140,7 @@ mat Crank::make_potential_triple_slit(double v0){
 cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
 
   cx_mat U = cx_mat(M, M).fill(0); //Creates the matrix U. Is sparse the best choice here?
- 
+
   // Find index-dimensions of wavepacket
   int x_start = round((M_-1)*x_c - ((sigma_x/h)/2)); // sigma_x is here 0.05. h is 0.005. Thus 10 h in sigma_x
   int x_end = x_start + (sigma_x/h);
@@ -149,30 +149,30 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
 
   // If wavepacket starts overlapping or outside a boundary, try to relocate it inside the boundary
   if (x_start < 1) {
-    cout << "Wavepacket to far to the left, attempting to move to the right." << endl;
-    int move_right = -x_start + 1; 
+    cout << "Wavepacket too far to the left, attempting to move to the right." << endl;
+    int move_right = -x_start + 1;
     x_start = x_start + move_right;
     x_end = x_end + move_right;
   }
   if (y_start < 0) {
-    cout << "Wavepacket to far to the up, attempting to move down." << endl;
-    int move_down = -y_start + 1; 
+    cout << "Wavepacket too far to the up, attempting to move down." << endl;
+    int move_down = -y_start + 1;
     y_start = y_start + move_down;
     y_end = y_end+ move_down;
   }
   if (x_end > M_-2) {
-    cout << "Wavepacket to far to the right, attempting to move to the left." << endl;
-    int move_left = x_end - M_ +2; 
+    cout << "Wavepacket too far to the right, attempting to move to the left." << endl;
+    int move_left = x_end - M_ +2;
     x_end = x_end - move_left;
-    x_start = x_start - move_left; 
+    x_start = x_start - move_left;
   }
 
   if (y_end > M_-2) {
-    cout << "Wavepacket to far to the down, attempting to move up." << endl;
+    cout << "Wavepacket too far to the down, attempting to move up." << endl;
     int move_up = y_end - M_ - 2;
     y_end = y_end - move_up;
-    y_start = y_start - move_up; 
-    
+    y_start = y_start - move_up;
+
   }
   // cout << endl;
   // cout << "x_start:" << x_start << " x_end: " << x_end << endl;
@@ -193,24 +193,24 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
       double y = j*h;
       complex <double> c = exp( -(((pow(x-x_c,2)/(2*pow(sigma_x,2))) - (pow(y-y_c,2)/(2*pow(sigma_y,2)))) + (1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c))));
       U(i,j) = c;
-      psum += real(conj(c)*c);     
+      psum += real(conj(c)*c);
     }
   }
   cout << "sum of real magnitudes is " << psum << endl; // remove later
-  
-  
+
+
   // Normalises U to 1
   double psum2 = 0;
   for(int i = x_start; i< x_end; i++){
     for(int j = y_start; j< y_end; j++){
       complex <double> c = cx_double(1/sqrt(psum)) * cx_double(U(i,j));
-      U(i,j) = c;       
+      U(i,j) = c;
       psum2 += real(conj(c)*c);
     }
   }
 
   cout << "sum of real magnitudes is normalised to " << psum2 << endl;
- 
+
 
   //cx_double bc= cx_double(0,0); //boundary condition(Need to find correct) only works with imaginary != 0
 
@@ -348,13 +348,15 @@ int Crank::to_file(string s) {
   } else if (s == "U") {
     A = U_;
     largeness = A.size();
-    filename = "datafiles/sparse_matrix_U_size_" + to_string(largeness) + ".txt";    
+    filename = "datafiles/sparse_matrix_U_size_" + to_string(largeness) + ".txt";
   } else {
     cout << "Unknown matrix\n";
     return 1;
   }
   largeness = sqrt(largeness);
-   
+
+  //A.save("datafiles/test.dat");
+
   ofstream ofile;
   ofile.open(filename);
   for (int i = 0; i<largeness; i++) {
