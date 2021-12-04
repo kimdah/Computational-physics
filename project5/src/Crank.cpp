@@ -34,7 +34,7 @@ Crank::Crank(double h, double deltat) {
   // Commented out to test errors:
   U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
   u_ = construct_u_vec(U_,true);
-  time_step(A_,B_,u_);
+  //time_step(A_,B_,u_);
 
 }
 
