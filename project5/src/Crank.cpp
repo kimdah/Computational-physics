@@ -184,16 +184,42 @@ sp_cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c,
   if (x_end > M-2) {cout << "Too far right " << endl;}
   if (y_end > M-2) {cout << "Too far down " << endl;}
   if (x_start < 1 || y_start < 1 || x_end > M-2 || y_end > M-2) {cout << "That's what she said" << endl;}
-  
+  double psum = 0;
+
   //calculates non-boundary condtions
   for(int i = x_start; i< x_end; i++){
     for(int j = y_start; j< y_end; j++){
       double x = i*h;
       double y = j*h;
-      U(i,j) =  exp( -(((pow(x-x_c,2)/(2*pow(sigma_x,2))) - (pow(y-y_c,2)/(2*pow(sigma_y,2)))) + (1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c))));
-       
+      complex <double> c = exp( -(((pow(x-x_c,2)/(2*pow(sigma_x,2))) - (pow(y-y_c,2)/(2*pow(sigma_y,2)))) + (1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c))));
+      U(i,j) = c;
+      //psum += abs(c);
+      psum += real(conj(c)*c);     
     }
   }
+  cout << "sum of magnitudes is " << psum << endl;
+  //double ssum = 0;
+  double psum2 = 0;
+  for(int i = x_start; i< x_end; i++){
+    for(int j = y_start; j< y_end; j++){
+
+      complex <double> c = cx_double(1/sqrt(psum)) * cx_double(U(i,j));
+      U(i,j) = c;
+      //ssum += abs(c);       
+      psum2 += real(conj(c)*c);
+    }
+  }
+  //cout << "sum of magnitudes is " << ssum << endl;
+  cout << "sum of real magnitudes is " << psum2 << endl;
+    //calculates non-boundary condtions
+  // for(int i = 1; i< M-1; i++){
+  //   for(int j = 1; j< M-1; j++){
+  //     double x = i*h;
+  //     double y = j*h;
+  //     U(i,j) =  exp( -(((pow(x-x_c,2)/(2*pow(sigma_x,2))) - (pow(y-y_c,2)/(2*pow(sigma_y,2)))) + (1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c))));
+       
+  //   }
+  // }
 
   // TODO: normalise the wavepacket. How to normalise a complex number?
   // //U=norm(U,1);
