@@ -40,6 +40,7 @@ class Crank {
     cx_mat make_insert_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y);
     void print();
     int to_file(string s);
+    int fritjofs(string s);
 
 };
 #endif
