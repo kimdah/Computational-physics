@@ -19,12 +19,12 @@ using namespace arma;
 
 int main(int argc, char const *argv[]) {
   // Crank(double h, double deltat)
-  
-  Crank crankyboii(0.005, 2.5e-4); // randomly chosen!
 
-  //crankyboii.to_file("A");
-  //crankyboii.to_file("B");
-  crankyboii.to_file("U");
+  Crank crank(0.005, 2.5e-4); // randomly chosen!
+
+  //crank.to_file("A");
+  //crank.to_file("B");
+  crank.to_file("U");
 
   return 0;
 }
