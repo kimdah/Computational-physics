@@ -34,5 +34,5 @@ void problem7() {
   cx_cube prob7_1 = crank.run_simulation(321); // TODO: 321 gives T = 0.008. Change input to actual time and modify code in Crank
   crank.to_file("U");
   crank.output_probabilities(prob7_1, "datafiles/probability_sum_test.txt");
-  prob7_1.save("datafiles/prob7_1");
+  prob7_1.save("datafiles/prob7_1.dat");
 }
