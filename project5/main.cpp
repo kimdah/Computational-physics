@@ -26,12 +26,13 @@ int main(int argc, char const *argv[]) {
 }
 
 void problem7() {
-    Crank crank(0.005, 2.5e-5); // NOT randomly chosen
+  Crank crank(0.005, 2.5e-5); // NOT randomly chosen
 
   //crank.to_file("A");
   //crank.to_file("B");
   
-  cx_cube nicolson = crank.run_simulation(321);
+  cx_cube prob7_1 = crank.run_simulation(321); // TODO: 321 gives T = 0.008. Change input to actual time and modify code in Crank
   crank.to_file("U");
-  crank.output_probabilities(nicolson, "datafiles/probability_sum_test.txt");
+  crank.output_probabilities(prob7_1, "datafiles/probability_sum_test.txt");
+  prob7_1.save("datafiles/prob7_1");
 }
