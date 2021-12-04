@@ -34,9 +34,7 @@ Crank::Crank(double h, double deltat) {
 
   // Commented out to test errors:
   U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
-  cx_vec u = construct_u_vec(U_, true); //
-  col_to_mat(u);
-  
+
 
 }
 
@@ -56,7 +54,7 @@ cx_cube Crank::run_simulation(int t) {
     u = u_next;
     
   }
-  
+  U_ = results.slice(t-1);
   return results;
 }
 

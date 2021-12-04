@@ -30,7 +30,8 @@ void problem7() {
 
   //crank.to_file("A");
   //crank.to_file("B");
-  crank.to_file("U");
+  
   cx_cube nicolson = crank.run_simulation(321);
+  crank.to_file("U");
   crank.output_probabilities(nicolson, "datafiles/probability_sum_test.txt");
 }
