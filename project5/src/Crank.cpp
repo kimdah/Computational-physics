@@ -137,9 +137,9 @@ mat Crank::make_potential_triple_slit(double v0){
 }
 
 
-sp_cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
+cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y){
 
-  sp_cx_mat U = sp_cx_mat(M, M); //Creates the matrix U. Is sparse the best choice here?
+  cx_mat U = cx_mat(M, M); //Creates the matrix U. Is sparse the best choice here?
 
   // Find index-dimensions of wavepacket
   int x_start = round((M_-1)*x_c - ((sigma_x/h)/2)); // sigma_x is here 0.05. h is 0.005. Thus 10 h in sigma_x
