@@ -354,7 +354,11 @@ int Crank::to_file(string s) {
     return 1;
   }
   largeness = sqrt(largeness);
-   
+  
+
+  A.save("datafiles/test.dat");
+
+  /*
   ofstream ofile;
   ofile.open(filename);
   for (int i = 0; i<largeness; i++) {
@@ -368,5 +372,6 @@ int Crank::to_file(string s) {
     ofile << endl;
   }
   ofile.close();
+  */
   return 0;
 }

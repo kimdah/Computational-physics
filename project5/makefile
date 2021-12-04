@@ -19,6 +19,7 @@ clean:
 	rm -f *.o *~
 
 plot:
+	python3 ./plotfiles/plotting.py
 
 
 # CPPflags = c++ #-O3 -std=c++11
