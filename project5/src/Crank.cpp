@@ -186,7 +186,7 @@ sp_cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c,
   if (x_start < 1 || y_start < 1 || x_end > M-2 || y_end > M-2) {cout << "That's what she said" << endl;}
   double psum = 0;
 
-  //calculates non-boundary condtions
+  // Inserts the wavepacket and calculates normalisation factor
   for(int i = x_start; i< x_end; i++){
     for(int j = y_start; j< y_end; j++){
       double x = i*h;
@@ -196,8 +196,10 @@ sp_cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c,
       psum += real(conj(c)*c);     
     }
   }
-  cout << "sum of real magnitudes is " << psum << endl;
-  //double ssum = 0;
+  cout << "sum of real magnitudes is " << psum << endl; // remove later
+  
+  
+  // Normalises U to 1
   double psum2 = 0;
   for(int i = x_start; i< x_end; i++){
     for(int j = y_start; j< y_end; j++){
@@ -206,9 +208,9 @@ sp_cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c,
       psum2 += real(conj(c)*c);
     }
   }
-  //cout << "sum of magnitudes is " << ssum << endl;
-  cout << "sum of real magnitudes is normalised to " << psum2 << endl;
 
+  cout << "sum of real magnitudes is normalised to " << psum2 << endl;
+ 
 
   //cx_double bc= cx_double(0,0); //boundary condition(Need to find correct) only works with imaginary != 0
 
