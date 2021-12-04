@@ -67,7 +67,7 @@ mat Crank::make_potential_double_slit(double v0){
 
   //Finds the righ indeces according to the dimesions specified
   int wall_thickness_index = floor(0.02/h)/2; //0.02
-  int wall_postion_index = floor(0.5/h);      //0.5
+  int wall_position_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
   int slit_epeture_index = floor(0.05/h);      //0.05
 
@@ -79,20 +79,20 @@ mat Crank::make_potential_double_slit(double v0){
   }
   //Builds the wall
   for(int i =0; i < wall_thickness_index; i++){
-    V.col(wall_postion_index + i) = wall_config;
-    V.col(wall_postion_index - i) = wall_config;
+    V.col(wall_position_index + i) = wall_config;
+    V.col(wall_position_index - i) = wall_config;
 
   }
   return V;
 }
 mat Crank::make_potential_single_slit(double v0){
-  mat V = make_potential_box(v0); //Creates the box potetnial
+  mat V = make_potential_box(v0); //Creates the box potential
 
   double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
   int wall_thickness_index = floor(0.2/h)/2; //0.02
-  int wall_postion_index = floor(0.5/h);      //0.5
+  int wall_position_index = floor(0.5/h);      //0.5
   int slit_apeture_index = floor(0.05/h);      //0.05
 
   //Sets up how the wallshould look
@@ -102,8 +102,8 @@ mat Crank::make_potential_single_slit(double v0){
   }
   //Builds the wall
   for(int i =0; i < wall_thickness_index; i++){
-    V.col(wall_postion_index + i) = wall_config;
-    V.col(wall_postion_index - i) = wall_config;
+    V.col(wall_position_index + i) = wall_config;
+    V.col(wall_position_index - i) = wall_config;
 
   }
   return V;
@@ -112,11 +112,11 @@ mat Crank::make_potential_single_slit(double v0){
 mat Crank::make_potential_triple_slit(double v0){
   mat V = make_potential_box(v0); //Creates the box potetnial
 
-    double h = 1.0/(M_-1);
+  double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
   int wall_thickness_index = floor(0.2/h)/2; //0.02
-  int wall_postion_index = floor(0.5/h);      //0.5
+  int wall_position_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
   int slit_apeture_index = floor(0.05/h);      //0.05
 
@@ -129,8 +129,8 @@ mat Crank::make_potential_triple_slit(double v0){
   }
   //Builds the wall
   for(int i =0; i<wall_thickness_index;i++){
-    V.col(wall_postion_index + i) = wall_config;
-    V.col(wall_postion_index - i) = wall_config;
+    V.col(wall_position_index + i) = wall_config;
+    V.col(wall_position_index - i) = wall_config;
 
   }
   return V;
@@ -356,7 +356,7 @@ int Crank::to_file(string s) {
   largeness = sqrt(largeness);
 
   //A.save("datafiles/test.dat");
-  
+
   ofstream ofile;
   ofile.open(filename);
   for (int i = 0; i<largeness; i++) {
