@@ -19,7 +19,8 @@ using namespace arma;
 Crank::Crank(double h, double deltat) {
   int M = 1/h+1; //To avvoid using M as a paramater
   M_ = M;
-
+  deltat_ = deltat;
+  U_empty = cx_mat(M_, M_).fill(0); // Makes a blank canvas to be reused by the col_to_mat function
   r_ = 1i*deltat/(2*pow(h,2)); //definition of r
   double v0 = numeric_limits<double>::max(); //Large potential
 
@@ -33,17 +34,83 @@ Crank::Crank(double h, double deltat) {
 
   // Commented out to test errors:
   U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
-  u_ = construct_u_vec(U_,true);
-  //time_step(A_,B_,u_);
+  cx_vec u = construct_u_vec(U_, true); //
+  col_to_mat(u);
+  
 
 }
 
+cx_cube Crank::run_simulation(int t) {
+  t_ = t;
+  cx_vec u = construct_u_vec(U_, true); // calculates the initial u column vector
+  
+  cx_cube results = cx_cube(M_, M_, t);
+  
+  results.slice(0) = U_; // Add initial state to results cube
+  cx_vec u_next;
+ 
+  for (int i = 1; i<t; i++) {
+    
+    u_next = time_step(u);
+    results.slice(i) = col_to_mat(u_next);
+    u = u_next;
+    
+  }
+  
+  return results;
+}
+
+//Problem 7
+void Crank::output_probabilities(cx_cube R, string filename) {
+  vec probability_sums = vec(t_);
+  ofstream ofile;
+  ofile.open(filename);
+  int width = 16;
+  int prec = 4;
+  ofile << setw(width) << setprecision(prec) << "Time";
+  ofile << setw(width) << setprecision(prec) << "P_tot";
+  ofile << endl;
+  for (int i = 0; i < t_; i++) {
+    ofile << setw(width) << setprecision(prec) << i*deltat_;
+    ofile << setw(width) << setprecision(prec) << sum_probabilies(R.slice(i));
+    ofile << endl;
+  
+  }
+  ofile.close();
+  
+}
 // Problem 2-1
 // Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
 int Crank::get_k_index(int i, int j, int M){
-//return ((i % (M - 1)) - 1) + (M - 2) * (j - 1);
   return ((j - 1) * (M - 2)) + (i - 1);
+}
 
+cx_mat Crank::col_to_mat(cx_vec u) {
+  U_empty.submat(1, 1, M_-2, M_-2) = reshape(u, M_-2, M_-2);
+  //time_slice = conv_to<cx_mat>::from(u);
+  
+/*   string filename;
+  int largeness = sqrt(U_empty.size());
+  int width = 24;
+  int prec = 3;
+  
+  filename = "datafiles/col_to_mat_test_matrix_U_size_" + to_string(largeness) + ".txt";
+
+  ofstream ofile;
+  ofile.open(filename);
+  for (int i = 0; i<largeness; i++) {
+    ofile << setw(width) << setprecision(prec) << i;
+  }
+  ofile << endl;
+  for (int i = 0; i<largeness; i++) {
+    for (int j = 0; j<largeness; j++) {
+      ofile << setw(width) << setprecision(prec) << scientific << U_empty(i,j);
+    }
+    ofile << endl;
+  }
+  ofile.close(); */
+
+  return U_empty;
 }
 
 // Problem x
@@ -142,10 +209,10 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
   cx_mat U = cx_mat(M, M).fill(0); //Creates the matrix U. Is sparse the best choice here?
 
   // Find index-dimensions of wavepacket
-  int x_start = round((M_-1)*x_c - ((sigma_x/h)/2)); // sigma_x is here 0.05. h is 0.005. Thus 10 h in sigma_x
-  int x_end = x_start + (sigma_x/h);
+  int x_start = round((M_-1)*x_c - ((sigma_x/h)/2)); // sigma_x is here 0.05. h is 0.005. Thus 10 h in sigma_x --> 11 points
+  int x_end = x_start + (sigma_x/h) + 1;
   int y_start = round((M_-1)*y_c - ((sigma_y/h)/2));
-  int y_end = y_start + (sigma_y/h);
+  int y_end = y_start + (sigma_y/h) + 1;
 
   // If wavepacket starts overlapping or outside a boundary, try to relocate it inside the boundary
   if (x_start < 1) {
@@ -187,6 +254,7 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
   double psum = 0;
 
   // Inserts the wavepacket and calculates normalisation factor
+  
   for(int i = x_start; i< x_end; i++){
     for(int j = y_start; j< y_end; j++){
       double x = i*h;
@@ -211,45 +279,22 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
 
   cout << "sum of real magnitudes is normalised to " << psum2 << endl;
 
-
-  //cx_double bc= cx_double(0,0); //boundary condition(Need to find correct) only works with imaginary != 0
-
-  //cout << M <<endl;
-  //Filling in boundary conditions
-  // for(int i=0; i < M+1; i+=(M-1)){ // Should change loop conditions to make more clear
-  //   for(int j=0; j< M; j++){
-  //       U(i,j) = bc;
-  //       U(j,i) = bc;
-  //   }
-  // }
-
-  /*
-  Currently not working. Need to normalize U according to problem 4
-
-
-  //finding normalisation constant
-  cx_double normalization_cosntant = (0,0);
-  for(int i=0;i<M; i++){
-    for(int j=0;j<M; j++){
-      normalization_cosntant += pow(abs(U(i,j)),2); //=p(x,y;t)?
-    }
-  }
-
-  cout << normalization_cosntant << endl;
-  //normalising
-  for(int i=0;i<M; i++){
-    for(int j=0;j<M; j++){
-      U(i,j) = U(i,j)/normalization_cosntant;
-    }
-  }
-  */
   return U;
+}
+double Crank::sum_probabilies(cx_mat U) {
+  double psum = 0;
+  for(int i = 0; i< M_; i++){
+    for(int j = 0; j< M_; j++){
+     
+      psum += real(conj(U(i,j))*U(i,j));
+    }
+  }
+  return psum;
 }
 
 
-
 // constructs the u vector based on U matrix
-cx_vec Crank::construct_u_vec(sp_cx_mat U, bool normalise){
+cx_vec Crank::construct_u_vec(cx_mat U, bool normalise){
   int M = sqrt(U.size()); //size() gives M², assumes U to be quadratic
   cx_vec u = cx_vec(pow(M-2,2));
 
@@ -258,18 +303,18 @@ cx_vec Crank::construct_u_vec(sp_cx_mat U, bool normalise){
       u(get_k_index(i, j, M)) = U(i, j);
     }
   }
-  if(normalise){ //Normalizes u, but not sure if correct
+  /* if(normalise){ //Normalizes u, but not sure if correct
     sp_cx_mat normalisation_factor;
     normalisation_factor = u.t()*u; //this is a 1x1 matrix
     u = u/normalisation_factor(0, 0);
-  }
+  } */
   return u;
 }
 
-// Task3
-cx_vec Crank::time_step(sp_cx_mat A, sp_cx_mat B, cx_vec u){
-  cx_vec a = B * u;
-  return spsolve(A,a);
+// Task3: Returns the column vector of the next time step u(n+1)
+cx_vec Crank::time_step(cx_vec u) {
+  cx_vec b = B_ * u; // Solves eq 26 RHS with u(n)
+  return spsolve(A_, b); // Solves eq 26 for u(n+1). Here the vector u(n) (and similarly u(n+1) is a column vector that contains the u^n_ij values for all the internal points of the xy grid at time step n
  }
 
 
@@ -286,7 +331,7 @@ void Crank::make_matrices(int M, double h, double deltat, mat V, complex<double>
       b(k) = (1.0 - 4.0*r - 1.0i*(deltat/2*cx_double(V(i,j))));
     }
   }
-  A_ = make_matrix(-r, a); // made these global variables - maybe make a class instead?
+  A_ = make_matrix(-r, a); 
   B_ = make_matrix(r,  b);
 }
 
