@@ -16,15 +16,26 @@ using namespace std::complex_literals; // to use imaginary number i | DEMANDS c
 using namespace std;
 using namespace arma;
 
-
+void problem7();
 int main(int argc, char const *argv[]) {
   // Crank(double h, double deltat)
 
-  Crank crank(0.005, 2.5e-4); // randomly chosen!
+  problem7();
+
+  return 0;
+}
+
+void problem7() {
+  Crank crank(0.005, 2.5e-5); // NOT randomly chosen
 
   //crank.to_file("A");
   //crank.to_file("B");
+  
+  cx_cube prob7_1 = crank.run_simulation(321); // TODO: 321 gives T = 0.008. Change input to actual time and modify code in Crank
   crank.to_file("U");
-
-  return 0;
+  
+  crank.output_probabilities(prob7_1, "datafiles/probability_sum_test.txt");
+  prob7_1.transform( [](complex <double> val) { return real(conj(val)*val); } );
+  cube out = conv_to< cube >::from(prob7_1);
+  out.save("datafiles/prob7_1.dat");
 }

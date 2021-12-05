@@ -1,9 +1,9 @@
-#Bare tatt fra code snippits
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-
+plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg'
+import pyarma as pa
 
 #
 # Let's generate a dummy time series for a function z(x,y,t)
@@ -19,23 +19,23 @@ x, y = np.meshgrid(x_points, y_points, sparse=True)
 dt = 0.005
 t_points = np.arange(0, 1+dt, dt)
 
-# A function for a Gaussian that is travelling
+A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
+A.load('prob7_1.dat') #Load the content of the matrix you saved into your Python program.
+# A function for a Gaussian that is travelling 
 # in the x direction and broadening as time passes
-def z(x,y,t):
-    v = 0.5
-    x_c = 0.2
-    sigma_x = 0.025 + 0.15 * t
-    return 1. / (2 * np.pi * np.sqrt(sigma_x)) * np.exp(-0.5 * (x - x_c - v * t)**2 / sigma_x**2)
+
 
 # Fill z_data_list with f(x,y,t)
 z_data_list = []
+c = 0
 for t in t_points:
-    z_data = z(x, y, t)
+    z_data = np.array(A[pa.single_slice, c])
+    c += 1
     z_data_list.append(z_data)
 
 
 #
-# Now the list z_data_list contains a series of "frames" of z(x,y,t),
+# Now the list z_data_list contains a series of "frames" of z(x,y,t), 
 # where each frame can be plotted as a 2D image using imshow. Let's
 # animate it!
 #
@@ -54,7 +54,7 @@ ax = plt.gca()
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 
 # Plot the first frame
-img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm) #
 
 # Axis labels
 plt.xlabel("x", fontsize=fontsize)
@@ -68,7 +68,7 @@ cbar.set_label("z(x,y,t)", fontsize=fontsize)
 cbar.ax.tick_params(labelsize=fontsize)
 
 # Add a text element showing the time
-time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
+time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white", 
                     horizontalalignment="right", verticalalignment="top", fontsize=fontsize)
 
 # Function that takes care of updating the z data and other things for each frame
@@ -93,4 +93,4 @@ anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_
 plt.show()
 
 # # Save the animation
-# anim.save('./animation.mp4', writer="ffmpeg", bitrate=-1, fps=30)
+anim.save('./animation.gif', writer="ffmpeg", fps=30)
