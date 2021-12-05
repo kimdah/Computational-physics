@@ -56,23 +56,36 @@ norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 
 # Plot the first frame
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_firstframe.pdf')
+
+# Plots for problem7.1, will not be used to solve problem.
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[22]))
+#img7_1_1 = ax.imshow(z_data_list[22], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_11.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[44]))
+#img7_1_1 = ax.imshow(z_data_list[44], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_22.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[140]))
+#img7_1_2 = ax.imshow(z_data_list[140], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_70.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[180]))
+#img7_1_3 = ax.imshow(z_data_list[180], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_90.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[200]))
+#img7_1_4 = ax.imshow(z_data_list[200], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time1_0.pdf')
+
+#Problem 8.1
+img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures'+filename+'_firstframe.pdf')
-# Plots for problem7
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[22]))
-img7_1_1 = ax.imshow(z_data_list[22], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures'+filename+'_time0_11.pdf')
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[44]))
-img7_1_1 = ax.imshow(z_data_list[44], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures'+filename+'_time0_22.pdf')
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[140]))
-img7_1_2 = ax.imshow(z_data_list[140], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures'+filename+'_time0_70.pdf')
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[180]))
-img7_1_3 = ax.imshow(z_data_list[180], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures'+filename+'_time0_90.pdf')
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[200]))
-img7_1_4 = ax.imshow(z_data_list[200], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures'+filename+'_time1_0.pdf')
+val1 = 0.001/dt
+norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val1]))
+img7_1_1 = ax.imshow(z_data_list[val1], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+plt.savefig('./figures'+filename+'_time0_001.pdf')
+val2 = 0.002/dt
+norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val2]))
+img7_1_1 = ax.imshow(z_data_list[val2], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+plt.savefig('./figures'+filename+'_time0_002.pdf')
 
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 
