@@ -31,8 +31,11 @@ void problem7() {
   //crank.to_file("A");
   //crank.to_file("B");
   
-  cx_cube prob7_1 = crank.run_simulation(3233); // TODO: 321 gives T = 0.008. Change input to actual time and modify code in Crank
+  cx_cube prob7_1 = crank.run_simulation(321); // TODO: 321 gives T = 0.008. Change input to actual time and modify code in Crank
   crank.to_file("U");
+  
   crank.output_probabilities(prob7_1, "datafiles/probability_sum_test.txt");
-  prob7_1.save("datafiles/prob7_1.dat");
+  prob7_1.transform( [](complex <double> val) { return real(conj(val)*val); } );
+  cube out = conv_to< cube >::from(prob7_1);
+  out.save("datafiles/prob7_1.dat");
 }

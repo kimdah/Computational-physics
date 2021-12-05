@@ -24,6 +24,7 @@ class Crank {
     mat V_;
     cx_vec u_;
     double deltat_;
+    bool poutput_; // Sets whether we want the probability output or real+imaginary
     int M_, t_; // size of total matrix
     complex<double> r_;
 

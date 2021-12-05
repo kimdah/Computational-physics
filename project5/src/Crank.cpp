@@ -20,6 +20,7 @@ Crank::Crank(double h, double deltat) {
   int M = 1/h+1; //To avvoid using M as a paramater
   M_ = M;
   deltat_ = deltat;
+  poutput_ = true;
   U_empty = cx_mat(M_, M_).fill(0); // Makes a blank canvas to be reused by the col_to_mat function
   r_ = 1i*deltat/(2*pow(h,2)); //definition of r
   double v0 = numeric_limits<double>::max(); //Large potential
@@ -54,7 +55,10 @@ cx_cube Crank::run_simulation(int t) {
     u = u_next;
     
   }
+  
   U_ = results.slice(t-1);
+
+  
   return results;
 }
 
@@ -72,10 +76,8 @@ void Crank::output_probabilities(cx_cube R, string filename) {
     ofile << setw(width) << setprecision(prec) << i*deltat_;
     ofile << setw(width) << setprecision(prec) << sum_probabilies(R.slice(i));
     ofile << endl;
-  
   }
   ofile.close();
-  
 }
 // Problem 2-1
 // Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
@@ -283,12 +285,12 @@ double Crank::sum_probabilies(cx_mat U) {
   double psum = 0;
   for(int i = 0; i< M_; i++){
     for(int j = 0; j< M_; j++){
-     
       psum += real(conj(U(i,j))*U(i,j));
     }
   }
   return psum;
 }
+
 
 
 // constructs the u vector based on U matrix
