@@ -34,7 +34,7 @@ Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double s
     V_ = make_potential_double_slit(v_0);
   }
   if(slits==3){
-    V_ = make_potential_triple_slit(v_0);
+    V_ = make_potential_triple_slit(v_0); // TODO: fix indexing in method
   }
 
 
