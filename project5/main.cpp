@@ -19,6 +19,7 @@ void problem7();
 int main(int argc, char const *argv[]) {
   // Crank(double h, double deltat)
   // ----- Cecilie-----
+  /*
   fstream myfile;
   string filename = "input.txt";
   myfile.open(filename);
@@ -54,15 +55,20 @@ int main(int argc, char const *argv[]) {
     cout << "Unable to open the file " << filename << endl;
   }
   myfile.close();
+  */
   // ---- end Cecilie-----
 
-  //problem7();
+  problem7();
 
   return 0;
 }
 
 void problem7() {
-  Crank crank(0.005, 2.5e-5);
+  //Crank crank(0.005, 2.5e-5);
+  double v_0 = numeric_limits<double>::max(); //Large potential
+  //Crank crank(0.005, 2.5e-5, 0.008, 0.25, 0.5, 0.05, 0.05, 200, 0.0, v_0, 1); this should be correct
+  Crank crank(0.005, 2.5e-5, 0.008, 0.5, 0.25, 0.05, 0.05, 0.0, -200.0, v_0, 1);  //Manually handling the index swap
+
 
   //crank.to_file("A");
   //crank.to_file("B");

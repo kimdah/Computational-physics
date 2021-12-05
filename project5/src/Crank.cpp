@@ -16,26 +16,34 @@ using namespace std::complex_literals; // to use imaginary number i | DEMANDS c
 using namespace std;
 using namespace arma;
 
-Crank::Crank(double h, double deltat) {
+Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y, double v_0, int slits=0) {
   int M = 1/h+1; //To avvoid using M as a paramater
   M_ = M;
   deltat_ = deltat;
   poutput_ = true;
   U_empty = cx_mat(M_, M_).fill(0); // Makes a blank canvas to be reused by the col_to_mat function
   r_ = 1i*deltat/(2*pow(h,2)); //definition of r
-  double v0 = numeric_limits<double>::max(); //Large potential
+  
+  if(slits==0){
+    V_ = make_potential_box(v_0);
+  }
+  if(slits==1){
+    V_ = make_potential_single_slit(v_0);
+  }
+  if(slits==2){
+    V_ = make_potential_double_slit(v_0);
+  }
+  if(slits==3){
+    V_ = make_potential_triple_slit(v_0);
+  }
 
-  V_ = make_potential_box(v0); // initialise V
-  make_potential_double_slit(v0);
-  make_potential_single_slit(v0);
-  make_potential_triple_slit(v0);
 
   //makes matrices A and B
   make_matrices(M_, h, deltat, V_, r_); // random variables!! change
 
   // Commented out to test errors:
-  U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
-
+  //U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
+  U_ = make_insert_wavepacket(M_, h, x_c, y_c, sigma_x, sigma_y, p_x, p_y); //Tryin to manually correct syntax error where dims are swapped.
 
 }
 
@@ -158,7 +166,7 @@ mat Crank::make_potential_single_slit(double v0){
   double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickness_index = floor(0.2/h)/2; //0.02
+  int wall_thickness_index = floor(0.02/h)/2; //0.02
   int wall_position_index = floor(0.5/h);      //0.5
   int slit_apeture_index = floor(0.05/h);      //0.05
 
@@ -182,7 +190,7 @@ mat Crank::make_potential_triple_slit(double v0){
   double h = 1.0/(M_-1);
 
   //Finds the righ indeces according to the dimesions specified
-  int wall_thickness_index = floor(0.2/h)/2; //0.02
+  int wall_thickness_index = floor(0.02/h)/2; //0.02
   int wall_position_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
   int slit_apeture_index = floor(0.05/h);      //0.05

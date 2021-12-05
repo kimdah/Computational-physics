@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg'
 import pyarma as pa
+import sys
 
 #
 # Let's generate a dummy time series for a function z(x,y,t)
 #
-
+filename = sys.argv[1]
 # Set up a 2D xy grid
 h = 0.005
 x_points = np.arange(0, 1+h, h)
@@ -20,7 +21,7 @@ dt = 0.005
 t_points = np.arange(0, 1+dt, dt)
 
 A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
-A.load('./datafiles/prob7_1.dat') #Load the content of the matrix you saved into your Python program.
+A.load('./datafiles/'+filename) #Load the content of the matrix you saved into your Python program.
 # A function for a Gaussian that is travelling 
 # in the x direction and broadening as time passes
 
@@ -93,4 +94,4 @@ anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_
 plt.show()
 
 # # Save the animation
-anim.save('./figures/animation.gif', writer="ffmpeg", fps=30)
+anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)

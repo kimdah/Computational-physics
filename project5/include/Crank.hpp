@@ -28,7 +28,7 @@ class Crank {
     int M_, t_; // size of total matrix
     complex<double> r_;
 
-    Crank(double h, double deltat);
+    Crank(double h, double deltat, double T, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y, double v_0, int slits);
     // Performs simulations based on parameter inputs
 
     int get_k_index(int i, int j, int M);

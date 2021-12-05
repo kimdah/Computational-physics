@@ -19,7 +19,7 @@ clean:
 	rm -f *.o *~
 
 plot:
-	python3 ./plotfiles/animation.py
+	python3 ./plotfiles/animation.py 'prob7_1.dat'
 
 
 # CPPflags = c++ #-O3 -std=c++11
