@@ -42,23 +42,23 @@ Crank::Crank(double h, double deltat) {
 cx_cube Crank::run_simulation(int t) {
   t_ = t;
   cx_vec u = construct_u_vec(U_, true); // calculates the initial u column vector
-  
+
   cx_cube results = cx_cube(M_, M_, t);
-  
+
   results.slice(0) = U_; // Add initial state to results cube
   cx_vec u_next;
- 
+
   for (int i = 1; i<t; i++) {
-    
+
     u_next = time_step(u);
     results.slice(i) = col_to_mat(u_next);
     u = u_next;
-    
+
   }
-  
+
   U_ = results.slice(t-1);
 
-  
+
   return results;
 }
 
@@ -88,12 +88,12 @@ int Crank::get_k_index(int i, int j, int M){
 cx_mat Crank::col_to_mat(cx_vec u) {
   U_empty.submat(1, 1, M_-2, M_-2) = reshape(u, M_-2, M_-2);
   //time_slice = conv_to<cx_mat>::from(u);
-  
+
 /*   string filename;
   int largeness = sqrt(U_empty.size());
   int width = 24;
   int prec = 3;
-  
+
   filename = "datafiles/col_to_mat_test_matrix_U_size_" + to_string(largeness) + ".txt";
 
   ofstream ofile;
@@ -132,7 +132,7 @@ mat Crank::make_potential_double_slit(double v0){
 
   double h = 1.0/(M_-1);
 
-  //Finds the righ indeces according to the dimesions specified
+  //Finds the right indeces according to the dimesions specified
   int wall_thickness_index = floor(0.02/h)/2; //0.02
   int wall_position_index = floor(0.5/h);      //0.5
   int slit_seperation_index = floor(0.05/h)/2;//0.05
@@ -254,7 +254,7 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
   double psum = 0;
 
   // Inserts the wavepacket and calculates normalisation factor
-  
+
   for(int i = x_start; i< x_end; i++){
     for(int j = y_start; j< y_end; j++){
       double x = i*h;
@@ -331,7 +331,7 @@ void Crank::make_matrices(int M, double h, double deltat, mat V, complex<double>
       b(k) = (1.0 - 4.0*r - 1.0i*(deltat/2*cx_double(V(i,j))));
     }
   }
-  A_ = make_matrix(-r, a); 
+  A_ = make_matrix(-r, a);
   B_ = make_matrix(r,  b);
 }
 
