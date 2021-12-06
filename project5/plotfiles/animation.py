@@ -21,8 +21,7 @@ dt = 0.005
 t_points = np.arange(0, 1+dt, dt)
 
 A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
-A.load('./datafiles/'+filename) #Load the content of the matrix you saved into your Python program.
-#A.load('one.dat')
+A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
 # A function for a Gaussian that is travelling
 # in the x direction and broadening as time passes
 
@@ -31,7 +30,7 @@ A.load('./datafiles/'+filename) #Load the content of the matrix you saved into y
 z_data_list = []
 c = 0
 for t in t_points:
-    z_data = np.rot90(np.array(A[pa.single_slice, c])) #TODO rearrange ordering from column to row major
+    z_data = np.rot90(np.array(A[pa.single_slice, c]))
     c += 1
     z_data_list.append(z_data)
 
@@ -56,7 +55,41 @@ ax = plt.gca()
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 
 # Plot the first frame
-img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm) #
+img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_firstframe.pdf')
+
+# Plots for problem7.1, will not be used to solve problem.
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[22]))
+#img7_1_1 = ax.imshow(z_data_list[22], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_11.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[44]))
+#img7_1_1 = ax.imshow(z_data_list[44], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_22.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[140]))
+#img7_1_2 = ax.imshow(z_data_list[140], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_70.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[180]))
+#img7_1_3 = ax.imshow(z_data_list[180], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time0_90.pdf')
+#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[200]))
+#img7_1_4 = ax.imshow(z_data_list[200], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+#plt.savefig('./figures'+filename+'_time1_0.pdf')
+
+
+filename = filename.split('.')[0]
+#Problem 8.1
+img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+plt.savefig('./figures/'+filename+'_time0.pdf')
+val1 = int((0.008/2.5e-5)/8)
+norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val1]))
+img7_1_1 = ax.imshow(z_data_list[val1], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+plt.savefig('./figures/'+filename+'_time0_001.pdf')
+val2 = int((0.008/2.5e-5)/4)
+norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val2]))
+img7_1_1 = ax.imshow(z_data_list[val2], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+plt.savefig('./figures/'+filename+'_time0_002.pdf')
+
+img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 
 # Axis labels
 plt.xlabel("x", fontsize=fontsize)
@@ -73,6 +106,7 @@ cbar.ax.tick_params(labelsize=fontsize)
 time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
                     horizontalalignment="right", verticalalignment="top", fontsize=fontsize)
 
+
 # Function that takes care of updating the z data and other things for each frame
 def animation(i):
     # Normalize the colour scale to the current frame?
@@ -88,6 +122,7 @@ def animation(i):
 
     return img
 
+
 # Use matplotlib.animation.FuncAnimation to put it all together
 anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_list), 2), repeat=False, blit=0)
 
@@ -95,5 +130,4 @@ anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_
 plt.show()
 
 # # Save the animation
-#anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)
-anim.save('animation.gif', writer="ffmpeg", fps=15)
+anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)
