@@ -33,14 +33,15 @@ int main(int argc, char const *argv[]) {
     int line_counter = 0;
     while (std::getline(myfile, line)) {
       std::stringstream mysstream(line);
-      mysstream >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0;
+      mysstream >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0; //TODO: add slits to file
       if (line_counter == 0){
         // Task 7.1 w/o double slit
         problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 0), 0);
 
       } else if (line_counter == 1){
         // Task 7.3 w/double slit
-        problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 2), 2); //commented out for testing
+        int slits = 2;
+        problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, slits), slits); //commented out for testing
 
       } else if (line_counter == 2){
         // Task 8 and 9 (using same parameters)
@@ -73,6 +74,15 @@ void problem7(Crank crank, int slits) { // name it deviation_of_probability inst
   prob7.for_each( [](complex <double> val) { return real(conj(val)*val); } ); // changed from transform to for_each
   cube out = conv_to <cube>::from(prob7);
   out.save("datafiles/prob7_slits_" + to_string(slits) + ".dat");
+  mat box = crank.make_potential_box();
+  mat box_single_slit = crank.make_potential_single_slit();
+  mat box_double_slit = crank.make_potential_double_slit();
+  mat box_triple_slit = crank.make_potential_triple_slit();
+  box.save("datafiles/box.dat");
+  box_single_slit.save("datafiles/box_single_slit.dat");
+  box_double_slit.save("datafiles/box_double_slit.dat");
+  box_triple_slit.save("datafiles/box_triple_slit.dat");
+
   // ----------------
 }
 

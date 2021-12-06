@@ -23,7 +23,7 @@ class Crank {
     cx_mat U_, U_empty;
     mat V_;
     cx_vec u_;
-    double deltat_, h_;
+    double deltat_, h_, v_0_;
     bool poutput_; // Sets whether we want the probability output or real+imaginary
     int M_, t_, t_steps_; 
     complex<double> r_;
@@ -33,10 +33,10 @@ class Crank {
 
     int get_k_index(int i, int j, int M);
     cx_vec construct_u_vec(cx_mat U, bool normalise);
-    mat make_potential_box(double v0);
-    mat make_potential_single_slit(double v0);
-    mat make_potential_double_slit(double v0);
-    mat make_potential_triple_slit(double v0);
+    mat make_potential_box();
+    mat make_potential_single_slit();
+    mat make_potential_double_slit();
+    mat make_potential_triple_slit();
     void make_matrices(int M, double h, double deltat, mat V, complex<double> r);
     sp_cx_mat make_matrix(complex<double> r, cx_vec d);
     cx_vec time_step(cx_vec u);

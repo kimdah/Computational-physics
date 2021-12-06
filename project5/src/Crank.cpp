@@ -21,22 +21,23 @@ Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double s
   t_steps_ = round(T/deltat)+1;
   M_ = M;
   h_ = h;
+  v_0_ = v_0;
   deltat_ = deltat;
   poutput_ = true;
   U_empty = cx_mat(M_, M_).fill(0); // Makes a blank canvas to be reused by the col_to_mat function
   r_ = 1i*deltat/(2*pow(h,2)); //definition of r
 
   if(slits==0){
-    V_ = make_potential_box(v_0);
+    V_ = make_potential_box();
   }
   if(slits==1){
-    V_ = make_potential_single_slit(v_0);
+    V_ = make_potential_single_slit();
   }
   if(slits==2){
-    V_ = make_potential_double_slit(v_0);
+    V_ = make_potential_double_slit();
   }
   if(slits==3){
-    V_ = make_potential_triple_slit(v_0); // TODO: fix indexing in method
+    V_ = make_potential_triple_slit(); // TODO: fix indexing in method
   }
 
 
@@ -93,20 +94,20 @@ cx_mat Crank::col_to_mat(cx_vec u) {
 
 // Problem x
 // Initialise potential V for the box (time-independent) - make complex if necessary
-mat Crank::make_potential_box(double v0){
+mat Crank::make_potential_box(){
   mat V = mat(M_,M_); //
-  V.col(0) = vec(M_).fill(v0);
-  V.col(M_-1) = vec(M_).fill(v0);
-  V.row(0) = rowvec(M_).fill(v0);
-  V.row(M_-1) = rowvec(M_).fill(v0);
+  V.col(0) = vec(M_).fill(v_0_);
+  V.col(M_-1) = vec(M_).fill(v_0_);
+  V.row(0) = rowvec(M_).fill(v_0_);
+  V.row(M_-1) = rowvec(M_).fill(v_0_);
   //submat(first_row, first_col, last_row, last_col)
   V.submat(1, 1, M_-2, M_-2) = mat(M_-2,M_-2).fill(0); // filling inner matrix
   return V;
 }
 
 // Creates the potential for the double slit and box
-mat Crank::make_potential_double_slit(double v0){
-  mat V = make_potential_box(v0); //Creates a box of size M_* M_
+mat Crank::make_potential_double_slit(){
+  mat V = make_potential_box(); //Creates a box of size M_* M_
   int center_index = (M_)*0.5; //200 * 0.5 = 100
   int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
   int x_start = center_index - x_thickness/2;
@@ -117,7 +118,7 @@ mat Crank::make_potential_double_slit(double v0){
   int end = start + aperture; // j=94 for lower aperture and j=116 for upper aperture
 
   for (int i = x_start; i < x_end+1; i++) {
-    V.row(i).fill(v0);
+    V.row(i).fill(v_0_);
     for(int j = start; j < end+1; j++) {
       V(i,j) = 0;
       V(i,j+center_wall_length+1+aperture) = 0;
@@ -126,8 +127,8 @@ mat Crank::make_potential_double_slit(double v0){
   return V;
 }
 
-mat Crank::make_potential_single_slit(double v0){
-  mat V = make_potential_box(v0); //Creates a box of size M_* M_
+mat Crank::make_potential_single_slit(){
+  mat V = make_potential_box(); //Creates a box of size M_* M_
   int center_index = (M_)*0.5; //200 * 0.5 = 100
   int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
   int x_start = center_index - x_thickness/2;
@@ -137,7 +138,7 @@ mat Crank::make_potential_single_slit(double v0){
   int end = start + aperture + 1;
 
   for (int i = x_start; i<x_end+1; i++) {
-    V.row(i).fill(v0);
+    V.row(i).fill(v_0_);
     for(int j = start; j < end+1; j++) {
       V(i,j) = 0;
     }
@@ -145,8 +146,8 @@ mat Crank::make_potential_single_slit(double v0){
   return V;
 }
 
-mat Crank::make_potential_triple_slit(double v0){
-  mat V = make_potential_box(v0); //Creates a box of size M_* M_
+mat Crank::make_potential_triple_slit(){
+  mat V = make_potential_box(); //Creates a box of size M_* M_
   int center_index = (M_)*0.5; //200 * 0.5 = 100
   int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
   int x_start = center_index - x_thickness/2;
@@ -158,7 +159,7 @@ mat Crank::make_potential_triple_slit(double v0){
   int unit_separation = wall_length + aperture;
 
   for (int i = x_start; i < x_end+1; i++) {
-    V.row(i).fill(v0);
+    V.row(i).fill(v_0_);
     for(int j = start; j < end+1; j++) {
       V(i,j) = 0;
       V(i,j + unit_separation + 1) = 0;
