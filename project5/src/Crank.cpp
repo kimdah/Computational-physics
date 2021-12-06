@@ -88,29 +88,6 @@ int Crank::get_k_index(int i, int j, int M){
 
 cx_mat Crank::col_to_mat(cx_vec u) {
   U_empty.submat(1, 1, M_-2, M_-2) = reshape(u, M_-2, M_-2);
-  //time_slice = conv_to<cx_mat>::from(u);
-
-/*   string filename;
-  int largeness = sqrt(U_empty.size());
-  int width = 24;
-  int prec = 3;
-
-  filename = "datafiles/col_to_mat_test_matrix_U_size_" + to_string(largeness) + ".txt";
-
-  ofstream ofile;
-  ofile.open(filename);
-  for (int i = 0; i<largeness; i++) {
-    ofile << setw(width) << setprecision(prec) << i;
-  }
-  ofile << endl;
-  for (int i = 0; i<largeness; i++) {
-    for (int j = 0; j<largeness; j++) {
-      ofile << setw(width) << setprecision(prec) << scientific << U_empty(i,j);
-    }
-    ofile << endl;
-  }
-  ofile.close(); */
-
   return U_empty;
 }
 
@@ -134,103 +111,59 @@ mat Crank::make_potential_double_slit(double v0){
   int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
   int x_start = center_index - x_thickness/2;
   int x_end = center_index + x_thickness/2;
-  int aperture = (0.05/h_) +1 ;// (0.05/0.005) + 1 = 11
-  int center_wall_length = (0.05/h_);// (0.05/0.005) + 1 = 11
-  int bottom_start = center_index - center_wall_length/2 - aperture;
-  int bottom_end = bottom_start + aperture;
+  int aperture = (0.05/h_) + 1 ;// (0.05/0.005) + 1 = 11
+  int center_wall_length = (0.05/h_);// (0.05/0.005) = 10. From j=95 to j=105
+  int start = center_index - (center_wall_length)/2 - aperture; // j=84 for lower aperture and j=106 for upper aperture
+  int end = start + aperture; // j=94 for lower aperture and j=116 for upper aperture
 
-  for (int i = x_start; i<x_end+1; i++) {
+  for (int i = x_start; i < x_end+1; i++) {
     V.row(i).fill(v0);
-    for(int j = bottom_start; j < bottom_end+1; j++) {
+    for(int j = start; j < end+1; j++) {
       V(i,j) = 0;
       V(i,j+center_wall_length+1+aperture) = 0;
     }
   }
-
-
   return V;
 }
-// // Creates the potential for the double slit and box
-// mat Crank::make_potential_double_slit(double v0){
-//   mat V = make_potential_box(v0); //Creates a box of size M_* M_
-
-//   double h = 1.0/(M_-1);
-
-//   //Finds the right indeces according to the dimesions specified
-//   int wall_thickness_index = floor(0.02/h)/2; //0.02
-//   int wall_position_index = floor(0.5/h);      //0.5
-//   int slit_seperation_index = floor(0.05/h)/2;//0.05
-//   int slit_epeture_index = floor(0.05/h);      //0.05
-
-//   //Sets up how the wallshould look
-//   vec wall_config = vec(M_).fill(v0);
-//   for(int i=0; i<slit_epeture_index; i++){
-//     wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
-//     wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
-//   }
-
-//   // the wall appears to be made along the column direction. It should be row direction
-//   // Builds the wall
-//   // for(int i =0; i < wall_thickness_index; i++){
-//   //   V.col(wall_position_index + i) = wall_config;
-//   //   V.col(wall_position_index - i) = wall_config;
-//   // }
-
-//    for(int i =0; i < wall_thickness_index; i++){
-//     V.row(wall_position_index + i) = wall_config;
-//     V.row(wall_position_index - i) = wall_config;
-
-//   }
-//   return V;
-// }
 
 mat Crank::make_potential_single_slit(double v0){
-  mat V = make_potential_box(v0); //Creates the box potential
+  mat V = make_potential_box(v0); //Creates a box of size M_* M_
+  int center_index = (M_)*0.5; //200 * 0.5 = 100
+  int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
+  int x_start = center_index - x_thickness/2;
+  int x_end = center_index + x_thickness/2;
+  int aperture = (0.05/h_) ;// (0.05/0.005) + 1 = 11
+  int start = center_index - aperture/2;
+  int end = start + aperture + 1;
 
-  double h = 1.0/(M_-1);
-
-  //Finds the righ indeces according to the dimesions specified
-  int wall_thickness_index = floor(0.02/h)/2; //0.02
-  int wall_position_index = floor(0.5/h);      //0.5
-  int slit_apeture_index = floor(0.05/h);      //0.05
-
-  //Sets up how the wallshould look
-  vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i < slit_apeture_index; i++){
-    wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0; //floor(slit_apeture_index/2) -->centering the slit
-  }
-  //Builds the wall
-  for(int i =0; i < wall_thickness_index; i++){
-    V.col(wall_position_index + i) = wall_config;
-    V.col(wall_position_index - i) = wall_config;
-
+  for (int i = x_start; i<x_end+1; i++) {
+    V.row(i).fill(v0);
+    for(int j = start; j < end+1; j++) {
+      V(i,j) = 0;
+    }
   }
   return V;
 }
 
 mat Crank::make_potential_triple_slit(double v0){
-  mat V = make_potential_box(v0); //Creates the box potetnial
+  mat V = make_potential_box(v0); //Creates a box of size M_* M_
+  int center_index = (M_)*0.5; //200 * 0.5 = 100
+  int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
+  int x_start = center_index - x_thickness/2;
+  int x_end = center_index + x_thickness/2;
+  int aperture = (0.05/h_) +1 ;// (0.05/0.005) + 1 = 11
+  int wall_length = (0.05/h_) + 1;// (0.05/0.005) + 1 = 11
+  int start = center_index - wall_length - aperture - ((aperture-1)/2);
+  int end = start + aperture;
+  int unit_separation = wall_length + aperture;
 
-  double h = 1.0/(M_-1);
-
-  //Finds the righ indeces according to the dimesions specified
-  int wall_thickness_index = floor(0.02/h)/2; //0.02
-  int wall_position_index = floor(0.5/h);      //0.5
-  int slit_seperation_index = floor(0.05/h)/2;//0.05
-  int slit_apeture_index = floor(0.05/h);      //0.05
-
-  //Sets up how the wallshould look
-  vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i<slit_apeture_index; i++){
-    wall_config(floor(0.5/h)+slit_seperation_index+slit_apeture_index/2+i) = 0; //lower slit
-    wall_config(floor(0.5/h)-slit_seperation_index+slit_apeture_index/2-i) = 0;//upper slit
-    wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0;              //middle slit
-  }
-  //Builds the wall
-  for(int i =0; i<wall_thickness_index;i++){
-    V.col(wall_position_index + i) = wall_config;
-    V.col(wall_position_index - i) = wall_config;
-
+  for (int i = x_start; i < x_end+1; i++) {
+    V.row(i).fill(v0);
+    for(int j = start; j < end+1; j++) {
+      V(i,j) = 0;
+      V(i,j + unit_separation + 1) = 0;
+      V(i,j + (unit_separation * 2) + 1) = 0;
+    }
   }
   return V;
 }
@@ -453,3 +386,89 @@ int Crank::to_file(string s) {
   ofile.close();
   return 0;
 }
+
+
+// // Creates the potential for the double slit and box
+// mat Crank::make_potential_double_slit(double v0){
+//   mat V = make_potential_box(v0); //Creates a box of size M_* M_
+
+//   double h = 1.0/(M_-1);
+
+//   //Finds the right indeces according to the dimesions specified
+//   int wall_thickness_index = floor(0.02/h)/2; //0.02
+//   int wall_position_index = floor(0.5/h);      //0.5
+//   int slit_seperation_index = floor(0.05/h)/2;//0.05
+//   int slit_epeture_index = floor(0.05/h);      //0.05
+
+//   //Sets up how the wallshould look
+//   vec wall_config = vec(M_).fill(v0);
+//   for(int i=0; i<slit_epeture_index; i++){
+//     wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
+//     wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+//   }
+
+//   // the wall appears to be made along the column direction. It should be row direction
+//   // Builds the wall
+//   // for(int i =0; i < wall_thickness_index; i++){
+//   //   V.col(wall_position_index + i) = wall_config;
+//   //   V.col(wall_position_index - i) = wall_config;
+//   // }
+
+//    for(int i =0; i < wall_thickness_index; i++){
+//     V.row(wall_position_index + i) = wall_config;
+//     V.row(wall_position_index - i) = wall_config;
+
+//   }
+//   return V;
+// }
+
+// mat Crank::make_potential_single_slit(double v0){
+//   mat V = make_potential_box(v0); //Creates the box potential
+
+//   double h = 1.0/(M_-1);
+
+//   //Finds the righ indeces according to the dimesions specified
+//   int wall_thickness_index = floor(0.02/h)/2; //0.02
+//   int wall_position_index = floor(0.5/h);      //0.5
+//   int slit_apeture_index = floor(0.05/h);      //0.05
+
+//   //Sets up how the wallshould look
+//   vec wall_config = vec(M_).fill(v0);
+//   for(int i=0; i < slit_apeture_index; i++){
+//     wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0; //floor(slit_apeture_index/2) -->centering the slit
+//   }
+//   //Builds the wall
+//   for(int i =0; i < wall_thickness_index; i++){
+//     V.col(wall_position_index + i) = wall_config;
+//     V.col(wall_position_index - i) = wall_config;
+
+//   }
+//   return V;
+// }
+
+// mat Crank::make_potential_triple_slit(double v0){
+//   mat V = make_potential_box(v0); //Creates the box potetnial
+
+//   double h = 1.0/(M_-1);
+
+//   //Finds the righ indeces according to the dimesions specified
+//   int wall_thickness_index = floor(0.02/h)/2; //0.02
+//   int wall_position_index = floor(0.5/h);      //0.5
+//   int slit_seperation_index = floor(0.05/h)/2;//0.05
+//   int slit_apeture_index = floor(0.05/h);      //0.05
+
+//   //Sets up how the wallshould look
+//   vec wall_config = vec(M_).fill(v0);
+//   for(int i=0; i<slit_apeture_index; i++){
+//     wall_config(floor(0.5/h)+slit_seperation_index+slit_apeture_index/2+i) = 0; //lower slit
+//     wall_config(floor(0.5/h)-slit_seperation_index+slit_apeture_index/2-i) = 0;//upper slit
+//     wall_config(floor(0.5/h)-floor(slit_apeture_index/2)+i) = 0;              //middle slit
+//   }
+//   //Builds the wall
+//   for(int i =0; i<wall_thickness_index;i++){
+//     V.col(wall_position_index + i) = wall_config;
+//     V.col(wall_position_index - i) = wall_config;
+
+//   }
+//   return V;
+// }
