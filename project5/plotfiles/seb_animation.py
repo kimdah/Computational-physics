@@ -77,7 +77,7 @@ img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_c
 
 #Problem 8.1
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures'+filename+'_firstframe.pdf')
+plt.savefig('./figures'+filename+'_time0.pdf')
 val1 = 0.001/dt
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val1]))
 img7_1_1 = ax.imshow(z_data_list[val1], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
@@ -129,13 +129,3 @@ plt.show()
 
 # # Save the animation
 anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)
-
-# Plots for problem7
-#img7_1_1 = ax.imshow(z_data_list[22], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_22.pdf')
-#img7_1_2 = ax.imshow(z_data_list[50], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_50.pdf')
-#img7_1_3 = ax.imshow(z_data_list[60], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_60.pdf')
-#img7_1_4 = ax.imshow(z_data_list[90], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_90.pdf')
