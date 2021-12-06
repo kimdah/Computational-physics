@@ -66,18 +66,20 @@ int main(int argc, char const *argv[]) {
 void problem7() {
   //Crank crank(0.005, 2.5e-5);
   double v_0 = numeric_limits<double>::max(); //Large potential
-  //Crank crank(0.005, 2.5e-5, 0.008, 0.25, 0.5, 0.05, 0.05, 200, 0.0, v_0, 1); this should be correct
-  Crank crank(0.005, 2.5e-5, 0.008, 0.5, 0.25, 0.05, 0.05, 0.0, -200.0, v_0, 2);  //Manually handling the index swap
+  Crank crank(0.005, 2.5e-5, 0.008, 0.25, 0.5, 0.05, 0.05, 200, 0.0, 1e10, 2); //this should be correct
+  //Crank crank(0.005, 2.5e-5, 0.008, 0.5, 0.25, 0.05, 0.05, 0.0, 200.0, 1e10, 2);  //Manually handling the index swap
 
 
   //crank.to_file("A");
   //crank.to_file("B");
 
-  cx_cube prob7_1 = crank.run_simulation(321); // TODO: 321 gives T = 0.008. Change input to actual time and modify code in Crank
+  cx_cube prob7_1 = crank.run_simulation(); 
   crank.to_file("U");
 
   crank.output_probabilities(prob7_1, "datafiles/probability_sum_test.txt");
-  prob7_1.transform( [](complex <double> val) { return real(conj(val)*val); } );
-  cube out = conv_to< cube >::from(prob7_1);
-  out.save("datafiles/prob7_1.dat");
+  prob7_1.for_each( [](complex <double> val) { return real(conj(val)*val); } ); // changed from transform to for_each
+  cube out = conv_to <cube>::from(prob7_1);
+  out.save("plotfiles/one.dat");
+
+  //out.save("datafiles/prob7_1.dat");  
 }

@@ -21,7 +21,8 @@ dt = 0.005
 t_points = np.arange(0, 1+dt, dt)
 
 A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
-A.load('./datafiles/'+filename) #Load the content of the matrix you saved into your Python program.
+#A.load('./datafiles/'+filename) #Load the content of the matrix you saved into your Python program.
+A.load('one.dat')
 # A function for a Gaussian that is travelling 
 # in the x direction and broadening as time passes
 
@@ -30,7 +31,7 @@ A.load('./datafiles/'+filename) #Load the content of the matrix you saved into y
 z_data_list = []
 c = 0
 for t in t_points:
-    z_data = np.array(A[pa.single_slice, c])
+    z_data = np.rot90(np.array(A[pa.single_slice, c])) #TODO rearrange ordering from column to row major
     c += 1
     z_data_list.append(z_data)
 
@@ -94,4 +95,5 @@ anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_
 plt.show()
 
 # # Save the animation
-anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)
+#anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)
+anim.save('animation.gif', writer="ffmpeg", fps=15)

@@ -23,9 +23,9 @@ class Crank {
     cx_mat U_, U_empty;
     mat V_;
     cx_vec u_;
-    double deltat_;
+    double deltat_, h_;
     bool poutput_; // Sets whether we want the probability output or real+imaginary
-    int M_, t_; // size of total matrix
+    int M_, t_, t_steps_; 
     complex<double> r_;
 
     Crank(double h, double deltat, double T, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y, double v_0, int slits);
@@ -44,7 +44,7 @@ class Crank {
     void print();
     int to_file(string s);
     int fritjofs(string s);
-    cx_cube run_simulation(int t);
+    cx_cube run_simulation();
     cx_mat col_to_mat(cx_vec u);
     double sum_probabilies(cx_mat U); 
     void output_probabilities(cx_cube R, string filename);

@@ -18,7 +18,9 @@ using namespace arma;
 
 Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y, double v_0, int slits=0) {
   int M = 1/h+1; //To avvoid using M as a paramater
+  t_steps_ = round(T/deltat)+1;
   M_ = M;
+  h_ = h;
   deltat_ = deltat;
   poutput_ = true;
   U_empty = cx_mat(M_, M_).fill(0); // Makes a blank canvas to be reused by the col_to_mat function
@@ -47,32 +49,23 @@ Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double s
 
 }
 
-cx_cube Crank::run_simulation(int t) {
-  t_ = t;
+cx_cube Crank::run_simulation() {
   cx_vec u = construct_u_vec(U_, true); // calculates the initial u column vector
-
-  cx_cube results = cx_cube(M_, M_, t);
-
+  cx_cube results = cx_cube(M_, M_, t_steps_);
   results.slice(0) = U_; // Add initial state to results cube
   cx_vec u_next;
-
-  for (int i = 1; i<t; i++) {
-
+  for (int i = 1; i<t_steps_; i++) {
     u_next = time_step(u);
-    results.slice(i) = col_to_mat(u_next);
+    results.slice(i) = col_to_mat(u_next); 
     u = u_next;
-
   }
-
-  U_ = results.slice(t-1);
-
-
+  U_ = results.slice(t_steps_-1);
   return results;
 }
 
 //Problem 7
 void Crank::output_probabilities(cx_cube R, string filename) {
-  vec probability_sums = vec(t_);
+  vec probability_sums = vec(t_steps_);
   ofstream ofile;
   ofile.open(filename);
   int width = 16;
@@ -80,7 +73,7 @@ void Crank::output_probabilities(cx_cube R, string filename) {
   ofile << setw(width) << setprecision(prec) << "Time";
   ofile << setw(width) << setprecision(prec) << "P_tot";
   ofile << endl;
-  for (int i = 0; i < t_; i++) {
+  for (int i = 0; i < t_steps_; i++) {
     ofile << setw(width) << setprecision(prec) << i*deltat_;
     ofile << setw(width) << setprecision(prec) << sum_probabilies(R.slice(i));
     ofile << endl;
@@ -136,30 +129,61 @@ mat Crank::make_potential_box(double v0){
 
 // Creates the potential for the double slit and box
 mat Crank::make_potential_double_slit(double v0){
-  mat V = make_potential_box(v0); //Creates the box potetnial
-
-  double h = 1.0/(M_-1);
-
-  //Finds the right indeces according to the dimesions specified
-  int wall_thickness_index = floor(0.02/h)/2; //0.02
-  int wall_position_index = floor(0.5/h);      //0.5
-  int slit_seperation_index = floor(0.05/h)/2;//0.05
-  int slit_epeture_index = floor(0.05/h);      //0.05
-
-  //Sets up how the wallshould look
-  vec wall_config = vec(M_).fill(v0);
-  for(int i=0; i<slit_epeture_index; i++){
-    wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
-    wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+  mat V = make_potential_box(v0); //Creates a box of size M_* M_
+  int center_index = (M_)*0.5; //200 * 0.5 = 100
+  int x_thickness = 0.02/h_;// indices i in x direction: (0.02/0.005) + 1 = 5
+  int x_start = center_index - x_thickness/2;
+  int x_end = center_index + x_thickness/2;
+  int aperture = (0.05/h_) +1 ;// (0.05/0.005) + 1 = 11
+  int center_wall_length = (0.05/h_);// (0.05/0.005) + 1 = 11
+  int bottom_start = center_index - center_wall_length/2 - aperture; 
+  int bottom_end = bottom_start + aperture;
+  
+  for (int i = x_start; i<x_end+1; i++) {
+    V.row(i).fill(v0);
+    for(int j = bottom_start; j < bottom_end+1; j++) {
+      V(i,j) = 0;
+      V(i,j+center_wall_length+1+aperture) = 0;
+    }
   }
-  //Builds the wall
-  for(int i =0; i < wall_thickness_index; i++){
-    V.col(wall_position_index + i) = wall_config;
-    V.col(wall_position_index - i) = wall_config;
 
-  }
+ 
   return V;
 }
+// // Creates the potential for the double slit and box
+// mat Crank::make_potential_double_slit(double v0){
+//   mat V = make_potential_box(v0); //Creates a box of size M_* M_
+
+//   double h = 1.0/(M_-1);
+
+//   //Finds the right indeces according to the dimesions specified
+//   int wall_thickness_index = floor(0.02/h)/2; //0.02
+//   int wall_position_index = floor(0.5/h);      //0.5
+//   int slit_seperation_index = floor(0.05/h)/2;//0.05
+//   int slit_epeture_index = floor(0.05/h);      //0.05
+
+//   //Sets up how the wallshould look
+//   vec wall_config = vec(M_).fill(v0);
+//   for(int i=0; i<slit_epeture_index; i++){
+//     wall_config(floor(0.5/h)+slit_seperation_index+i) = 0;
+//     wall_config(floor(0.5/h)-slit_seperation_index-i) = 0;
+//   }
+
+//   // the wall appears to be made along the column direction. It should be row direction
+//   // Builds the wall
+//   // for(int i =0; i < wall_thickness_index; i++){
+//   //   V.col(wall_position_index + i) = wall_config;
+//   //   V.col(wall_position_index - i) = wall_config;
+//   // }
+
+//    for(int i =0; i < wall_thickness_index; i++){
+//     V.row(wall_position_index + i) = wall_config;
+//     V.row(wall_position_index - i) = wall_config;
+
+//   }
+//   return V;
+// }
+
 mat Crank::make_potential_single_slit(double v0){
   mat V = make_potential_box(v0); //Creates the box potential
 
@@ -217,6 +241,8 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
   cx_mat U = cx_mat(M, M).fill(0); //Creates the matrix U. Is sparse the best choice here?
 
   // Find index-dimensions of wavepacket
+  int x_center = (M_-1)*x_c; // 200*0.25 = index 50
+  int y_center = (M_-1)*y_c; // 200*0.5 = index 100
   int x_start = round((M_-1)*x_c - ((sigma_x/h)/2)); // sigma_x is here 0.05. h is 0.005. Thus 10 h in sigma_x --> 11 points
   int x_end = x_start + (sigma_x/h) + 1;
   int y_start = round((M_-1)*y_c - ((sigma_y/h)/2));
@@ -262,19 +288,20 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
   double psum = 0;
 
   // Inserts the wavepacket and calculates normalisation factor
-
+  x_start = 1;
+  x_end = M-2;
+  y_start = 1;
+  y_end = M-2;
   for(int i = x_start; i< x_end; i++){
+    double x = i*h;
     for(int j = y_start; j< y_end; j++){
-      double x = i*h;
       double y = j*h;
-      complex <double> c = exp( -(((pow(x-x_c,2)/(2*pow(sigma_x,2))) - (pow(y-y_c,2)/(2*pow(sigma_y,2)))) + (1i*p_x*(x-x_c)+ 1i*p_y*(y-y_c))));
+      complex <double> c = exp( -( pow(x - x_c ,2) / ( 2 * pow(sigma_x,2) ) ) - ( pow(y - y_c, 2) / ( 2*pow(sigma_y, 2) ) ) + 1i * p_x * (x - x_c) + 1i * p_y * (y - y_c) );
       U(i,j) = c;
       psum += real(conj(c)*c);
     }
   }
   cout << "sum of real magnitudes is " << psum << endl; // remove later
-
-
   // Normalises U to 1
   double psum2 = 0;
   for(int i = x_start; i< x_end; i++){
@@ -284,11 +311,12 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
       psum2 += real(conj(c)*c);
     }
   }
-
   cout << "sum of real magnitudes is normalised to " << psum2 << endl;
-
   return U;
 }
+
+
+
 double Crank::sum_probabilies(cx_mat U) {
   double psum = 0;
   for(int i = 0; i< M_; i++){
