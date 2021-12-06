@@ -21,9 +21,9 @@ dt = 0.005
 t_points = np.arange(0, 1+dt, dt)
 
 A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
-#A.load('./datafiles/'+filename) #Load the content of the matrix you saved into your Python program.
-A.load('one.dat')
-# A function for a Gaussian that is travelling 
+A.load('./datafiles/'+filename) #Load the content of the matrix you saved into your Python program.
+#A.load('one.dat')
+# A function for a Gaussian that is travelling
 # in the x direction and broadening as time passes
 
 
@@ -37,7 +37,7 @@ for t in t_points:
 
 
 #
-# Now the list z_data_list contains a series of "frames" of z(x,y,t), 
+# Now the list z_data_list contains a series of "frames" of z(x,y,t),
 # where each frame can be plotted as a 2D image using imshow. Let's
 # animate it!
 #
@@ -70,7 +70,7 @@ cbar.set_label("z(x,y,t)", fontsize=fontsize)
 cbar.ax.tick_params(labelsize=fontsize)
 
 # Add a text element showing the time
-time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white", 
+time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
                     horizontalalignment="right", verticalalignment="top", fontsize=fontsize)
 
 # Function that takes care of updating the z data and other things for each frame

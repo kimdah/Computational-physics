@@ -25,7 +25,7 @@ Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double s
   poutput_ = true;
   U_empty = cx_mat(M_, M_).fill(0); // Makes a blank canvas to be reused by the col_to_mat function
   r_ = 1i*deltat/(2*pow(h,2)); //definition of r
-  
+
   if(slits==0){
     V_ = make_potential_box(v_0);
   }
@@ -56,7 +56,7 @@ cx_cube Crank::run_simulation() {
   cx_vec u_next;
   for (int i = 1; i<t_steps_; i++) {
     u_next = time_step(u);
-    results.slice(i) = col_to_mat(u_next); 
+    results.slice(i) = col_to_mat(u_next);
     u = u_next;
   }
   U_ = results.slice(t_steps_-1);
@@ -136,9 +136,9 @@ mat Crank::make_potential_double_slit(double v0){
   int x_end = center_index + x_thickness/2;
   int aperture = (0.05/h_) +1 ;// (0.05/0.005) + 1 = 11
   int center_wall_length = (0.05/h_);// (0.05/0.005) + 1 = 11
-  int bottom_start = center_index - center_wall_length/2 - aperture; 
+  int bottom_start = center_index - center_wall_length/2 - aperture;
   int bottom_end = bottom_start + aperture;
-  
+
   for (int i = x_start; i<x_end+1; i++) {
     V.row(i).fill(v0);
     for(int j = bottom_start; j < bottom_end+1; j++) {
@@ -147,7 +147,7 @@ mat Crank::make_potential_double_slit(double v0){
     }
   }
 
- 
+
   return V;
 }
 // // Creates the potential for the double slit and box

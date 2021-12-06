@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void parameters(double h, double deltat, double T, double xc, double sc, int px,
+void parameters(double h, double deltat, double T, double xc, double sx, int px,
                 double yc, double sy, int py, double v0);
 
 int width = 10;
@@ -31,10 +31,10 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-void parameters(double h, double deltat, double T, double xc, double sc, int px,
+void parameters(double h, double deltat, double T, double xc, double sx, int px,
                 double yc, double sy, int py, double v0){
   ofile << setw(width) << h << setw(width) << deltat << setw(width) << T
-        << setw(width) << xc << setw(width) << sc << setw(width) << px
+        << setw(width) << xc << setw(width) << sx << setw(width) << px
         << setw(width) << yc << setw(width) << sy << setw(width) << py
         << setw(width) << v0
         << endl;
