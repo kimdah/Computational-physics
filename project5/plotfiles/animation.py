@@ -80,11 +80,11 @@ filename = filename.split('.')[0]
 #Problem 8.1
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures/'+filename+'_time0.pdf')
-val1 = int((0.008/2.5e-5)/8)
+val1 = int((0.002/2.5e-5)/8)
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val1]))
 img7_1_1 = ax.imshow(z_data_list[val1], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures/'+filename+'_time0_001.pdf')
-val2 = int((0.008/2.5e-5)/4)
+val2 = int((0.002/2.5e-5)/4)
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val2]))
 img7_1_1 = ax.imshow(z_data_list[val2], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures/'+filename+'_time0_002.pdf')
