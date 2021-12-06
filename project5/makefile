@@ -19,7 +19,8 @@ clean:
 	rm -f *.o *~
 
 plot:
-	python3 ./plotfiles/animation.py 'prob8_probability.dat'
+	python3 plotfiles/animation.py 'prob7_slits_2.dat' # test
+	python3 plotfiles/animation.py 'prob8_probability.dat'
 	# python3 ./plotfiles/animation.py 'prob9_slits_1.dat'
 	# python3 ./plotfiles/animation.py 'prob9_slits_2.dat'
 	# python3 ./plotfiles/animation.py 'prob9_slits_3.dat'

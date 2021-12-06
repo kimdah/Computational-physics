@@ -36,14 +36,12 @@ int main(int argc, char const *argv[]) {
       mysstream >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0;
       if (line_counter == 0){
         // Task 7.1 w/o double slit
-
-        //Crank crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 0);
         problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 0), 0);
+
       } else if (line_counter == 1){
         // Task 7.3 w/double slit
-
-        //Crank crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 2);
         problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 2), 2); //commented out for testing
+
       } else if (line_counter == 2){
         // Task 8 and 9 (using same parameters)
 
@@ -66,12 +64,16 @@ int main(int argc, char const *argv[]) {
 
 // --- General prob7 function to be called for 0 slits and 2 slits
 void problem7(Crank crank, int slits) { // name it deviation_of_probability instead?
-  // slits as input for filename
 
   cx_cube prob7 = crank.run_simulation();
   crank.to_file("U"); // what does this do?
-
   crank.output_probabilities(prob7, "datafiles/probability_sum_slits_"+to_string(slits)+".txt");
+
+  // ----Remove later - only for testing:
+  prob7.for_each( [](complex <double> val) { return real(conj(val)*val); } ); // changed from transform to for_each
+  cube out = conv_to <cube>::from(prob7);
+  out.save("datafiles/prob7_slits_" + to_string(slits) + ".dat");
+  // ----------------
 }
 
 void problem8(Crank crank){
@@ -87,10 +89,9 @@ void problem8(Crank crank){
 
   cx_cube prob8 = crank.run_simulation();
 
-  // New file with only U to get Re(u) and Im(u) :
-  cube out_u = conv_to <cube>::from(prob8);
-  out_u.save("datafiles/prob8_u.dat"); // other name?
-  // like this ?
+  // New file with only U to get Re(u) and Im(u) : Not finished, and unsure...
+  //cube out_u = conv_to <cube>::from(prob8);
+  //out_u.save("datafiles/prob8_u.dat"); // other name?
 
 
   // probabilites p_{ij}^n = u_{ij}^{n*}* u_{ij}^{n} :
