@@ -30,7 +30,7 @@ A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved i
 z_data_list = []
 c = 0
 for t in t_points:
-    z_data = np.array(A[pa.single_slice, c])
+    z_data = np.rot90(np.array(A[pa.single_slice, c]))
     c += 1
     z_data_list.append(z_data)
 
@@ -80,11 +80,11 @@ filename = filename.split('.')[0]
 #Problem 8.1
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures/'+filename+'_time0.pdf')
-val1 = int(0.001/dt)
+val1 = int((0.008/2.5e-5)/8)
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val1]))
 img7_1_1 = ax.imshow(z_data_list[val1], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures/'+filename+'_time0_001.pdf')
-val2 = int(0.002/dt)
+val2 = int((0.008/2.5e-5)/4)
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val2]))
 img7_1_1 = ax.imshow(z_data_list[val2], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 plt.savefig('./figures/'+filename+'_time0_002.pdf')
