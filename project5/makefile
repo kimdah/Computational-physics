@@ -20,9 +20,9 @@ clean:
 
 plot:
 	python3 ./plotfiles/animation.py 'prob8_probability.dat'
-	python3 ./plotfiles/animation.py 'prob9_slits_1.dat'
-	python3 ./plotfiles/animation.py 'prob9_slits_2.dat'
-	python3 ./plotfiles/animation.py 'prob9_slits_3.dat'
+	# python3 ./plotfiles/animation.py 'prob9_slits_1.dat'
+	# python3 ./plotfiles/animation.py 'prob9_slits_2.dat'
+	# python3 ./plotfiles/animation.py 'prob9_slits_3.dat'
 
 
 # CPPflags = c++ #-O3 -std=c++11
