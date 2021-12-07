@@ -10,7 +10,7 @@ compile:
 	${CPPflags} -c main.cpp src/Crank.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Crank.o -larmadillo -fopenmp #${LIB}
+	${CPPflags} -o main.exe main.o Crank.o -larmadillo -lomp #${LIB}
 
 run:
 	./main.exe
@@ -19,14 +19,14 @@ clean:
 	rm -f *.o *~
 
 plot:
-	python3 plotfiles/animation.py 'prob7_slits_2.dat' # test
-	python3 plotfiles/animation.py 'prob8_probability.dat'
+	python3 plotfiles/animation.py 'Problem_7.10_outputCube_slits_2.dat' # test 
+	python3 plotfiles/animation.py 'Problem_8.00_outputCube_slits_2.dat'
 	# python3 ./plotfiles/animation.py 'prob9_slits_1.dat'
 	# python3 ./plotfiles/animation.py 'prob9_slits_2.dat'
 	# python3 ./plotfiles/animation.py 'prob9_slits_3.dat'
 
 
-# CPPflags = c++ #-O3 -std=c++11
+# CPPflags = c++ #-O3 -std=c++11 -lomp
 # LIB =  #-larmadillo # -llapack -lblas
 # PROG = main
 #
