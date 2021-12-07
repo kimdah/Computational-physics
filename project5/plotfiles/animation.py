@@ -10,11 +10,12 @@ import sys
 # Let's generate a dummy time series for a function z(x,y,t)
 #
 filename = sys.argv[1]
-number_of_snaps = int(sys.argv[2])
+z_axis_label = sys.argv[2]
+number_of_snaps = int(sys.argv[3])
 
 snaps = []
 for i in range(number_of_snaps):
-    snaps.append(float(sys.argv[i+3]))
+    snaps.append(float(sys.argv[i+4]))
 
 # Set up a 2D xy grid
 h = 0.005
@@ -24,30 +25,74 @@ x, y = np.meshgrid(x_points, y_points, sparse=True)
 
 
 
-A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
-A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
-# A function for a Gaussian that is travelling
-# in the x direction and broadening as time passes
-
-
-# Array of time points (Dynamically allocates T)
-dt = 0.000025
-t_points = np.arange(0, dt*(np.shape(A)[0]), dt)
-
-
 # Fill z_data_list with f(x,y,t)
 z_data_list = []
 snapshot_index_list = []
 c = 0
-for t in t_points:
-    z_data = np.rot90(np.array(A[pa.single_slice, c]))
-    c += 1
 
-    z_data_list.append(z_data)
+if z_axis_label == 'Real(u)':
+    A = pa.cx_cube() #Create pa.mat object (just as arma::mat in C++)
+    A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
+    # A function for a Gaussian that is travelling
+    # in the x direction and broadening as time passes
 
-    #Finds if the timestap matches a snapshot an appends index
-    if any(t== t_snap for t_snap in snaps):
-        snapshot_index_list.append(int(c-1))
+
+    # Array of time points (Dynamically allocates T)
+    dt = 0.000025
+    t_points = np.arange(0, dt*(np.shape(A)[0]), dt)
+
+    for t in t_points:
+        z_data = np.rot90(np.array(np.real(A[pa.single_slice, c])))
+        c += 1
+        z_data_list.append(z_data)
+
+        #Finds if the timestap matches a snapshot an appends index
+        if any(t== t_snap for t_snap in snaps):
+            snapshot_index_list.append(int(c-1))
+    filename = filename.split('.t')[0]+'_real'
+
+elif z_axis_label == 'Imag(u)':
+    A = pa.cx_cube() #Create pa.mat object (just as arma::mat in C++)
+    A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
+    # A function for a Gaussian that is travelling
+    # in the x direction and broadening as time passes
+
+
+    # Array of time points (Dynamically allocates T)
+    dt = 0.000025
+    t_points = np.arange(0, dt*(np.shape(A)[0]), dt)
+
+    for t in t_points:
+        z_data = np.rot90(np.array(np.imag(A[pa.single_slice, c])))
+        c += 1
+        z_data_list.append(z_data)
+
+        #Finds if the timestap matches a snapshot an appends index
+        if any(t== t_snap for t_snap in snaps):
+            snapshot_index_list.append(int(c-1))
+    filename = filename.split('.t')[0]+'_imag'
+
+else:
+    A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
+    A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
+    # A function for a Gaussian that is travelling
+    # in the x direction and broadening as time passes
+
+
+    # Array of time points (Dynamically allocates T)
+    dt = 0.000025
+    t_points = np.arange(0, dt*(np.shape(A)[0]), dt)
+
+    for t in t_points:
+        z_data = np.rot90(np.array(A[pa.single_slice, c]))
+        c += 1
+        z_data_list.append(z_data)
+
+        #Finds if the timestap matches a snapshot an appends index
+        if any(t== t_snap for t_snap in snaps):
+            snapshot_index_list.append(int(c-1))
+    filename = filename.split('.t')[0]
+
 
 
 
@@ -105,7 +150,7 @@ plt.yticks(fontsize=fontsize)
 
 # Add a colourbar
 cbar = fig.colorbar(img, ax=ax)
-cbar.set_label("p(x,y,t)", fontsize=fontsize)
+cbar.set_label(z_axis_label, fontsize=fontsize)
 cbar.ax.tick_params(labelsize=fontsize)
 
 # Add a text element showing the time
@@ -114,7 +159,7 @@ time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
 #-----Setting up plot format(end)------
 
 
-filename = filename.split('.')[0]
+
 #Problem 8.1
 
 for ind in snapshot_index_list:

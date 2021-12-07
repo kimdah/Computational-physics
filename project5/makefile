@@ -20,10 +20,11 @@ clean:
 
 plot:
 	#Animation format is: animation.py 'filename' 'number of snapshots' 'snapshot times'
-	python3 plotfiles/animation.py 'Problem_8.00_outputCube_slits_2.dat' 3 0.0 0.001 0.002
-	python3 plotfiles/animation.py 'Problem_7.10_outputCube_slits_2.dat' 0
-	python3 plotfiles/animation.py 'Problem_7.20_outputCube_slits_2.dat' 0
-	#python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 0
+	python3 plotfiles/animation.py 'Problem_7.10_outputCube_slits_2.dat' 'p(x,y,t)' 0
+	python3 plotfiles/animation.py 'Problem_7.20_outputCube_slits_2.dat' 'p(x,y,t)' 0
+	python3 plotfiles/animation.py 'Problem_8.00_outputCube_slits_2.dat' 'p(x,y,t)' 3 0.0 0.001 0.002
+	python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 'Real(u)' 3 0.0 0.001 0.002
+	python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 'Imag(u)' 3 0.0 0.001 0.002
 
 	
 	
