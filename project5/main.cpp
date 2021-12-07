@@ -28,7 +28,7 @@ template <typename T> string to_string_with_precision(const T a_value, const int
 }
 
 int main(int argc, char const *argv[]) {
-  workwork();
+  workwork(); //TODO: input task list text file in terminal
 
 /*   fstream myfile;
   string filename = "input.txt";
@@ -42,7 +42,7 @@ int main(int argc, char const *argv[]) {
     int line_counter = 0;
     while (std::getline(myfile, line)) {
       std::stringstream mysstream(line);
-      mysstream >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0 >> slits; //TODO: add slits to file
+      mysstream >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0 >> slits;
       if (line_counter == 0){
         // Task 7.1 w/o double slit
         
@@ -120,6 +120,7 @@ void workwork() {
       Crank crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, slits);
       cx_cube results_cube;
       cx_mat last_slice_mat;
+      
       if(last_slice != 1) {
         results_cube = crank.run_simulation();
       } else if (last_slice == 1) {
@@ -144,17 +145,17 @@ void workwork() {
         output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
       } else {}
 
-      //Output box shapes once
-      if(i = 0) {
-        mat box = crank.make_potential_box();
-        mat box_single_slit = crank.make_potential_single_slit();
-        mat box_double_slit = crank.make_potential_double_slit();
-        mat box_triple_slit = crank.make_potential_triple_slit();
-        box.save("datafiles/box.dat");
-        box_single_slit.save("datafiles/box_single_slit.dat");
-        box_double_slit.save("datafiles/box_double_slit.dat");
-        box_triple_slit.save("datafiles/box_triple_slit.dat");
-      }
+      // //Output box shapes once
+      // if(i = 0) {
+      //   mat box = crank.make_potential_box();
+      //   mat box_single_slit = crank.make_potential_single_slit();
+      //   mat box_double_slit = crank.make_potential_double_slit();
+      //   mat box_triple_slit = crank.make_potential_triple_slit();
+      //   box.save("datafiles/box.dat");
+      //   box_single_slit.save("datafiles/box_single_slit.dat");
+      //   box_double_slit.save("datafiles/box_double_slit.dat");
+      //   box_triple_slit.save("datafiles/box_triple_slit.dat");
+      // }
     }
   }
   else{cout << "Unable to open the file " << filename << endl;}
