@@ -145,17 +145,17 @@ void workwork() {
         output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
       } else {}
 
-      // //Output box shapes once
-      // if(i = 0) {
-      //   mat box = crank.make_potential_box();
-      //   mat box_single_slit = crank.make_potential_single_slit();
-      //   mat box_double_slit = crank.make_potential_double_slit();
-      //   mat box_triple_slit = crank.make_potential_triple_slit();
-      //   box.save("datafiles/box.dat");
-      //   box_single_slit.save("datafiles/box_single_slit.dat");
-      //   box_double_slit.save("datafiles/box_double_slit.dat");
-      //   box_triple_slit.save("datafiles/box_triple_slit.dat");
-      // }
+      //Output box shapes once
+      if(i == 0) {
+        mat box = crank.make_potential_box();
+        mat box_single_slit = crank.make_potential_single_slit();
+        mat box_double_slit = crank.make_potential_double_slit();
+        mat box_triple_slit = crank.make_potential_triple_slit();
+        box.save("datafiles/box.dat");
+        box_single_slit.save("datafiles/box_single_slit.dat");
+        box_double_slit.save("datafiles/box_double_slit.dat");
+        box_triple_slit.save("datafiles/box_triple_slit.dat");
+      }
     }
   }
   else{cout << "Unable to open the file " << filename << endl;}

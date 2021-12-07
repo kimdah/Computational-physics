@@ -93,7 +93,18 @@ else:
             snapshot_index_list.append(int(c-1))
     filename = filename.split('.t')[0]
 
-
+V_0 = pa.mat()
+V_1 = pa.mat()
+V_2 = pa.mat()
+V_3 = pa.mat()
+V_0.load("./datafiles/box.dat")
+V_1.load("./datafiles/box_single_slit.dat")
+V_2.load("./datafiles/box_double_slit.dat")
+V_3.load("./datafiles/box_triple.slit.dat")
+V_0 = np.rot90(np.array(V_0))
+V_1 = np.rot90(np.array(V_1))
+V_2 = np.rot90(np.array(V_2))
+V_3 = np.rot90(np.array(V_3))
 
 
 
