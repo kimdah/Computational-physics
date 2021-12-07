@@ -10,6 +10,12 @@ import sys
 # Let's generate a dummy time series for a function z(x,y,t)
 #
 filename = sys.argv[1]
+number_of_snaps = int(sys.argv[2])
+
+snaps = []
+for i in range(number_of_snaps):
+    snaps.append(float(sys.argv[i+3]))
+
 # Set up a 2D xy grid
 h = 0.005
 x_points = np.arange(0, 1+h, h)
@@ -28,11 +34,19 @@ A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved i
 
 # Fill z_data_list with f(x,y,t)
 z_data_list = []
+snapshot_index_list = []
 c = 0
 for t in t_points:
     z_data = np.rot90(np.array(A[pa.single_slice, c]))
     c += 1
     z_data_list.append(z_data)
+
+    #Finds if the timestap matches a snapshot an appends index
+    if any(t== t_snap for t_snap in snaps):
+        snapshot_index_list.append(int(c-1))
+
+
+
 
 
 #
@@ -51,11 +65,9 @@ y_min, y_max = y_points[0], y_points[-1]
 fig = plt.figure()
 ax = plt.gca()
 
-# Create a colour scale normalization according to the max z value in the first frame
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 
-# Plot the first frame
-img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+
+
 #plt.savefig('./figures'+filename+'_firstframe.pdf')
 
 # Plots for problem7.1, will not be used to solve problem.
@@ -76,20 +88,10 @@ img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_c
 #plt.savefig('./figures'+filename+'_time1_0.pdf')
 
 
-filename = filename.split('.')[0]
-#Problem 8.1
+#-----Setting up plot format------
+norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures/'+filename+'_time0.pdf')
-val1 = int((0.002/2.5e-5)/8)
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val1]))
-img7_1_1 = ax.imshow(z_data_list[val1], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures/'+filename+'_time0_001.pdf')
-val2 = int((0.002/2.5e-5)/4)
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[val2]))
-img7_1_1 = ax.imshow(z_data_list[val2], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-plt.savefig('./figures/'+filename+'_time0_002.pdf')
 
-img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 
 # Axis labels
 plt.xlabel("x", fontsize=fontsize)
@@ -105,6 +107,25 @@ cbar.ax.tick_params(labelsize=fontsize)
 # Add a text element showing the time
 time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
                     horizontalalignment="right", verticalalignment="top", fontsize=fontsize)
+#-----Setting up plot format(end)------
+
+
+filename = filename.split('.')[0]
+#Problem 8.1
+
+for ind in snapshot_index_list:
+    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[ind]))
+    img = ax.imshow(z_data_list[ind], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+    img.set_norm(norm)
+
+    time_txt.set_text("t = {:.3e}".format(t_points[ind]))
+    plt.savefig('./figures/'+filename+'_time'+str(t_points[ind])+'.pdf')
+
+
+
+
+img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+
 
 
 # Function that takes care of updating the z data and other things for each frame
