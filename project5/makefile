@@ -2,15 +2,15 @@
 # make
 # make run (or make compile, make clean etc.)
 
-CPPflags = g++ -std=c++14
+CPPflags = g++ -std=c++14 -O2
 LIB =  -larmadillo
 all: compile link clean
 
 compile:
-	${CPPflags} -c main.cpp src/Crank.cpp -I include/ # ${LIB}
+	${CPPflags} -c main.cpp src/Crank.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Crank.o ${LIB}
+	${CPPflags} -o main.exe main.o Crank.o -larmadillo -fopenmp #${LIB}
 
 run:
 	./main.exe

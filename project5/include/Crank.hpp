@@ -44,7 +44,10 @@ class Crank {
     void print();
     int to_file(string s);
     int fritjofs(string s);
+    // Returns a cube of complex double with all the time slices
     cx_cube run_simulation();
+    // Returns the last time slice
+    cx_mat run_simulation(int last_slice); 
     cx_mat col_to_mat(cx_vec u);
     double sum_probabilies(cx_mat U); 
     void output_probabilities(cx_cube R, string filename);

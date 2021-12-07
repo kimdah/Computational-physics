@@ -64,6 +64,20 @@ cx_cube Crank::run_simulation() {
   return results;
 }
 
+// For problem 9. It doesn't bother with storing the cube. Only returns last slice
+cx_mat Crank::run_simulation(int last_slice) {
+  cx_vec u = construct_u_vec(U_, true); // calculates the initial u column vector
+  //cx_cube results = cx_cube(M_, M_, t_steps_);
+  //results.slice(0) = U_; // Add initial state to results cube
+  cx_vec u_next;
+  for (int i = 1; i<t_steps_; i++) {
+    u_next = time_step(u);
+    u = u_next;
+  }
+  cx_mat results = col_to_mat(u_next);
+  return results;
+}
+
 //Problem 7
 void Crank::output_probabilities(cx_cube R, string filename) {
   vec probability_sums = vec(t_steps_);
@@ -235,7 +249,7 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
       psum += real(conj(c)*c);
     }
   }
-  cout << "sum of real magnitudes is " << psum << endl; // remove later
+  //cout << "sum of real magnitudes is " << psum << endl; // remove later
   // Normalises U to 1
   double psum2 = 0;
   for(int i = x_start; i< x_end; i++){
@@ -245,7 +259,7 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
       psum2 += real(conj(c)*c);
     }
   }
-  cout << "sum of real magnitudes is normalised to " << psum2 << endl;
+  //cout << "sum of real magnitudes is normalised to " << psum2 << endl;
   return U;
 }
 
