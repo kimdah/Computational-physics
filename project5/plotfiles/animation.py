@@ -22,14 +22,17 @@ x_points = np.arange(0, 1+h, h)
 y_points = np.arange(0, 1+h, h)
 x, y = np.meshgrid(x_points, y_points, sparse=True)
 
-# Array of time points
-dt = 0.005
-t_points = np.arange(0, 1+dt, dt)
+
 
 A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
 A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
 # A function for a Gaussian that is travelling
 # in the x direction and broadening as time passes
+
+
+# Array of time points (Dynamically allocates T)
+dt = 0.000025
+t_points = np.arange(0, dt*(np.shape(A)[0]), dt)
 
 
 # Fill z_data_list with f(x,y,t)
@@ -39,6 +42,7 @@ c = 0
 for t in t_points:
     z_data = np.rot90(np.array(A[pa.single_slice, c]))
     c += 1
+
     z_data_list.append(z_data)
 
     #Finds if the timestap matches a snapshot an appends index
@@ -101,7 +105,7 @@ plt.yticks(fontsize=fontsize)
 
 # Add a colourbar
 cbar = fig.colorbar(img, ax=ax)
-cbar.set_label("z(x,y,t)", fontsize=fontsize)
+cbar.set_label("p(x,y,t)", fontsize=fontsize)
 cbar.ax.tick_params(labelsize=fontsize)
 
 # Add a text element showing the time
