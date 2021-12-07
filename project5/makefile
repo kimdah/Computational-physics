@@ -10,7 +10,7 @@ compile:
 	${CPPflags} -c main.cpp src/Crank.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Crank.o -larmadillo -fopenmp #${LIB}
+	${CPPflags} -o main.exe main.o Crank.o -larmadillo -lomp #${LIB}
 
 run:
 	./main.exe
