@@ -10,7 +10,7 @@ compile:
 	${CPPflags} -c main.cpp src/Crank.cpp -Xpreprocessor -fopenmp -I include/ # ${LIB}
 
 link:
-	${CPPflags} -o main.exe main.o Crank.o -larmadillo -lomp #${LIB}
+	${CPPflags} -o main.exe main.o Crank.o -larmadillo -fopenmp #${LIB}
 
 run:
 	./main.exe
@@ -20,11 +20,11 @@ clean:
 
 plot:
 	#Animation format is: animation.py 'filename' 'number of snapshots' 'snapshot times'
-	python3 plotfiles/animation.py 'Problem_7.10_outputCube_slits_2.dat' 'p(x,y,t)' 0
-	python3 plotfiles/animation.py 'Problem_7.20_outputCube_slits_2.dat' 'p(x,y,t)' 0
-	python3 plotfiles/animation.py 'Problem_8.00_outputCube_slits_2.dat' 'p(x,y,t)' 3 0.0 0.001 0.002
-	python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 'Real(u)' 3 0.0 0.001 0.002
-	python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 'Imag(u)' 3 0.0 0.001 0.002
+	python3 plotfiles/animation.py 'Problem_7.10_outputCube_slits_2.dat' 'p(x,y,t)' 0 1 0.001
+	python3 plotfiles/animation.py 'Problem_7.20_outputCube_slits_2.dat' 'p(x,y,t)' 0 0
+	python3 plotfiles/animation.py 'Problem_8.00_outputCube_slits_2.dat' 'p(x,y,t)' 0 3 0.0 0.001 0.002
+	python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 'Real(u)' 0 3 0.0 0.001 0.002
+	python3 plotfiles/animation.py 'Problem_8.00_ReIm_outputCube_slits_2.dat' 'Imag(u)' 0 3 0.0 0.001 0.002
 
 	
 	

@@ -11,11 +11,12 @@ import sys
 #
 filename = sys.argv[1]
 z_axis_label = sys.argv[2]
-number_of_snaps = int(sys.argv[3])
+slits_overlay = int(sys.argv[3])
+number_of_snaps = int(sys.argv[4])
 
 snaps = []
 for i in range(number_of_snaps):
-    snaps.append(float(sys.argv[i+4]))
+    snaps.append(float(sys.argv[i+5]))
 
 # Set up a 2D xy grid
 h = 0.005
@@ -100,11 +101,13 @@ V_3 = pa.mat()
 V_0.load("./datafiles/box.dat")
 V_1.load("./datafiles/box_single_slit.dat")
 V_2.load("./datafiles/box_double_slit.dat")
-V_3.load("./datafiles/box_triple.slit.dat")
+V_3.load("./datafiles/box_triple_slit.dat")
 V_0 = np.rot90(np.array(V_0))
 V_1 = np.rot90(np.array(V_1))
 V_2 = np.rot90(np.array(V_2))
 V_3 = np.rot90(np.array(V_3))
+
+V = [V_0,V_1,V_2,V_3]
 
 
 
@@ -126,26 +129,6 @@ fig = plt.figure()
 ax = plt.gca()
 
 
-
-
-#plt.savefig('./figures'+filename+'_firstframe.pdf')
-
-# Plots for problem7.1, will not be used to solve problem.
-#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[22]))
-#img7_1_1 = ax.imshow(z_data_list[22], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_time0_11.pdf')
-#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[44]))
-#img7_1_1 = ax.imshow(z_data_list[44], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_time0_22.pdf')
-#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[140]))
-#img7_1_2 = ax.imshow(z_data_list[140], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_time0_70.pdf')
-#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[180]))
-#img7_1_3 = ax.imshow(z_data_list[180], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_time0_90.pdf')
-#norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[200]))
-#img7_1_4 = ax.imshow(z_data_list[200], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-#plt.savefig('./figures'+filename+'_time1_0.pdf')
 
 
 #-----Setting up plot format------
