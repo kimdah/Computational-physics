@@ -5,6 +5,7 @@ from matplotlib.animation import FuncAnimation
 plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg'
 import pyarma as pa
 import sys
+from PIL import Image
 
 #
 # Let's generate a dummy time series for a function z(x,y,t)
@@ -36,6 +37,13 @@ for t in t_points:
     z_data_list.append(z_data)
 
 
+V_2 = pa.mat()
+
+V_2.load("box_double_slit.dat")
+testing = []
+
+testing.append(np.rot90(np.array(V_2)))
+print(V_2)
 #
 # Now the list z_data_list contains a series of "frames" of z(x,y,t), 
 # where each frame can be plotted as a 2D image using imshow. Let's
@@ -55,8 +63,12 @@ ax = plt.gca()
 # Create a colour scale normalization according to the max z value in the first frame
 norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 
+
 # Plot the first frame
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm) #
+
+
+
 
 # Axis labels
 plt.xlabel("x", fontsize=fontsize)
@@ -80,7 +92,8 @@ def animation(i):
     img.set_norm(norm)
 
     # Update z data
-    img.set_data(z_data_list[i])
+    img.set_data(np.add(z_data_list[i], testing[0]))
+    #img.set_data(V_2[0])
 
     # Update the time label
     current_time = t_min + i * dt
