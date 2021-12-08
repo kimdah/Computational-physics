@@ -134,15 +134,19 @@ void workwork() {
       if (reim == 1) {
         results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_ReIm_outputCube_slits_" + to_string((int)slits) + ".dat");
       }
-
+      
       if(last_slice != 1) {
-        results_cube.for_each( [](complex <double> val) { return real(conj(val)*val); } ); // changed from transform to for_each
-        cube output = conv_to <cube>::from(results_cube);
-        output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
+        //results_cube.for_each( [](complex <double> val) { return abs(real(conj(val)*val)); } ); // changed from transform to for_each
+       
+        //cube output = conv_to <cube>::from(results_cube);
+        //output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
+        results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
       } else if (last_slice == 1) {
-        last_slice_mat.for_each( [](complex <double> val) { return real(conj(val)*val); } );
-        mat output = conv_to <mat>::from(last_slice_mat);
-        output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
+        
+        //last_slice_mat.for_each( [](complex <double> val) { return abs(real(conj(val)*val)); } );
+        //mat output = conv_to <mat>::from(last_slice_mat);
+        //output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
+        last_slice_mat.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
       } else {}
 
       //Output box shapes once

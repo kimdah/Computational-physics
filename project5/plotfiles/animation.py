@@ -74,6 +74,29 @@ elif z_axis_label == 'Imag(u)':
     filename = filename.split('.t')[0]+'_imag'
 
 else:
+    A = pa.cx_cube() #Create pa.mat object (just as arma::mat in C++)
+    A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
+    # A function for a Gaussian that is travelling
+    # in the x direction and broadening as time passes
+
+
+    # Array of time points (Dynamically allocates T)
+    dt = 0.000025
+    t_points = np.arange(0, dt*(np.shape(A)[0]), dt)
+
+    for t in t_points:
+        z_data = np.rot90(np.array(A[pa.single_slice, c]))
+        c += 1
+
+        out = np.real(np.multiply(np.conj(z_data), z_data))
+        z_data_list.append(out)
+        
+            #Finds if the timestap matches a snapshot an appends index
+        if any(t== t_snap for t_snap in snaps):
+            snapshot_index_list.append(int(c-1))
+    filename = filename.split('.t')[0]
+
+""" else:
     A = pa.cube() #Create pa.mat object (just as arma::mat in C++)
     A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
     # A function for a Gaussian that is travelling
@@ -87,12 +110,17 @@ else:
     for t in t_points:
         z_data = np.rot90(np.array(A[pa.single_slice, c]))
         c += 1
-        z_data_list.append(z_data)
+        z_data_list.append(np.absolute(z_data))
 
         #Finds if the timestap matches a snapshot an appends index
         if any(t== t_snap for t_snap in snaps):
             snapshot_index_list.append(int(c-1))
-    filename = filename.split('.t')[0]
+    filename = filename.split('.t')[0] """
+flat = np.ravel(z_data_list[0])
+print(flat)
+pos = [ sum(y>=0 for y in x)  for x in zip(*z_data_list[0]) ]
+neg = [ len(z_data_list[0])-x for x in pos]
+#print("Positive: ",pos, "Negative: ", neg)
 
 V_0 = pa.mat()
 V_1 = pa.mat()
@@ -132,13 +160,13 @@ ax = plt.gca()
 
 
 #-----Setting up plot format------
-norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
+norm = matplotlib.cm.colors.Normalize(vmin=np.min(z_data_list[0]), vmax=np.max(z_data_list[0]))
 img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 
 
 # Axis labels
-plt.xlabel("x", fontsize=fontsize)
-plt.ylabel("y", fontsize=fontsize)
+plt.xlabel("x [Units of distance /1]", fontsize=fontsize)
+plt.ylabel("y [Units of distance /1]", fontsize=fontsize)
 plt.xticks(fontsize=fontsize)
 plt.yticks(fontsize=fontsize)
 
@@ -159,12 +187,13 @@ time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
 # Function that takes care of updating the z data and other things for each frame
 def animation(i):
     # Normalize the colour scale to the current frame?
-    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[i]))
+    #norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[i]))
+    norm = matplotlib.cm.colors.Normalize(vmin=np.min(z_data_list[i]), vmax=np.max(z_data_list[i]))
     img.set_norm(norm)
 
     # Update z data
     #img.set_data(z_data_list[i])
-    img.set_data(np.add(z_data_list[i], V[2]))
+    img.set_data(np.add(z_data_list[i], V[slits_overlay]))
 
     # Update the time label
     current_time = t_min + i * dt
@@ -188,7 +217,8 @@ plt.show()
 anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=15)
 
 for ind in snapshot_index_list:
-    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[ind]))
+    #norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[ind]))
+    norm = matplotlib.cm.colors.Normalize(vmin=np.min(z_data_list[ind]), vmax=np.max(z_data_list[ind]))
     img = ax.imshow(z_data_list[ind], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
     img.set_norm(norm)
 
