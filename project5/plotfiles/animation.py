@@ -154,22 +154,7 @@ time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
 
 
 
-#Problem 8.1
-
-for ind in snapshot_index_list:
-    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[ind]))
-    img = ax.imshow(z_data_list[ind], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-    img.set_norm(norm)
-
-    time_txt.set_text("t = {:.3e}".format(t_points[ind]))
-    plt.savefig('./figures/'+filename+'_time'+str(t_points[ind])+'.pdf')
-
-
-
-
-img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-
-
+#img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
 
 # Function that takes care of updating the z data and other things for each frame
 def animation(i):
@@ -191,8 +176,21 @@ def animation(i):
 # Use matplotlib.animation.FuncAnimation to put it all together
 anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_list), 2), repeat=False, blit=0)
 
+
+
+#Problem 8.1
+
+
 # Run the animation!
 plt.show()
 
 # # Save the animation
-anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=30)
+anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=15)
+
+for ind in snapshot_index_list:
+    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[ind]))
+    img = ax.imshow(z_data_list[ind], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+    img.set_norm(norm)
+
+    time_txt.set_text("t = {:.3e}".format(t_points[ind]))
+    plt.savefig('./figures/'+filename+'_time'+str(t_points[ind])+'.pdf')
