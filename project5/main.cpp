@@ -147,6 +147,7 @@ void workwork() {
 
       //Output box shapes once
       if(i == 0) {
+        crank.v_0_ = 1e10;
         mat box = crank.make_potential_box();
         mat box_single_slit = crank.make_potential_single_slit();
         mat box_double_slit = crank.make_potential_double_slit();

@@ -105,7 +105,11 @@ V_0 = np.rot90(np.array(V_0))
 V_1 = np.rot90(np.array(V_1))
 V_2 = np.rot90(np.array(V_2))
 V_3 = np.rot90(np.array(V_3))
-
+backgrounds = []
+backgrounds.append(V_0)
+backgrounds.append(V_1)
+backgrounds.append(V_2)
+backgrounds.append(V_3)
 
 
 
@@ -195,7 +199,8 @@ def animation(i):
     img.set_norm(norm)
 
     # Update z data
-    img.set_data(z_data_list[i])
+    #img.set_data(z_data_list[i])
+    img.set_data(np.add(z_data_list[i], backgrounds[2]))
 
     # Update the time label
     current_time = t_min + i * dt
