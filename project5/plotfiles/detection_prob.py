@@ -23,7 +23,7 @@ for i in range(0,3):
     # normalized_p = p / np.sqrt(np.sum(p**2))
 
     plt.plot(y, p)
-    plt.title("Detection probability for %d slit(s)"%i)
+    #plt.title("Detection probability for %d slit(s)"%i)
     plt.xlabel("y")
     plt.ylabel("p(y|x=0.8; t=0.002)")
 
@@ -38,4 +38,4 @@ for i in range(0,3):
     # )
 
     plt.show()
-    plt.savefig("prob_vs_t_slits_%d.pdf" %i)
+    plt.savefig("detection_prob_slits_%d.pdf" %i)
