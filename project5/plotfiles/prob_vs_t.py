@@ -24,7 +24,7 @@ for i in range(0,3,2):
     print(p_diff[:10])
 
     plt.plot(t, p)
-    plt.title("Deviation of total probability from 1.0")
+    #plt.title("Deviation of total probability from 1.0")
     plt.xlabel("y")
     plt.ylabel("p(x,y) - 1.0")
 
