@@ -13,8 +13,9 @@ link:
 	${CPPflags} -o main.exe main.o Crank.o -larmadillo -fopenmp #${LIB}
 
 run:
-	./main.exe
-
+	./main.exe "input.txt"
+extra:
+	./main.exe "extra.txt"
 clean:
 	rm -f *.o *~
 

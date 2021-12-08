@@ -18,7 +18,7 @@ using namespace arma;
 void problem7(Crank crank, int slits);
 void problem8(Crank crank);
 void problem9(Crank crank, int slits);
-void workwork();
+void workwork(string inputfile);
 
 template <typename T> string to_string_with_precision(const T a_value, const int n = 2) {
     std::ostringstream out;
@@ -28,7 +28,10 @@ template <typename T> string to_string_with_precision(const T a_value, const int
 }
 
 int main(int argc, char const *argv[]) {
-  workwork(); //TODO: input task list text file in terminal
+  string inputfile;
+  const char* str=argv[1];
+  inputfile = str;//atof(argv[1]);
+  workwork(inputfile); //TODO: input task list text file in terminal
 
 /*   fstream myfile;
   string filename = "input.txt";
@@ -73,10 +76,10 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-void workwork() {
+void workwork(string inputfile) {
   fstream myfile;
-  string filename = "input.txt";
-  myfile.open(filename);
+
+  myfile.open(inputfile);
   if (myfile.is_open()){
     // This checks that the file was opened OK
     string line;
@@ -163,7 +166,7 @@ void workwork() {
       }
     }
   }
-  else{cout << "Unable to open the file " << filename << endl;}
+  else{cout << "Unable to open the file " << inputfile << endl;}
   myfile.close();
 }
 // // --- General prob7 function to be called for 0 slits and 2 slits
