@@ -7,9 +7,7 @@ plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg'
 import pyarma as pa
 import sys
 
-#
-# Let's generate a dummy time series for a function z(x,y,t)
-#
+#Input arguments that determines what is being plotted.
 filename = sys.argv[1]
 z_axis_label = sys.argv[2]
 slits_overlay = int(sys.argv[3])
@@ -32,7 +30,7 @@ z_data_list = []
 snapshot_index_list = []
 c = 0
 
-if z_axis_label == 'Real(u)':
+if z_axis_label == 'Real(u)':   #if we want to plot the real part
     A = pa.cx_cube() #Create pa.mat object (just as arma::mat in C++)
     A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
     # A function for a Gaussian that is travelling
@@ -53,7 +51,7 @@ if z_axis_label == 'Real(u)':
             snapshot_index_list.append(int(c-1))
     filename = filename.split('.t')[0]+'_real'
 
-elif z_axis_label == 'Imag(u)':
+elif z_axis_label == 'Imag(u)': #if we want to plot the imaginary part
     A = pa.cx_cube() #Create pa.mat object (just as arma::mat in C++)
     A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
     # A function for a Gaussian that is travelling
@@ -74,7 +72,7 @@ elif z_axis_label == 'Imag(u)':
             snapshot_index_list.append(int(c-1))
     filename = filename.split('.t')[0]+'_imag'
 
-else:
+else: #if the we want to plot p
     A = pa.cx_cube() #Create pa.mat object (just as arma::mat in C++)
     A.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
     # A function for a Gaussian that is travelling
@@ -97,7 +95,7 @@ else:
             snapshot_index_list.append(int(c-1))
     filename = filename.split('.t')[0]
 
-
+#Fetches the different potentials in case overlay is requested by input arguments
 V_0 = pa.mat()
 V_1 = pa.mat()
 V_2 = pa.mat()
@@ -137,24 +135,11 @@ ax = plt.gca()
 
 #-----Setting up plot format------
 norm = matplotlib.cm.colors.Normalize(vmin=np.min(z_data_list[0]), vmax=np.max(z_data_list[0]))
-#img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-
-
-
-
-
 
 
 V[slits_overlay] = np.ma.masked_where(V[slits_overlay] > 10.00, V[slits_overlay])
 pb = ax.imshow(V[slits_overlay],extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("Greys_r"), norm=norm)
-#fig,ax = plt.subplots()
 img = ax.imshow(z_data_list[0],extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-
-
-
-
-
-
 
 # Axis labels
 plt.xlabel("x [Units of distance /1]", fontsize=fontsize)
@@ -178,13 +163,11 @@ time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
 
 # Function that takes care of updating the z data and other things for each frame
 def animation(i):
-    # Normalize the colour scale to the current frame?
-    #norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[i]))
+    # Normalize the colour scale to the current frame
     norm = matplotlib.cm.colors.Normalize(vmin=np.min(z_data_list[i]), vmax=np.max(z_data_list[i]))
     img.set_norm(norm)
 
-    # Update z data
-    #img.set_data(z_data_list[i])
+    # Update z data(Sums with V only to make the ovarlay for the boundary conditions)
     img.set_data(np.add(z_data_list[i], V[slits_overlay]))
 
     # Update the time label
@@ -198,23 +181,14 @@ def animation(i):
 anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_list), 2), repeat=False, blit=0)
 
 
-
-#Problem 8.1
-
-
-# Run the animation!
-plt.show()
-
-# # Save the animation
+# Save the animation
 anim.save('./figures/'+filename+'_animation.gif', writer="ffmpeg", fps=15)
 
+#Saves snapshots if arguments say so
 for ind in snapshot_index_list:
-    #norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[ind]))
     norm = matplotlib.cm.colors.Normalize(vmin=np.min(z_data_list[ind]), vmax=np.max(z_data_list[ind]))
-    #img = ax.imshow(z_data_list[ind], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
     V[slits_overlay] = np.ma.masked_where(V[slits_overlay] > 10.00, V[slits_overlay])
     pb = ax.imshow(V[slits_overlay],extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("Greys_r"), norm=norm)
-    #fig,ax = plt.subplots()
     img = ax.imshow(z_data_list[ind],extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
     img.set_norm(norm)
     img.set_data(np.add(z_data_list[ind], V[slits_overlay]))
