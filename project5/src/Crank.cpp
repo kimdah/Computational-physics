@@ -96,15 +96,13 @@ void Crank::output_probabilities(cx_cube R, string filename) {
   ofile.close();
 }
 
-double Crank::sum_probabilies(cx_mat U) {
-  double psum = 0;
-  for(int i = 0; i< M_; i++){
-    for(int j = 0; j< M_; j++){
-      psum += real(conj(U(i,j))*U(i,j));
-    }
+vec Crank::output_probabilities(cx_cube R) {
+  vec probability_sums = vec(t_steps_);
+  for (int i = 0; i < t_steps_; i++) {
+    probability_sums(i) = sum_probabilies(R.slice(i));
   }
-  return psum;
 }
+
 // Problem 2-1
 // Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
 int Crank::get_k_index(int i, int j, int M){
@@ -128,6 +126,8 @@ mat Crank::make_potential_box(){
   V.submat(1, 1, M_-2, M_-2) = mat(M_-2,M_-2).fill(0); // filling inner matrix
   return V;
 }
+
+
 
 // Creates the potential for the double slit and box
 mat Crank::make_potential_double_slit(){

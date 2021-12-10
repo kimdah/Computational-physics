@@ -51,6 +51,7 @@ class Crank {
     cx_mat col_to_mat(cx_vec u);
     double sum_probabilies(cx_mat U); 
     void output_probabilities(cx_cube R, string filename);
+    vec output_probabilities(cx_cube R);
 
 };
 #endif
