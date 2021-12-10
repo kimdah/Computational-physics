@@ -34,7 +34,8 @@ index = int(0.8/h) # x = 0.8 / stepsize h
 U = slice[index,:]
 p = np.real(np.conj(U)*U);
 psum = np.sum(p)
-p_norm = p/psum # normalise
+p_norm = p/np.sqrt(np.sum(p**2))# normalise
+print("Sum prob after normalising: " , np.sum(p_norm))
 
 plt.plot(y, p_norm)
 plt.xlabel("y")

@@ -101,7 +101,7 @@ vec Crank::output_probabilities(cx_cube R) {
   for (int i = 0; i < t_steps_; i++) {
     probability_sums(i) = sum_probabilies(R.slice(i));
   }
-  return probability_sums;
+  return probability_sums; // added this - assuming its correct
 }
 
 double Crank::sum_probabilies(cx_mat U) {
