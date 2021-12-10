@@ -2,6 +2,16 @@
 ## Desctiption
 This folder is contains source code, datafiles and figures for project 5 in FYS4150/3150. This project aims to study the behavoiur of a quantum particle in a box by using the normalizes schrodiner equation. We conduct several experiments using this simulation, for example the single-, double- and triple-slit experiment. Instuctions on compiling and running the function, as well as plotting the figures can be found at the bottom of this README file. 
 
+## Files
+### `main.cpp`
+The main file is used to set up and simualte the the different scenrarios, by calling on functions from the `src/Crank.cpp` source file. 
+
+### `main.exe`
+This is the compiled and runnable program. Note that you should run this using the makefile specified at he bottom of this document.
+
+### `input.txt`
+This file contains input arguments for running the program, and is utilized by the `makefile`.
+
 ## Folder structure
 
 ### `src/`
