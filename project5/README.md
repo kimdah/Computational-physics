@@ -14,6 +14,9 @@ This file contains input arguments for running the program, and is utilized by t
 
 ## Folder structure
 
+### `inputs/`
+This folder contains files with input arguments for `main.exe`, and are used to run simulations with different paramaters.
+
 ### `src/`
 This folder contains the source code `Crank.cpp` to our program, which is linked during compilation. 
 
