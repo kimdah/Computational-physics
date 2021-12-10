@@ -132,7 +132,7 @@ void workwork(string inputfile) {
       // For problem 7
       if (psum == 1) {
         vec ut = crank.output_probabilities(results_cube);
-        ut.save("datafiles/Problem_"+to_string_with_precision(prob)+"_output_probability_sum_slits_"+to_string((int)slits)+".txt");
+        ut.save("datafiles/Problem_"+to_string_with_precision(prob)+"_output_probability_sum_slits_"+to_string((int)slits)+".dat");
       } 
       // For problem 8-2. Results cube before being converted to probabilities. Raw Re and Im.
       if (reim == 1) {
