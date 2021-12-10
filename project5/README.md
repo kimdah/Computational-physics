@@ -9,9 +9,6 @@ The main file is used to set up and simualte the the different scenrarios, by ca
 ### `main.exe`
 This is the compiled and runnable program. Note that you should run this using the makefile specified at he bottom of this document.
 
-### `input.txt`
-This file contains input arguments for running the program, and is utilized by the `makefile`.
-
 ## Folder structure
 
 ### `inputs/`
