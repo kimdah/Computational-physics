@@ -101,6 +101,17 @@ vec Crank::output_probabilities(cx_cube R) {
   for (int i = 0; i < t_steps_; i++) {
     probability_sums(i) = sum_probabilies(R.slice(i));
   }
+  return probability_sums;
+}
+
+double Crank::sum_probabilies(cx_mat U) {
+  double psum = 0;
+  for(int i = 0; i< M_; i++){
+    for(int j = 0; j< M_; j++){
+      psum += real(conj(U(i,j))*U(i,j));
+    }
+  }
+  return psum;
 }
 
 // Problem 2-1

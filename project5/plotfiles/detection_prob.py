@@ -50,4 +50,4 @@ wspace=0.0
 )
 
 plt.savefig("./figures/detection_prob_slits_%s.pdf" %slits)
-plt.show()
+#plt.show()
