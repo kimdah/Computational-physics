@@ -42,7 +42,7 @@ Crank::Crank(double h, double deltat, double T, double x_c, double y_c, double s
 
 
   //makes matrices A and B
-  make_matrices(M_, h, deltat, V_, r_); // random variables!! change
+  make_matrices(M_, h, deltat, V_, r_);
 
   // Commented out to test errors:
   //U_ = make_insert_wavepacket(M_, h, 0.25, 0.5, 0.05, 0.05, 200.0, 0.0); // (int M, double h, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
@@ -80,20 +80,30 @@ cx_mat Crank::run_simulation(int last_slice) {
 
 //Problem 7
 void Crank::output_probabilities(cx_cube R, string filename) {
-  vec probability_sums = vec(t_steps_);
+  vec probability_sums = vec(t_steps_); // are you using this?
   ofstream ofile;
   ofile.open(filename);
   int width = 16;
-  int prec = 4;
+  double prec = 4; //1e-20;
   ofile << setw(width) << setprecision(prec) << "Time";
   ofile << setw(width) << setprecision(prec) << "P_tot";
   ofile << endl;
   for (int i = 0; i < t_steps_; i++) {
     ofile << setw(width) << setprecision(prec) << i*deltat_;
-    ofile << setw(width) << setprecision(prec) << sum_probabilies(R.slice(i));
+    ofile << setw(width) << setprecision(prec) << scientific << sum_probabilies(R.slice(i));
     ofile << endl;
   }
   ofile.close();
+}
+
+double Crank::sum_probabilies(cx_mat U) {
+  double psum = 0;
+  for(int i = 0; i< M_; i++){
+    for(int j = 0; j< M_; j++){
+      psum += real(conj(U(i,j))*U(i,j));
+    }
+  }
+  return psum;
 }
 // Problem 2-1
 // Translates matrix (i,j) index to column (k) index which have values from 1 to M-1
@@ -265,15 +275,7 @@ cx_mat Crank::make_insert_wavepacket(int M, double h, double x_c, double y_c, do
 
 
 
-double Crank::sum_probabilies(cx_mat U) {
-  double psum = 0;
-  for(int i = 0; i< M_; i++){
-    for(int j = 0; j< M_; j++){
-      psum += real(conj(U(i,j))*U(i,j));
-    }
-  }
-  return psum;
-}
+
 
 
 

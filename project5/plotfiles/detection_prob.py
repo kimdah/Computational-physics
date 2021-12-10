@@ -1,6 +1,7 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
+import pyarma as pa
+import sys
 
 #Adjusting text size
 # SMALL_SIZE = 14
@@ -15,27 +16,38 @@ import matplotlib.pyplot as plt
 # plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 # plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
+#Input arguments that determines what is being plotted.
+filename = sys.argv[1]
+slits = sys.argv[2]
+#x_axis_label = sys.argv[2] # if we want general one
+#y_axis_label = sys.argv[3]
 
-for i in range(0,3):
-    data = np.loadtxt('./datafiles/prob9_slits_%d.txt' %i, skiprows=1)
-    y = np.array(data[:,0])
-    p = np.array(data[:,1]) # assumed already normalized
-    # normalized_p = p / np.sqrt(np.sum(p**2))
+slice = pa.cx_mat() #Create pa.mat object (just as arma::mat in C++)
+slice.load("./datafiles/"+str(filename)) #Load the content of the matrix you saved into your Python program.
+slice = np.array(slice)
 
-    plt.plot(y, p)
-    #plt.title("Detection probability for %d slit(s)"%i)
-    plt.xlabel("y")
-    plt.ylabel("p(y|x=0.8; t=0.002)")
+h = 0.005
+points = int((1/h) +1) # M = 201
+y = np.linspace(0,1,points)
 
+index = int(0.8/h) # x = 0.8 / stepsize h
+U = slice[index,:]
+p = np.real(np.conj(U)*U);
+psum = np.sum(p)
+p_norm = p/psum # normalise
 
-    # plt.subplots_adjust(
-    # top=0.915,
-    # bottom=0.165,
-    # left=0.0,
-    # right=1,
-    # hspace=0.0,
-    # wspace=0.0
-    # )
+plt.plot(y, p_norm)
+plt.xlabel("y")
+plt.ylabel("p(y|x=0.8; t=0.002)")
 
-    plt.show()
-    plt.savefig("detection_prob_slits_%d.pdf" %i)
+plt.subplots_adjust(
+top=0.915,
+bottom=0.165,
+left=0.20,
+right=0.95,
+hspace=0.0,
+wspace=0.0
+)
+
+plt.savefig("./figures/detection_prob_slits_%s.pdf" %slits)
+plt.show()

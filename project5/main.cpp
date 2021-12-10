@@ -9,7 +9,7 @@
 #include <armadillo>
 #include <omp.h>
 #include <complex>
-#include <cmath>
+#include <array>
 
 using namespace std::complex_literals; // to use imaginary number i | DEMANDS c++14!
 using namespace std;
@@ -32,47 +32,6 @@ int main(int argc, char const *argv[]) {
   const char* str=argv[1];
   inputfile = str;//atof(argv[1]);
   workwork(inputfile); //TODO: input task list text file in terminal
-
-/*   fstream myfile;
-  string filename = "input.txt";
-  myfile.open(filename);
-  if (myfile.is_open()){
-    // This checks that the file was opened OK
-    string line;
-    std::getline(myfile, line); // skip the first line
-
-    double h, deltat, T, xc, sx, px, yc, sy, py, v0, slits;
-    int line_counter = 0;
-    while (std::getline(myfile, line)) {
-      std::stringstream mysstream(line);
-      mysstream >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0 >> slits;
-      if (line_counter == 0){
-        // Task 7.1 w/o double slit
-        
-        problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, slits), slits);
-
-      } else if (line_counter == 1){
-        // Task 7.3 w/double slit
-        
-        problem7(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, slits), slits); //commented out for testing
-
-      } else if (line_counter == 2){
-        // Task 8 and 9 (using same parameters)
-
-        Crank crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 2); // problem 8
-        problem8(crank);
-
-        problem9(crank, 2); // double-slit
-        problem9(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 1), 1);
-        problem9(Crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, 3), 3);
-
-      } else{cout << "Not all lines of the file are used" << endl;}
-      line_counter +=1;
-    }
-  }
-  else{cout << "Unable to open the file " << filename << endl;}
-  myfile.close(); */
-
   return 0;
 }
 
@@ -86,19 +45,20 @@ void workwork(string inputfile) {
     std::getline(myfile, line); // skip the first line
     const size_t input_vals = 15;
     std::vector<std::array<double, input_vals>> vars;
-    
+
     int line_counter = 0;
     while (std::getline(myfile, line)) {
       double prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, psum, reim, last_slice, slits;
       std::stringstream mysstream(line);
       mysstream >> prob >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0 >> slits >> psum >> reim >> last_slice;
       vars.push_back({{prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, slits, psum, reim, last_slice}});
+
       line_counter +=1;
     }
 
-    cout << std::setw( 8 ) << "Problem" << std::setw( 8 ) << "h" << std::setw( 8 ) << "deltat" << std::setw( 8 ) << "T" << std::setw( 8 ) << "x_c" << std::setw( 8 ) 
-    << "sigma_x" << std::setw( 8 ) << "p_x" << std::setw( 8 ) << "y_c" << std::setw( 8 ) << "sigma_y" << std::setw( 8 ) << "p_y" << std::setw( 8 ) << "v_0" 
-    << std::setw( 8 ) << "slits" << std::setw( 8 ) << "psum" << std::setw( 8 ) << "ReIm" << std::setw( 8 ) << "Last_slice" << endl; 
+    cout << std::setw( 8 ) << "Problem" << std::setw( 8 ) << "h" << std::setw( 8 ) << "deltat" << std::setw( 8 ) << "T" << std::setw( 8 ) << "x_c" << std::setw( 8 )
+    << "sigma_x" << std::setw( 8 ) << "p_x" << std::setw( 8 ) << "y_c" << std::setw( 8 ) << "sigma_y" << std::setw( 8 ) << "p_y" << std::setw( 8 ) << "v_0"
+    << std::setw( 8 ) << "slits" << std::setw( 8 ) << "psum" << std::setw( 8 ) << "ReIm" << std::setw( 10 ) << "Last_slice" << endl;
 
     for (int i = 0; i<vars.size(); i++) {
       for (int j = 0; j < (int)input_vals; j++) {
@@ -106,7 +66,7 @@ void workwork(string inputfile) {
       }
       cout << endl;
     }
-
+    //line_counter = 2; // testing prob 7
     cout << "Number of simulations to run is " << line_counter << ". Running in parallel." << endl;
 
     #pragma omp parallel for
@@ -114,16 +74,16 @@ void workwork(string inputfile) {
       int thread_id = omp_get_thread_num();
       double prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, psum, reim, last_slice, slits;
       prob=vars[i][0]; h=vars[i][1]; deltat=vars[i][2]; T=vars[i][3]; xc=vars[i][4]; sx=vars[i][5]; px=vars[i][6]; yc=vars[i][7]; sy=vars[i][8];
-      py=vars[i][9]; v0=vars[i][10]; slits=vars[i][11]; psum=vars[i][12]; reim=vars[i][13]; last_slice=vars[i][14]; 
+      py=vars[i][9]; v0=vars[i][10]; slits=vars[i][11]; psum=vars[i][12]; reim=vars[i][13]; last_slice=vars[i][14];
 
       #pragma omp critical
-      cout << "Running problem " << to_string_with_precision(prob) << " on thread " << thread_id << " with parameters: h=" << h << ", delta t=" << deltat << ", T=" <<  T << ", x_c=" << xc << ", s_x=" << sx << ", p_x=" << px << ", y_c=" << yc 
+      cout << "\nRunning problem " << to_string_with_precision(prob) << " on thread " << thread_id << " with parameters: \nh=" << h << ", delta t=" << deltat << ", T=" <<  T << ", x_c=" << xc << ", s_x=" << sx << ", p_x=" << px << ", y_c=" << yc
       << ", s_y=" << sy << ", p_y=" << py << ", v_0=" << v0 << ", slits=" << (int)slits << ", psum=" << psum << ", ReIm=" << reim << ", last slice=" << last_slice << "." << endl;
 
       Crank crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, slits);
       cx_cube results_cube;
       cx_mat last_slice_mat;
-      
+
       if(last_slice != 1) {
         results_cube = crank.run_simulation();
       } else if (last_slice == 1) {
@@ -132,20 +92,20 @@ void workwork(string inputfile) {
       // For problem 7
       if (psum == 1) {
         crank.output_probabilities(results_cube, "datafiles/Problem_"+to_string_with_precision(prob)+"_output_probability_sum_slits_"+to_string((int)slits)+".txt");
-      } 
+      }
       // For problem 8-2. Results cube before being converted to probabilities. Raw Re and Im.
       if (reim == 1) {
         results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_ReIm_outputCube_slits_" + to_string((int)slits) + ".dat");
       }
-      
+
       if(last_slice != 1) {
         //results_cube.for_each( [](complex <double> val) { return abs(real(conj(val)*val)); } ); // changed from transform to for_each
-       
+
         //cube output = conv_to <cube>::from(results_cube);
         //output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
         results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
       } else if (last_slice == 1) {
-        
+
         //last_slice_mat.for_each( [](complex <double> val) { return abs(real(conj(val)*val)); } );
         //mat output = conv_to <mat>::from(last_slice_mat);
         //output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
