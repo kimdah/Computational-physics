@@ -4,13 +4,13 @@ import pyarma as pa
 import sys
 
 #Adjusting text size
-# SMALL_SIZE = 14
-# MEDIUM_SIZE = 17
+SMALL_SIZE = 14
+MEDIUM_SIZE = 14
 # BIGGER_SIZE = 17
 #
 # plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
 # plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
-# plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
 # plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 # plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 # plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
@@ -32,14 +32,14 @@ y = np.linspace(0,1,points)
 
 index = int(0.8/h) # x = 0.8 / stepsize h
 U = slice[index,:]
-p = np.real(np.conj(U)*U);
-psum = np.sum(p)
+p = np.real(np.conj(U)*U); # here???? Shouldnt this be done to the entire matrix?
 p_norm = p/np.sqrt(np.sum(p**2))# normalise
-print("Sum prob after normalising: " , np.sum(p_norm))
+#print("Sum prob after normalising: " , np.sum(p_norm))
 
 plt.plot(y, p_norm)
-plt.xlabel("y")
+plt.xlabel("y [Units of distance/1]")
 plt.ylabel("p(y|x=0.8; t=0.002)")
+plt.grid()
 
 plt.subplots_adjust(
 top=0.915,

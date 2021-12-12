@@ -21,6 +21,8 @@ clean:
 
 plot:
 	#Animation format is: animation.py 'filename' 'heatmap label' 'number of slits in overlay' 'number of snapshots' 'snapshot times'
+	python3 plotfiles/prob_vs_t.py 'Problem_7.10_outputCube_slits_0.dat' 0
+	python3 plotfiles/prob_vs_t.py 'Problem_7.20_outputCube_slits_2.dat' 2
 	python3 plotfiles/animation.py 'Problem_7.10_outputCube_slits_0.dat' 'p(x,y,t)' 0 0
 	python3 plotfiles/animation.py 'Problem_7.20_outputCube_slits_2.dat' 'p(x,y,t)' 2 0
 	python3 plotfiles/animation.py 'Problem_8.00_outputCube_slits_2.dat' 'p(x,y,t)' 2 3 0.0 0.001 0.002

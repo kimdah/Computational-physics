@@ -78,7 +78,7 @@ cx_mat Crank::run_simulation(int last_slice) {
   return results;
 }
 
-//Problem 7
+//Problem 7 ## OLD
 void Crank::output_probabilities(cx_cube R, string filename) {
   vec probability_sums = vec(t_steps_); // are you using this?
   ofstream ofile;
@@ -101,7 +101,7 @@ vec Crank::output_probabilities(cx_cube R) {
   for (int i = 0; i < t_steps_; i++) {
     probability_sums(i) = sum_probabilies(R.slice(i));
   }
-  return probability_sums; // added this - assuming its correct
+  return probability_sums; // added this - assuming it's correct
 }
 
 double Crank::sum_probabilies(cx_mat U) {
