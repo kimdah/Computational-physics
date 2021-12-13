@@ -79,40 +79,40 @@ cx_mat Crank::run_simulation(int last_slice) {
 }
 
 //Problem 7 ## OLD
-void Crank::output_probabilities(cx_cube R, string filename) {
-  vec probability_sums = vec(t_steps_); // are you using this?
-  ofstream ofile;
-  ofile.open(filename);
-  int width = 16;
-  double prec = 4; //1e-20;
-  ofile << setw(width) << setprecision(prec) << "Time";
-  ofile << setw(width) << setprecision(prec) << "P_tot";
-  ofile << endl;
-  for (int i = 0; i < t_steps_; i++) {
-    ofile << setw(width) << setprecision(prec) << i*deltat_;
-    ofile << setw(width) << setprecision(prec) << scientific << sum_probabilies(R.slice(i));
-    ofile << endl;
-  }
-  ofile.close();
-}
+// void Crank::output_probabilities(cx_cube R, string filename) {
+//   vec probability_sums = vec(t_steps_); // are you using this?
+//   ofstream ofile;
+//   ofile.open(filename);
+//   int width = 16;
+//   double prec = 4; //1e-20;
+//   ofile << setw(width) << setprecision(prec) << "Time";
+//   ofile << setw(width) << setprecision(prec) << "P_tot";
+//   ofile << endl;
+//   for (int i = 0; i < t_steps_; i++) {
+//     ofile << setw(width) << setprecision(prec) << i*deltat_;
+//     ofile << setw(width) << setprecision(prec) << scientific << sum_probabilies(R.slice(i));
+//     ofile << endl;
+//   }
+//   ofile.close();
+// }
 
-vec Crank::output_probabilities(cx_cube R) {
-  vec probability_sums = vec(t_steps_);
-  for (int i = 0; i < t_steps_; i++) {
-    probability_sums(i) = sum_probabilies(R.slice(i));
-  }
-  return probability_sums; // added this - assuming it's correct
-}
-
-double Crank::sum_probabilies(cx_mat U) {
-  double psum = 0;
-  for(int i = 0; i< M_; i++){
-    for(int j = 0; j< M_; j++){
-      psum += real(conj(U(i,j))*U(i,j));
-    }
-  }
-  return psum;
-}
+// vec Crank::output_probabilities(cx_cube R) {
+//   vec probability_sums = vec(t_steps_);
+//   for (int i = 0; i < t_steps_; i++) {
+//     probability_sums(i) = sum_probabilies(R.slice(i));
+//   }
+//   return probability_sums; // added this - assuming it's correct
+// }
+//
+// double Crank::sum_probabilies(cx_mat U) {
+//   double psum = 0;
+//   for(int i = 0; i< M_; i++){
+//     for(int j = 0; j< M_; j++){
+//       psum += real(conj(U(i,j))*U(i,j));
+//     }
+//   }
+//   return psum;
+// }
 
 // Problem 2-1
 // Translates matrix (i,j) index to column (k) index which have values from 1 to M-1

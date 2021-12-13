@@ -1,3 +1,4 @@
+# Problem 7
 import numpy as np
 import matplotlib.pyplot as plt
 import pyarma as pa
@@ -30,10 +31,11 @@ for i in range(0, U_cube.n_slices):
 
 t = np.linspace(0,0.008, U_cube.n_slices)
 
-
 plt.scatter(t, prob_sum, marker='.')
 plt.xlabel("time")
 plt.ylabel("|p(x,y) - 1.0|")
+plt.ticklabel_format(axis="both", style="sci", scilimits=(0,0))
+plt.yticks([0.0, 0.5*1e-14, 1e-14, 1.5*1e-14, 2.0*1e-14])
+plt.ylim([-0.07e-14, 2.3e-14])
 plt.grid()
 plt.savefig("./figures/prob_vs_t_slits_%s.pdf" %slits)
-#plt.show()
