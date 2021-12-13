@@ -25,13 +25,26 @@ template <typename T> string to_string_with_precision(const T a_value, const int
 }
 
 int main(int argc, char const *argv[]) {
-  string inputfile;
-  const char* str=argv[1];
-  inputfile = str;//atof(argv[1]);
-  simulate(inputfile); //TODO: input task list text file in terminal
+  if (argc != 2) {
+    // Get the name of the executable file
+    std::string executable_name = argv[0];
+
+    std::cerr << "Error: Wrong number of input arguments." << std::endl;
+    std::cerr << "Usage: " << executable_name << " <inputfile.txt>" << std::endl;
+
+    // Exit program with non-zero return code to indicate a problem
+    return 1;   
+  }
+  
+  // Runs the simulations specified in the input file
+  simulate(argv[1]); 
   return 0;
 }
 
+
+/// <summary>Performs the simulations specified in the input file</summary>
+/// <param name="inputfile">Filename of file that specifies what simulations to run.</param>  
+/// <returns>void</returns>  
 void simulate(string inputfile) {
   fstream myfile;
 
@@ -52,14 +65,14 @@ void simulate(string inputfile) {
 
       line_counter +=1;
     }
-
-    cout << std::setw( 8 ) << "Problem" << std::setw( 8 ) << "h" << std::setw( 8 ) << "deltat" << std::setw( 8 ) << "T" << std::setw( 8 ) << "x_c" << std::setw( 8 )
-    << "sigma_x" << std::setw( 8 ) << "p_x" << std::setw( 8 ) << "y_c" << std::setw( 8 ) << "sigma_y" << std::setw( 8 ) << "p_y" << std::setw( 8 ) << "v_0"
-    << std::setw( 8 ) << "slits" << std::setw( 8 ) << "psum" << std::setw( 8 ) << "ReIm" << std::setw( 10 ) << "Last_slice" << endl;
+    int width = 10;
+    cout << std::setw(width) << "Problem" << std::setw(width) << "h" << std::setw(width) << "deltat" << std::setw(width) << "T" << std::setw(width) << "x_c" << std::setw(width)
+    << "sigma_x" << std::setw(width) << "p_x" << std::setw(width) << "y_c" << std::setw(width) << "sigma_y" << std::setw(width) << "p_y" << std::setw(width) << "v_0"
+    << std::setw(width) << "slits" << std::setw(width) << "psum" << std::setw(width) << "ReIm" << std::setw(width) << "Last_slice" << endl;
 
     for (int i = 0; i<vars.size(); i++) {
       for (int j = 0; j < (int)input_vals; j++) {
-        cout << std::setw( 8 ) << vars[i][j] ;
+        cout << std::setw(width) << vars[i][j] ;
       }
       cout << endl;
     }
@@ -80,34 +93,22 @@ void simulate(string inputfile) {
       cx_cube results_cube;
       cx_mat last_slice_mat;
 
-      if(last_slice != 1) {
-        results_cube = crank.run_simulation();
-      } else if (last_slice == 1) {
+      if (last_slice == 1) {
         last_slice_mat = crank.run_simulation(1);
-      } else {}
-      // For problem 7 - can probably be removed
-      // if (psum == 1) {
-      //   vec ut = crank.output_probabilities(results_cube);
-      //   ut.save("datafiles/Problem_"+to_string_with_precision(prob)+"_output_probability_sum_slits_"+to_string((int)slits)+".dat");
-      // }
+      } else {
+        results_cube = crank.run_simulation();
+      }
+
       // For problem 8-2. Results cube before being converted to probabilities. Raw Re and Im.
       if (reim == 1) {
         results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_ReIm_outputCube_slits_" + to_string((int)slits) + ".dat");
       }
 
-      if(last_slice != 1) {
-        //results_cube.for_each( [](complex <double> val) { return abs(real(conj(val)*val)); } ); // changed from transform to for_each
-
-        //cube output = conv_to <cube>::from(results_cube);
-        //output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
-        results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
-      } else if (last_slice == 1) {
-
-        //last_slice_mat.for_each( [](complex <double> val) { return abs(real(conj(val)*val)); } );
-        //mat output = conv_to <mat>::from(last_slice_mat);
-        //output.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
+      if (last_slice == 1) {
         last_slice_mat.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputMat_slits_" + to_string((int)slits) + ".dat");
-      } else {}
+      } else {
+        results_cube.save("datafiles/Problem_"+to_string_with_precision(prob)+"_outputCube_slits_" + to_string((int)slits) + ".dat");
+      }
 
       //Output box shapes once
       if(i == 0) {
@@ -123,6 +124,8 @@ void simulate(string inputfile) {
       }
     }
   }
-  else{cout << "Unable to open the file " << inputfile << endl;}
+  else {
+    cout << "Unable to open the file " << inputfile << endl;
+  }
   myfile.close();
 }
