@@ -1,6 +1,8 @@
 # Simulating the two-dimensional time-dependent Schrödinger equation
 ## Desctiption
 This folder is contains source code, datafiles and figures for project 5 in FYS4150/3150. This project aims to study the behavoiur of a quantum particle in a box by using the normalizes schrodiner equation. We conduct several experiments using this simulation, for example the single-, double- and triple-slit experiment. Instuctions on compiling and running the function, as well as plotting the figures can be found at the bottom of this README file. 
+![Problem_7 20_outputCube_slits_2 dat_animation](https://user-images.githubusercontent.com/31341364/146273401-9a893a1d-75e6-4bcf-ad0c-5c643b64598e.gif)
+![Problem_7 10_outputCube_slits_0 dat_animation](https://user-images.githubusercontent.com/31341364/146273416-c59bb355-bddd-49ff-9e21-9c91c4da1452.gif)
 
 ## Files
 ### `main.cpp`
