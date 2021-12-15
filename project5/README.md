@@ -47,3 +47,5 @@ To run the program, use the following command:
 To generate animations and plots, use the following line:
 `$ make plot`
 
+To run extra long simulations as specified in `inputs/input.txt`:
+`$ make extra`
