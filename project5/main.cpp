@@ -53,22 +53,22 @@ void simulate(string inputfile) {
     // This checks that the file was opened OK
     string line;
     std::getline(myfile, line); // skip the first line
-    const size_t input_vals = 15;
+    const size_t input_vals = 14;
     std::vector<std::array<double, input_vals>> vars;
 
     int line_counter = 0;
     while (std::getline(myfile, line)) {
-      double prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, psum, reim, last_slice, slits;
+      double prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, reim, last_slice, slits;
       std::stringstream mysstream(line);
-      mysstream >> prob >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0 >> slits >> psum >> reim >> last_slice;
-      vars.push_back({{prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, slits, psum, reim, last_slice}});
+      mysstream >> prob >> h >> deltat >> T >> xc >> sx >> px >> yc >> sy >> py >> v0 >> slits >> reim >> last_slice;
+      vars.push_back({{prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, slits, reim, last_slice}});
 
       line_counter +=1;
     }
     int width = 10;
     cout << std::setw(width) << "Problem" << std::setw(width) << "h" << std::setw(width) << "deltat" << std::setw(width) << "T" << std::setw(width) << "x_c" << std::setw(width)
     << "sigma_x" << std::setw(width) << "p_x" << std::setw(width) << "y_c" << std::setw(width) << "sigma_y" << std::setw(width) << "p_y" << std::setw(width) << "v_0"
-    << std::setw(width) << "slits" << std::setw(width) << "psum" << std::setw(width) << "ReIm" << std::setw(width) << "Last_slice" << endl;
+    << std::setw(width) << "slits"  << std::setw(width) << "ReIm" << std::setw(width) << "Last_slice" << endl;
 
     for (int i = 0; i<vars.size(); i++) {
       for (int j = 0; j < (int)input_vals; j++) {
@@ -81,13 +81,13 @@ void simulate(string inputfile) {
     #pragma omp parallel for
     for (int i = 0; i <line_counter; i++) {
       int thread_id = omp_get_thread_num();
-      double prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, psum, reim, last_slice, slits;
+      double prob, h, deltat, T, xc, sx, px, yc, sy, py, v0, reim, last_slice, slits;
       prob=vars[i][0]; h=vars[i][1]; deltat=vars[i][2]; T=vars[i][3]; xc=vars[i][4]; sx=vars[i][5]; px=vars[i][6]; yc=vars[i][7]; sy=vars[i][8];
-      py=vars[i][9]; v0=vars[i][10]; slits=vars[i][11]; psum=vars[i][12]; reim=vars[i][13]; last_slice=vars[i][14];
+      py=vars[i][9]; v0=vars[i][10]; slits=vars[i][11]; reim=vars[i][12]; last_slice=vars[i][13];
 
       #pragma omp critical
       cout << "\nRunning problem " << to_string_with_precision(prob) << " on thread " << thread_id << " with parameters: \nh=" << h << ", delta t=" << deltat << ", T=" <<  T << ", x_c=" << xc << ", s_x=" << sx << ", p_x=" << px << ", y_c=" << yc
-      << ", s_y=" << sy << ", p_y=" << py << ", v_0=" << v0 << ", slits=" << (int)slits << ", psum=" << psum << ", ReIm=" << reim << ", last slice=" << last_slice << "." << endl;
+      << ", s_y=" << sy << ", p_y=" << py << ", v_0=" << v0 << ", slits=" << (int)slits << ", ReIm=" << reim << ", last slice=" << last_slice << "." << endl;
 
       Crank crank(h, deltat, T, xc, yc, sx, sy, px, py, v0, slits);
       cx_cube results_cube;
