@@ -15,8 +15,10 @@ using namespace std::complex_literals; // to use imaginary number i | DEMANDS c
 using namespace std;
 using namespace arma;
 
+// Performs the simulations specified in the input file
 void simulate(string inputfile);
 
+// Converts to string with specified precision
 template <typename T> string to_string_with_precision(const T a_value, const int n = 2) {
     std::ostringstream out;
     out.precision(n);
