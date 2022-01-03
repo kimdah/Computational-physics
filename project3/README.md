@@ -10,7 +10,7 @@ $ make run
 To make plots:
 $ make plot
 
-![schematic penning trap](.figures/penning_trap.jpg)
+![schematic penning trap](./figures/penning_trap.jpg)
 
 # Folder Structure
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
