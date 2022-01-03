@@ -6,4 +6,6 @@ Folder for files for FYS3150 Computational Physics at University of Oslo Fall 20
 
 # Project 2: Numerical solution of an eigenvalue problem exemplified by a special case of the one-dimensional buckling beam.
 
+# Project 3: 
+
 ![animation](https://user-images.githubusercontent.com/31341364/144926070-2ea39b86-607f-4a8e-aec4-f8027d95b0af.gif)
