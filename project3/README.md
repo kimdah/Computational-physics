@@ -10,6 +10,8 @@ $ make run
 To make plots:
 $ make plot
 
+![Alt text](figures/penning_trap.jpg?raw=true "Title")
+
 ![schematic penning trap](https://upload.wikimedia.org/wikipedia/commons/b/b6/Penning_Trap.svg)
 
 # Folder Structure
