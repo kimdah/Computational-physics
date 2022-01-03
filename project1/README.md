@@ -11,26 +11,12 @@ exact_data<N>.txt
 approx_general<N>.txt
 approx_special<N>.txt
 
-Stores log10 absolute and relative error, as well as max(rel_error) in file errors<N>.txt
+It also stores log10 absolute and relative error, as well as max(rel_error) in files:
+errors<N>.txt
 
-plot_exact.py
--------
-Python script that reads the data in exact_data{N}.txt and plots the exact solution of the Poisson equation, u(x).
-Output: exact.pdf
+The number of steps can be changed manually in the makefile, or by running:
 
-
-general_vs_exact.py
--------
-Plots the general approximations from approx_general<N>.txt against the exact values exact_data<N>.txt.
-Output: general_vs_exact.pdf
-
-
-
-errorplot.py
--------
-Plots logarithmic10 absolute and relative errors from file errors<N>.txt against x-values.
-Output:'error_plot_log.pdf'
-
+$ ./main.cpp <N>
 
 # Compiling, running and plotting
 

@@ -7,11 +7,9 @@
 #include <fstream>
 #include <sstream>
 
-
-
 //Code files included:
-#include "Particle.hpp"
-#include "PenningTrap.hpp"
+#include "./include/Particle.hpp"
+#include "./include/PenningTrap.hpp"
 
 using namespace std;
 using namespace arma;
@@ -34,7 +32,7 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
 
-/* 
+/*
     std::cout << "Problem 9 running..." << std::endl;
     // ------------- PROBLEM 9 -----------
     //Problem 9 point 1
@@ -147,7 +145,7 @@ double simulator(int iterations, int duration, int particles, std::string output
     std::ofstream ofile;
     ofile.open(filename);
 
-    
+
 
     // Run simulation for a single particle with default values for B_0, V_0 and d
     // double B0_in, double V0_in, double d_in

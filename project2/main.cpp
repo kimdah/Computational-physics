@@ -83,7 +83,9 @@ int main(int argc, char const *argv[]) {
   cout << endl << "------------Solution to task 5 b) (end)------------"<< endl;
 
   // Problem 6 - comment out to avoid taking up too much time
+  cout << endl << "------------Solution to task 6------------"<< endl;
   jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
+  cout << endl << "------------Solution to task 6 (end)------------"<< endl;
 
   // Problem 7
   file_for_plot(10);
