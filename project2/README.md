@@ -36,9 +36,10 @@ Run the code, main.exe:
 
 $ make run
 
+When main.exe is done running you can make plots using the command:
+
+$ make plot
+
 Note that the file may take some time to run, as it solves alle the different subtasks as well.
 Running main.exe will write results from task 3, 4 and 5 to the terminal. It will also produce some
 .txt files with the results from task 6 and 7 stored in the folder *datafiles*
-
-When main.exe is done running you can make plots using the command:
-$ make plot
