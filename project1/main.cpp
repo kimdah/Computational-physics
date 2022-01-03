@@ -43,7 +43,7 @@ int main(int argc, const char * argv[]) {
     //opening file
     ofstream ofile;
     std::ostringstream filename;
-    filename << "exact_data" << N << ".txt";
+    filename << "./datafiles/exact_data" << N << ".txt";
     ofile.open(filename.str());
 
     //setting up the x-array and the solutions to the function u, and printing it to file
@@ -88,7 +88,7 @@ int main(int argc, const char * argv[]) {
     //opening file
     ofstream ofile2;
     std::ostringstream filename2;
-    filename2 << "approx_general" << N << ".txt";
+    filename2 << "./datafiles/approx_general" << N << ".txt";
     ofile2.open(filename2.str());
 
     //setting up the x-array and the solutions to the function u, and printing it to file
@@ -101,7 +101,7 @@ int main(int argc, const char * argv[]) {
     // Problem 8:
     ofstream ofile3;
     std::ostringstream filename3;
-    filename3 << "errors" << N << ".txt";
+    filename3 << "./datafiles/errors" << N << ".txt";
     ofile3.open(filename3.str());
     for (int i=0 ; i <= n-1 ; i++){
       double abs_err = std::abs(u(i+1)-v(i));
@@ -115,8 +115,7 @@ int main(int argc, const char * argv[]) {
     }
     ofile3.close();
 
-    cout << setw(width) << setprecision(prec) << scientific << "The max relative error is:" << largestvalue
-    << setw(width) << setprecision(prec) << scientific << "for N=" << N << endl;
+    cout << "The max relative error for N = " << N<< " is: " << setprecision(prec) << scientific << largestvalue << endl;
 
 
     // Problem 9:
@@ -125,7 +124,7 @@ int main(int argc, const char * argv[]) {
 
     ofstream ofile4;
     std::ostringstream filename4;
-    filename4 << "approx_special" << N << ".txt";
+    filename4 << "./datafiles/approx_special" << N << ".txt";
     ofile3.open(filename4.str());
 
     //setting up the x-array and the solutions to the function u, and printing it to file
@@ -135,6 +134,7 @@ int main(int argc, const char * argv[]) {
     }
     ofile4.close(); //close file
 
+    cout << "\n" << endl;
     return 0;
 }
 

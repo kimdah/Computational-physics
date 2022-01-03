@@ -5,12 +5,12 @@ import math
 k = 6 # max exponent of 10 number of points
 colors = ['r', 'g', 'y', 'b', 'c', 'm', 'r']
 
-fig, (ax1, ax2)= plt.subplots(2, sharex=True) #(ax1, ax2)
+fig, (ax1, ax2)= plt.subplots(2, sharex=True)
 fig.suptitle('Errors')
 
 for i in range(1, k+1):
     N = 10**i
-    errors = np.loadtxt('errors%d.txt' %N) # only once?
+    errors = np.loadtxt('./datafiles/errors%d.txt' %N)
     x = np.array(errors[:,0])
     abs_error = np.array(errors[:,1])
     rel_error = np.array(errors[:,2])
@@ -36,5 +36,4 @@ ax2.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 ax2.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 plt.xlabel('x')
-plt.savefig('error_plot_log.pdf')
-plt.show()
+plt.savefig('./figures/error_plot_log.pdf')
