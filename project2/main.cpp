@@ -327,19 +327,25 @@ void jacobi_eigensolver(arma::mat& A, double& eps, arma::vec& eigenvalues, arma:
 void jacobi_scaling(arma::mat& A, int& N, double& eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         int& maxiter, int& iterations, bool& converged){
 
+  ofstream myfile;
 
-for (int N = 3; N < 150; N++){
-  int n = N+1;       //steps in matrix
-  double h = 1./n;
-  double a = -1./(h*h);     //super and sub diagonal elements
-  double d = 2./(h*h);      //diagonal elements
+  myfile.open("./datafiles/task6_dataset.txt");
+  myfile << "N=    , Rotations=    "<<endl;
+
+  for (int N = 3; N < 110; N++){
+    int n = N+1;       //steps in matrix
+    double h = 1./n;
+    double a = -1./(h*h);     //super and sub diagonal elements
+    double d = 2./(h*h);      //diagonal elements
 
 
-  A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
-  maxiter = (int) N * (int) N * (int) N;
-  jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
-  cout <<"N= "<<N<<", gives "<< iterations<< " iterations"<< endl;
-    }
+    A = create_symmetric_tridiagonal(N,a,d); //creates an NxN tridaiag symmetric matrix
+    maxiter = (int) N * (int) N * (int) N;   //redefines max number of itterations
+    jacobi_eigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged); //runs jacobi eigensolver
+    myfile <<N<<","<< iterations << endl;   //writes N and number of itterations to a txt file
+  }
+
+  myfile.close();
 }
 
 //-----------Problem 6(end)-------------
@@ -375,7 +381,6 @@ void file_for_plot(int n){
     xhat(i) = xhat(0) + i*h;
   }
   xhat(n) = 1; // boundary point
-
 
   arma::mat vhat = arma::mat(N, 3);
   arma::mat v_analytic = arma::mat(N, 3);

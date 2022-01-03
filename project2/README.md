@@ -52,11 +52,5 @@ Below, you will find a description of each folder. At the bottom you will find i
 ## figures/
   This folder will contain all the plots that are present in the report. If the folder is empty, make sure you ran the plot command in the terminal.
 
-## include/
-  This folder contains the header files for our program
-
 ## plot_files/
   This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the 'figure/' folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the '$make plot' command described below.
-
-## src/
-  This folder contains the Ising.cpp source file. Note that the main.cpp source file will be linked with the Ising.cpp source file.
