@@ -6,12 +6,15 @@ A Penning trap is a device that utilizes a static configuration of electic and m
 
 # Build, run and plot
 To build the code:
+
 $ make
 
 To run the code:
+
 $ make run
 
 To make plots:
+
 $ make plot
 
 ![schematic penning trap](https://upload.wikimedia.org/wikipedia/commons/b/b6/Penning_Trap.svg)
