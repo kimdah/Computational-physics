@@ -1,13 +1,10 @@
 # Simulating the Behaviour of Charged Particles in a Penning trap (Project 3)
 Our results are summarized in the [project report](report_project3.pdf).
 
+![Penning trap simulation in spacial plane](https://github.com/cecilmkl/comp_phys/blob/main/project3/figures/xy_1000.png)
+
 # Description
 A Penning trap is a device that utilizes a static configuration of electic and magnetic fields to confine charged particles.
-
-![schematic penning trap](https://upload.wikimedia.org/wikipedia/commons/b/b6/Penning_Trap.svg)
-
-[Penning trap simulation in spacial plane](figures/xy.pdf)
-[Penning trap simulation in spacial plane](figures/xy100.pdf)
 
 # Build, run and plot
 To build the code:
