@@ -2,7 +2,7 @@
 
 Our results are summarized in a [project report](report_project2.pdf)
 
------------------
+# Description
 The main topics of this project was:
 - scaling of equations
 - eigenvalue problems
