@@ -2,7 +2,7 @@
 
 Our results are summarized in a [project report](report_project1.pdf)
 
-# Description
+## Description
 
 `main.cpp` computes the exact solution, u(x), and the numerical approximations v(x) and v<sup>*</sup>(x) using both the general algorithm and special algorithm for solving the matrix equation.
 This is done with different number of steps, N = 10<sup>i</sup> for i = 1,2,...,6
@@ -23,7 +23,7 @@ The number of steps can be changed manually in the makefile, or by running:
 
 `$ ./main.cpp {N}`
 
-# Compiling, running and plotting
+## Compiling, running and plotting
 
 To build the code:  
 `$ make`
