@@ -13,10 +13,10 @@ Motion of a single particle in z-direction:
 zt.pdf
 
 Motion of two particles with and without particle interactions:
-- xy.pdf  (in the xy-plane for t = 100 $\mu$s and t = 1000 $\mu s$)
-- xyz0.pdf (in the xyz-space without interactions)
-- xyz1.pdf (in the xyz-space with interactions)
-- phase_space.pdf (plot of position vs velocity in each direction w/ & w/o interactions)
+- xy_{duration}.pdf  (in the xy-plane for t = 100 $\mu$s and t = 1000 $\mu s$)
+- xyz0_{duration}.pdf (in the xyz-space without interactions)
+- xyz1_{duration}.pdf (in the xyz-space with interactions)
+- phase_space_{duration}.pdf (plot of position vs velocity in each direction w/ & w/o interactions)
 
 Relative error plots:
 - relative_error_EC.pdf   (for Euler-Cromer method)
@@ -26,5 +26,7 @@ Relative error plots:
 particles in the trap when the electric field is not constant**
 
 fraction_vs_angfreq.pdf
+
+fraction_vs_angfreq_100avg.pdf
 
 fract_vs_angfreq_zoom.pdf (zoomed in around resonance)
