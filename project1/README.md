@@ -4,20 +4,22 @@ Our results are summarized in a [project report](report_project1.pdf)
 
 main.cpp
 --------
-C++ code that computes the exact solution, u(x), and the numerical approximations v(x) and v^(x) using both the general algorithm and special algorithm for solving the matrix equation.
-This is done with different number of steps, N = 10**i for i = 1,2,...,6
+C++ code that computes the exact solution, u(x), and the numerical approximations v(x) and v<sup>*</sup>(x) using both the general algorithm and special algorithm for solving the matrix equation.
+This is done with different number of steps, N = 10<sup>i</sup> for i = 1,2,...,6
 
 The code outputs the result to files based on N:
-exact_data<N>.txt
-approx_general<N>.txt
-approx_special<N>.txt
+
+exact_data{N}.txt
+
+approx_general{N}.txt
+
+approx_special{N}.txt
 
 It also stores log10 absolute and relative error, as well as max(rel_error) in files:
-errors<N>.txt
+errors{N}.txt
 
 The number of steps can be changed manually in the makefile, or by running:
-
-$ ./main.cpp <N>
+$ ./main.cpp {N}
 
 # Compiling, running and plotting
 
@@ -32,7 +34,9 @@ $ make plot
 
 
 # Folder Structure
+
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
+
 ## datafiles/
   This folder contains all the different datafiles(.txt files) that are produced when running the simulation. If the folder is empty, make sure you have compiled and run the program.
 
