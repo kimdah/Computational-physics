@@ -13,6 +13,8 @@ Numerical solution of an eigenvalue problem exemplified by a special case of the
 ### [Project 3](project3/):
 Simulation of a Penning trap which confines charged particles using static electric and magnetic fields. 
 
+![Penning trap simulation in spacial plane](https://github.com/cecilmkl/comp_phys/blob/main/project3/figures/xy_1000.png)
+
 ### [Project 4](project4/):
 Simulation of the Ising model in two dimensions to explore temperature-dependent behaviour in ferromagnets and numerically estimate the critical temperature at which the system undergoes a phase transition (from magnetized phase to a phase with no net magnetization).
 
