@@ -1,8 +1,7 @@
 from mpl_toolkits import mplot3d
 import numpy as np
 import matplotlib.pyplot as plt
-
-#fig = plt.figure()
+import sys
 
 
 SMALL_SIZE = 12
@@ -17,10 +16,11 @@ plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
+duration = int(sys.argv[1])
 
 for i in range(0,2):
     #iter = 10**i
-    data = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_%d_outputs_xyz_pert_0_rs_0_f_0.0_w_v_0.0.txt' %i, skiprows=1) #%iter
+    data = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_%d_outputs_xyz_pert_0_rs_0_f_0.0_w_v_0.0.txt' %(duration,i), skiprows=1) #%iter
     x1 = np.array(data[:,0])
     y1 = np.array(data[:,1])
     z1 = np.array(data[:,2])
@@ -59,6 +59,6 @@ for i in range(0,2):
     wspace=0.0
 )
     #plt.legend()
-    plt.savefig('./figures/xyz%d_1000.pdf'%i,bbox_inches='tight')
-    plt.show()
+    plt.savefig('./figures/xyz%d_%d.pdf'%(i,duration) , bbox_inches='tight')
+    #plt.show()
     plt.close()

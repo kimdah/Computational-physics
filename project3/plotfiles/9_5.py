@@ -114,7 +114,7 @@ for j in range(0,2):
     )
     plt.savefig('./figures/relative_error_%s.pdf'%(method), bbox_inches='tight')
     plt.clf()
-    plt.show()
+    #plt.show()
 
 
 

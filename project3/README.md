@@ -32,7 +32,7 @@ Below, you will find a description of each folder. At the bottom you will find i
   This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the *figure/* folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the '$ make plot' command described above.
 
 ## [include](include/)
-  This folder contains the header files for our program; *Particle.hpp*, *PenningTrap.hpp*
+  This folder contains the header files for our program; *Particle.hpp* and *PenningTrap.hpp*
 
 ## [src](src/)
   This folder contains the *Particle.cpp* and *PenningTrap.cpp* source file. Note that the *main.cpp* source file will be linked with these files.

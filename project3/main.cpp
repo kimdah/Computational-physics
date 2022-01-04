@@ -38,19 +38,37 @@ int main(int argc, char const *argv[]) {
     simulator(10000, 100, 1, "tzv", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
     // interactions on
-    simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xy", true, false, false, false, 0.0, 0.0, true); //T = 100 ms
+    simulator(10000, 1000, 2, "xy", true, false, false, false, 0.0, 0.0, true); //T = 1000 ms
     // interactions off
-    simulator(10000, 100, 2, "xy", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 100, 2, "xy", false, false, false, false, 0.0, 0.0, true); // T = 100 ms
+    simulator(10000, 1000, 2, "xy", false, false, false, false, 0.0, 0.0, true); // T = 1000 ms
+
     // Point 3: Phase space plots
+    // For total time 100 ms
     simulator(10000, 100, 2, "xv", true, false, false, false, 0.0, 0.0, true);
     simulator(10000, 100, 2, "xv", false, false, false, false, 0.0, 0.0, true);
     simulator(10000, 100, 2, "yv", true, false, false, false, 0.0, 0.0, true);
     simulator(10000, 100, 2, "yv", false, false, false, false, 0.0, 0.0, true);
     simulator(10000, 100, 2, "zv", true, false, false, false, 0.0, 0.0, true);
     simulator(10000, 100, 2, "zv", false, false, false, false, 0.0, 0.0, true);
+
+    // For total time 1000 ms:
+    simulator(10000, 1000, 2, "xv", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "xv", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "yv", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "yv", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "zv", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "zv", false, false, false, false, 0.0, 0.0, true);
+
     // Point 4: 3D plot
+    // interactions on, T = 100 ms and T = 1000 ms
     simulator(10000, 100, 2, "xyz", true, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "xyz", true, false, false, false, 0.0, 0.0, true);
+    // interactions off, T = 100 ms and T = 1000 ms
     simulator(10000, 100, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
+    simulator(10000, 1000, 2, "xyz", false, false, false, false, 0.0, 0.0, true);
+
     // Point 5: step sizes
     for (int i = 1; i < 6; i++) {
         simulator(pow(10,i), 100, 1, "txyzv", true, false, false, false, 0.0, 0.0, true); // RK4
@@ -84,13 +102,8 @@ int main(int argc, char const *argv[]) {
     problem_10(0.1, freqs2, false, "narrow without interactions");
     std::cout << "With particle interactions..." << std::endl;
     problem_10(0.1, freqs2, true,  "narrow with interactions");
-    // // Point 3: Phase space plots \\ REMOVE?
-    // simulator(100000, 1000, 2, "xv", true, false, false, false, 0.0, 0.0, true);
-    // simulator(100000, 1000, 2, "xv", false, false, false, false, 0.0, 0.0, true);
-    // simulator(100000, 1000, 2, "yv", true, false, false, false, 0.0, 0.0, true);
-    // simulator(100000, 1000, 2, "yv", false, false, false, false, 0.0, 0.0, true);
-    // simulator(100000, 1000, 2, "zv", true, false, false, false, 0.0, 0.0, true);
-    // simulator(100000, 1000, 2, "zv", false, false, false, false, 0.0, 0.0, true);
+    
+
     return 0;
 }
 
@@ -98,7 +111,7 @@ void problem_10(double f, vec frequencies, bool interactions, string range) {
     int width = 16;
     int prec  = 8;
 
-    std::string filename = "Results/problem10_f"+to_string_with_precision(f)+range+".txt";
+    std::string filename = "./datafiles/problem10_f"+to_string_with_precision(f)+range+".txt";
     std::ofstream ofile;
     ofile.open(filename);
     ofile << std::setw(width) << std::setprecision(prec) << std::scientific << "w_v";
@@ -136,10 +149,10 @@ double simulator(int iterations, int duration, int particles, std::string output
     // V-pertrubation for Problem 10, random seed on/off, V-pertrubation amplitude, V-pertrubation angular frequency
     std::string filename;
     if (euler_cromer && out) {
-            filename = "Results/EC_i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+
+            filename = "./datafiles/EC_i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+
             "_outputs_"+outputs+"_pert_"+std::to_string(pertrubation)+"_rs_"+std::to_string(randomseed)+"_f_"+to_string_with_precision(f)+"_w_v_"+to_string_with_precision(w_v)+".txt";
         } else if (out){
-            filename = "Results/RK4_i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+
+            filename = "./datafiles/RK4_i_"+std::to_string(iterations)+"_d_"+std::to_string(duration)+"_p_"+std::to_string(particles)+"_pi_"+std::to_string(interactions)+
             "_outputs_"+outputs+"_pert_"+std::to_string(pertrubation)+"_rs_"+std::to_string(randomseed)+"_f_"+to_string_with_precision(f)+"_w_v_"+to_string_with_precision(w_v)+".txt";
         }
 

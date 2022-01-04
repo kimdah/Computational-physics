@@ -1,15 +1,16 @@
 # Phase space plots - position vs velocity in each direction for two particles!!!
 import numpy as np
 import matplotlib.pyplot as plt
-# now import pylustrator
-#import pylustrator
+import sys
 
 # $axis $interaction $particle
 
+duration = int(sys.argv[1])
+
 # WITHOUT INTERACTIONS
-data0x = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_0_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data0y = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_0_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data0z = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_0_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data0x = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_0_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows = 1)
+data0y = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_0_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows = 1)
+data0z = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_0_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows = 1)
 
 # ------Particle 1--------
 # positions
@@ -33,9 +34,9 @@ vz02 = np.array(data0z[:,3])
 
 # WITH INTERACTIONS
 
-data1x = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_1_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data1y = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_1_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
-data1z = np.loadtxt('./datafiles/RK4_i_10000_d_1000_p_2_pi_1_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows = 1)
+data1x = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_1_outputs_xv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows = 1)
+data1y = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_1_outputs_yv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows = 1)
+data1z = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_1_outputs_zv_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows = 1)
 
 # -------Particle 1 --------
 # Positions
@@ -129,6 +130,6 @@ plt.subplots_adjust(
     wspace=0.3
     )
 
-plt.savefig('./figures/phase_space1000.pdf')
+plt.savefig('./figures/phase_space%d.pdf'%duration)
 #plt.show()
 plt.close()

@@ -19,9 +19,13 @@ clean:
 
 plot:
 	python3 ./plotfiles/9_1.py
-	python3 ./plotfiles/9_2.py
-	python3 ./plotfiles/9_3.py
-	python3 ./plotfiles/9_4.py
+	python3 ./plotfiles/9_2.py 100
+	python3 ./plotfiles/9_2.py 1000
+	python3 ./plotfiles/9_3.py 100
+	python3 ./plotfiles/9_3.py 1000
+	python3 ./plotfiles/9_4.py 100
+	python3 ./plotfiles/9_4.py 1000
 	python3 ./plotfiles/9_5.py
 	python3 ./plotfiles/10_6.py
-	python3 ./plotfiles/10_7.py
+	#python3 ./plotfiles/10_7.py
+	python3 ./plotfiles/10_7.py average

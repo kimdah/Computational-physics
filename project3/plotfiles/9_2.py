@@ -1,12 +1,15 @@
 # Plot of 2 particles and their motion in xy-plane with and without particle interactions
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 # pi:   0: no interactions, 1:interactions
 
-data0 = np.loadtxt('./datafiles/RK4_i_10000_d_100_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+duration = int(sys.argv[1])
 
-data1 = np.loadtxt('./datafiles/RK4_i_10000_d_100_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt', skiprows=1)
+data0 = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_0_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows=1)
+
+data1 = np.loadtxt('./datafiles/RK4_i_10000_d_%d_p_2_pi_1_outputs_xy_pert_0_rs_0_f_0.0_w_v_0.0.txt'%duration, skiprows=1)
 
 
 # No interactions: $axis $interaction $particle
@@ -75,5 +78,5 @@ plt.subplots_adjust(
     wspace=0.2
 )
 
-plt.savefig('./figures/xy.pdf', bbox_inches='tight')
+plt.savefig('./figures/xy_%d.pdf'%duration, bbox_inches='tight')
 #plt.show()
