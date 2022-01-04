@@ -1,5 +1,7 @@
 # Simulation of the two-dimensional Ising Model (Project 3)
--------------------------------------------------
+
+Our results are summarized in a [project report](report_project4.pdf)
+----------
 The model will be used to explore temperature-dependent behaviour in ferromagnets and numerically estimate the critical temperature at which our 2D system undergoes a phase transition from a magnetized phase to a phase with no net magnetization.
 
 The lattice of spins is defined by the state configuration matrix **s**.

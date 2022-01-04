@@ -17,7 +17,7 @@ for i in range(1, k+1):
     vstar = np.array([0]) # boundary point u_0 = 0
     vstar = np.append(vstar, v)
     vstar = np.append(vstar, 0) # appending boundary point u_1 = 0
-    plt.plot(x, vstar, ':', color=colors[i-1], label='Approximation v*(x) with n =%d' %n)
+    plt.plot(x, vstar, ':', color=colors[i-1], label='v^*(x), N=%d' %n)
 
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 

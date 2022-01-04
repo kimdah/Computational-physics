@@ -88,7 +88,7 @@ int main(int argc, char const *argv[]) {
 
 
   // Problem 7
-  cout << endl << "------------Running to task 7------------"<< endl;
+  cout << endl << "------------Running task 7------------"<< endl;
   file_for_plot(10);
   file_for_plot(100);
 

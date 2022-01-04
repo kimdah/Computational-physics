@@ -14,10 +14,10 @@ for i in range(1, k+1):
     x = np.array(errors[:,0])
     abs_error = np.array(errors[:,1])
     rel_error = np.array(errors[:,2])
-    #x_log = np.log10(x)
+    x_log = np.log10(x)
 
-    ax1.plot(x, abs_error, '-', color=colors[i-1], label='Abs_error with %d' %N)
-    ax2.plot(x, rel_error, '-', color=colors[i-1], label='Rel_error with %d' %N)
+    ax1.plot(x_log, abs_error, '-', color=colors[i-1], label='N=%d' %N)
+    ax2.plot(x_log, rel_error, '-', color=colors[i-1], label='N=%d' %N)
 
 ax1.set_title('Log of absolute errors for various number of steps N')
 ax2.set_title('Log of relative errors for various number of steps N')
@@ -35,5 +35,7 @@ box = ax2.get_position()
 ax2.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 ax2.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-plt.xlabel('x')
+plt.xlabel('log(x)')
 plt.savefig('./figures/error_plot_log.pdf')
+plt.show()
+plt.close()

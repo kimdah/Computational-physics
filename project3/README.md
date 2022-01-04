@@ -1,5 +1,8 @@
 Simulation of a Penning Trap (Project 3)
--------------------------------------------------
+
+
+
+# Compiling, running and plotting
 To build the code:
 $ make
 

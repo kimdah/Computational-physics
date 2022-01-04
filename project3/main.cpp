@@ -32,9 +32,8 @@ std::string to_string_with_precision(const T a_value, const int n = 1)
 
 int main(int argc, char const *argv[]) {
 
-/*
-    std::cout << "Problem 9 running..." << std::endl;
     // ------------- PROBLEM 9 -----------
+    std::cout << "Problem 9 running..." << std::endl;
     //Problem 9 point 1
     simulator(10000, 100, 1, "tzv", true, false, false, false, 0.0, 0.0, true);
     // Problem 9 point 2
@@ -84,14 +83,14 @@ int main(int argc, char const *argv[]) {
     std::cout << "Without particle interactions..."<< std::endl;
     problem_10(0.1, freqs2, false, "narrow without interactions");
     std::cout << "With particle interactions..." << std::endl;
-    problem_10(0.1, freqs2, true,  "narrow with interactions"); */
-    // Point 3: Phase space plots
-    simulator(100000, 1000, 2, "xv", true, false, false, false, 0.0, 0.0, true);
-    simulator(100000, 1000, 2, "xv", false, false, false, false, 0.0, 0.0, true);
-    simulator(100000, 1000, 2, "yv", true, false, false, false, 0.0, 0.0, true);
-    simulator(100000, 1000, 2, "yv", false, false, false, false, 0.0, 0.0, true);
-    simulator(100000, 1000, 2, "zv", true, false, false, false, 0.0, 0.0, true);
-    simulator(100000, 1000, 2, "zv", false, false, false, false, 0.0, 0.0, true);
+    problem_10(0.1, freqs2, true,  "narrow with interactions");
+    // // Point 3: Phase space plots \\ REMOVE?
+    // simulator(100000, 1000, 2, "xv", true, false, false, false, 0.0, 0.0, true);
+    // simulator(100000, 1000, 2, "xv", false, false, false, false, 0.0, 0.0, true);
+    // simulator(100000, 1000, 2, "yv", true, false, false, false, 0.0, 0.0, true);
+    // simulator(100000, 1000, 2, "yv", false, false, false, false, 0.0, 0.0, true);
+    // simulator(100000, 1000, 2, "zv", true, false, false, false, 0.0, 0.0, true);
+    // simulator(100000, 1000, 2, "zv", false, false, false, false, 0.0, 0.0, true);
     return 0;
 }
 
@@ -130,6 +129,8 @@ double simulator(int iterations, int duration, int particles, std::string output
     double t = duration;
     double h = double(t) / n;
     double d = pow(10,4);
+    int width = 16;
+    int prec  = 8;
 
     // Create a filename specifying in order the number of iterations, duration, particles, outputs included, whether particle interactions are on, EC on/off,
     // V-pertrubation for Problem 10, random seed on/off, V-pertrubation amplitude, V-pertrubation angular frequency

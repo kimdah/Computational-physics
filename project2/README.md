@@ -1,6 +1,8 @@
 # Project 2: Numerical solution of an eigenvalue problem exemplified by a special case of the one-dimensional buckling beam.
-------------
 
+Our results are summarized in a [project report](report_project2.pdf)
+
+-----------------
 The main topics of this project was:
 - scaling of equations
 - eigenvalue problems
