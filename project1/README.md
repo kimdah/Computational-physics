@@ -1,5 +1,6 @@
 # Numerical solution to the one-dimensional Poisson equation by converting the second derivative to a solvable matrix equation Av = g (Project 1)
 ---------------------------
+Our results are summarized in a [project report](report_project1.pdf)
 
 main.cpp
 --------
