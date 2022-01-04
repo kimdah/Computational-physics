@@ -4,11 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
-
-
-
-
 #Adjusting text size
 SMALL_SIZE = 14
 MEDIUM_SIZE = 17
