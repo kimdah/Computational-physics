@@ -18,11 +18,11 @@ clean:
 	rm -f *.o *~
 
 plot:
-	python3 ./plot_files/problem4.py
-	python3 ./plot_files/problem5.py
-	#python3 ./plot_files/problem6.py
-	python3 ./plot_files/problem8.py
-	python3 ./plot_files/problem9.py
+	python3 ./plotfiles/problem4.py
+	python3 ./plotfiles/problem5.py
+	#python3 ./plotfiles/problem6.py
+	python3 ./plotfiles/problem8.py
+	python3 ./plotfiles/problem9.py
 
 
 

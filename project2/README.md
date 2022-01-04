@@ -2,7 +2,7 @@
 
 Our results are summarized in a [project report](report_project2.pdf)
 
-# Description
+## Description
 The main topics of this project was:
 - scaling of equations
 - eigenvalue problems
@@ -28,32 +28,32 @@ The eigenpairs <img width="58" alt="Screenshot 2022-01-03 at 20 07 50" src="http
 
 <img width="474" alt="Screenshot 2022-01-03 at 20 08 48" src="https://user-images.githubusercontent.com/30042718/147969780-7d86bd1e-a939-489b-9efc-237f242630c3.png">
 
-# Compiling, running and plotting
+## Compiling, running and plotting
 
 To compile and link main.cpp:
 
-$ make
+`$ make`
 
 Run the code, main.exe:
 
-$ make run
+`$ make run`
 
 When main.exe is done running you can make plots using the command:
 
-$ make plot
+`$ make plot`
 
-Note that the file may take some time to run, as it solves alle the different subtasks as well.
+Note that the file may take some time to run, as it solves all subtasks as well.
 Running main.exe will write results from task 3, 4 and 5 to the terminal. It will also produce some
 .txt files with the results from task 6 and 7 stored in the folder *datafiles*
 
-# Folder Structure
+## Folder Structure
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
 
-## [datafiles](datafiles/)
+### [datafiles](datafiles/)
   This folder contains all the different datafiles(.txt files) that are produced when running the simulation. If the folder is empty, make sure you have compiled and run the program.
 
-## [figures](figures/)
+### [figures](figures/)
   This folder will contain all the plots that are present in the report. If the folder is empty, make sure you ran the plot command in the terminal.
 
-## [plot_files](plot_files/)
-  This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the 'figure/' folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the '$make plot' command described below.
+### [plotfiles](plotfiles/)
+  This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the *figure/* folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the `$make plot` command described above.
