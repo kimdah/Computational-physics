@@ -1,4 +1,4 @@
-# Project 2: Numerical solution of an eigenvalue problem exemplified by a special case of the one-dimensional buckling beam.
+# Numerical solution of an eigenvalue problem exemplified by a special case of the one-dimensional buckling beam (Project 2).
 
 Our results are summarized in a [project report](report_project2.pdf)
 
@@ -48,11 +48,12 @@ Running main.exe will write results from task 3, 4 and 5 to the terminal. It wil
 
 # Folder Structure
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
-## datafiles/
+
+## [datafiles](datafiles/)
   This folder contains all the different datafiles(.txt files) that are produced when running the simulation. If the folder is empty, make sure you have compiled and run the program.
 
-## figures/
+## [figures](figures/)
   This folder will contain all the plots that are present in the report. If the folder is empty, make sure you ran the plot command in the terminal.
 
-## plot_files/
+## [plot_files](plot_files/)
   This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the 'figure/' folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the '$make plot' command described below.
