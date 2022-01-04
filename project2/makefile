@@ -2,7 +2,7 @@ CPPflags = g++ -c -std=c++11
 LIB =  -larmadillo
 PROG = main
 
-all: compile link clean #run
+all: compile link clean
 
 compile:
 	${CPPflags} -c ${PROG}.cpp
