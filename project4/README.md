@@ -15,19 +15,20 @@ For full Project description, visit https://anderkve.github.io/FYS3150/book/proj
 
 # Folder Structure
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
-## datafiles/
+
+## [datafiles](datafiles/)
   This folder contains all the different datafiles(.txt files) that are produced when running the simulation. If the folder is empty, make sure you have compiled and run the program.
 
-## figures/
+## [figures](figures/)
   This folder will contain all the plots that are present in the report. If the folder is empty, make sure you ran the plot command in the terminal.
 
-## include/
+## [include](include/)
   This folder contains the header files for our program
 
-## plot_files/
+## [plot_files](plot_files/)
   This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the 'figure/' folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the '$make plot' command described below.
 
-## src/
+## [src](src/)
   This folder contains the Ising.cpp source file. Note that the main.cpp source file will be linked with the Ising.cpp source file.
 
 # Code structure
