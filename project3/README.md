@@ -1,8 +1,10 @@
-Simulation of a Penning Trap (Project 3)
+# Simulation of a Penning trap (Project 3)
+Our results are summarized in a [project report](report_project3.pdf)
 
+# Description
+A Penning trap is a device that utilizes a static configuration of electic and magnetix fields to confine charged particles.
 
-
-# Compiling, running and plotting
+# Build, run and plot
 To build the code:
 $ make
 
@@ -12,6 +14,7 @@ $ make run
 To make plots:
 $ make plot
 
+![schematic penning trap](https://upload.wikimedia.org/wikipedia/commons/b/b6/Penning_Trap.svg)
 
 # Folder Structure
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
