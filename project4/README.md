@@ -1,11 +1,9 @@
-# Simulation of the two-dimensional Ising Model (Project 3)
+# Simulation of the two-dimensional Ising Model (Project 4)
 
 Our results are summarized in a [project report](report_project4.pdf)
-----------
-The model will be used to explore temperature-dependent behaviour in ferromagnets and numerically estimate the critical temperature at which our 2D system undergoes a phase transition from a magnetized phase to a phase with no net magnetization.
 
-The lattice of spins is defined by the state configuration matrix **s**.
-...
+# Description
+The model will be used to explore temperature-dependent behaviour in ferromagnets and numerically estimate the critical temperature at which our 2D system undergoes a phase transition from a magnetized phase to a phase with no net magnetization.
 
 We estimated the expectancy value of the energy per spin, **< epsilon >**, and of the absolute value of the magnetization per spin, **<|m|>**. This were done by sampling **s** using the Monte Carlo Markov Chain (MCMC) method and taking the mean of **epsilon** and **|m|** over MCMC cycles.
 These were the used to find estimations for the specific heat capacity, **C__v**, and the susceptibility, **chi**. These were both normalized to per spin.
@@ -17,19 +15,20 @@ For full Project description, visit https://anderkve.github.io/FYS3150/book/proj
 
 # Folder Structure
 Below, you will find a description of each folder. At the bottom you will find instructions on how to compile the program, run it and plot the datafiles that are produced.
-## datafiles/
+
+## [datafiles](datafiles/)
   This folder contains all the different datafiles(.txt files) that are produced when running the simulation. If the folder is empty, make sure you have compiled and run the program.
 
-## figures/
+## [figures](figures/)
   This folder will contain all the plots that are present in the report. If the folder is empty, make sure you ran the plot command in the terminal.
 
-## include/
+## [include](include/)
   This folder contains the header files for our program
 
-## plot_files/
+## [plot_files](plot_files/)
   This folder contains the python scrips that were used to plot the results. All the python files saves the figures in the 'figure/' folder. Note that if you try to run the program manually, it won't find the correct path to the datafiles, so make sure you run them using the '$make plot' command described below.
 
-## src/
+## [src](src/)
   This folder contains the Ising.cpp source file. Note that the main.cpp source file will be linked with the Ising.cpp source file.
 
 # Code structure
