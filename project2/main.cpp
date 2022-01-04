@@ -83,12 +83,12 @@ int main(int argc, char const *argv[]) {
   cout << endl << "------------Solution to task 5 b) (end)------------"<< endl;
 
   // Problem 6 - comment out to avoid taking up too much time
-  cout << endl << "------------Running task 6------------"<< endl;
+  cout << endl << "------------Running task 6------------>"<< endl;
   jacobi_scaling(A, N, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
 
 
   // Problem 7
-  cout << endl << "------------Running task 7------------"<< endl;
+  cout << endl << "------------Running task 7------------>"<< endl;
   file_for_plot(10);
   file_for_plot(100);
 
@@ -405,7 +405,7 @@ void file_for_plot(int n){
 
   ofstream ofile;
   std::ostringstream filename;
-  filename << "output" << n << ".txt";
+  filename << "./datafiles/output" << n << ".txt";
   ofile.open(filename.str());
   int width = 20;
   int prec = 12;
