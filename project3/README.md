@@ -1,4 +1,4 @@
-# Simulation of a Penning trap (Project 3)
+# Simulating the Behaviour of Charged Particles in a Penning trap (Project 3)
 Our results are summarized in the [project report](report_project3.pdf).
 
 # Description
