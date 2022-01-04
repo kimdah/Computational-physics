@@ -1,4 +1,4 @@
-# Simulation of the two-dimensional Ising Model (Project 3)
+# Simulation of the two-dimensional Ising Model (Project 4)
 
 Our results are summarized in a [project report](report_project4.pdf)
 
