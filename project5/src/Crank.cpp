@@ -145,7 +145,7 @@ cx_vec Crank::construct_u_vec(cx_mat U, bool normalise){
   return u;
 }
 
-/// <summary>Constructs the A and B matrices used by the time_step/Crank-Nicolsonmethod and stores them as class variables.</summary>
+/// <summary>Constructs the A and B matrices used by the time_step/Crank-Nicolson method and stores them as class variables.</summary>
 /// <param name="M">The size of one size of the matrix.</param> 
 /// <param name="h">The step size along the x and y axis.</param>
 /// <param name="deltat">The time step to be used in the simulation.</param> 
@@ -167,7 +167,7 @@ void Crank::make_matrices(int M, double h, double deltat, mat V, complex<double>
   B_ = make_matrix(r,  b);
 }
 
-/// <summary>Helper method for constructing the A and B matrices used by the time_step/Crank-Nicolsonmethod and stores them as class variables.</summary>
+/// <summary>Helper method for constructing the A and B matrices used by the time_step/Crank-Nicolson method and stores them as class variables.</summary>
 /// <param name="r">A constant proportional to deltat and h, the spatial step size</param>
 /// <param name="d">The vector to be put on the diagonal as part of the Crank-Nicolson method </param>
 /// <returns>The Matrix A or B as an Armadillo sparse complex matrix, sp_cx_mat</returns> 
