@@ -21,4 +21,4 @@ Simulation of the Ising model in two dimensions to explore temperature-dependent
 ### [Project 5](project5/): 
 Simulation of the two dimensional time-dependent Schrödinger equation to study a double-slit-in-a-box setup and variations thereof. 
 
-![animation](https://user-images.githubusercontent.com/31341364/144926070-2ea39b86-607f-4a8e-aec4-f8027d95b0af.gif)
+![Problem_7 20_outputCube_slits_2 dat_animation](https://user-images.githubusercontent.com/31341364/146273401-9a893a1d-75e6-4bcf-ad0c-5c643b64598e.gif)
